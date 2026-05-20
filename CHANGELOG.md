@@ -13,6 +13,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ### ✨ Añadido
 
+- `docs/skill-promotion.md` — flujo formal de promoción de skills desde `~/.claude/skills/` (uso personal) al catálogo público del toolkit. Incluye checklist, criterio universal/específico, diagrama Mermaid del contrato con el agente y caso de despromoción. Enlazado desde README y CONTRIBUTING.
 - `CHANGELOG.md`, `ROADMAP.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, `SUPPORT.md`, `RECRUITER.md` — alineación con la plantilla del resto de repos del autor.
 - `scripts/uninstall.ps1` — paridad con `uninstall.sh` para Windows.
 - `.github/workflows/ci.yml` — CI con 3 jobs: `yaml-lint` (eat-your-own-dog-food con `yaml-control`), `markdown-lint`, `python-tests` (matriz ubuntu/windows/macOS × Python 3.11/3.12).

@@ -313,6 +313,7 @@ Ver [CONTRIBUTING.md](CONTRIBUTING.md) para las reglas completas.
 | 🆘 [SUPPORT.md](SUPPORT.md) | Canales por tipo de problema · cómo pedir ayuda |
 | 🤗 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Código de conducta de la comunidad |
 | 🏗️ [docs/architecture.md](docs/architecture.md) | Arquitectura interna · decisiones de diseño |
+| 🚀 [docs/skill-promotion.md](docs/skill-promotion.md) | Flujo formal para promover skills locales al toolkit |
 | 💼 [RECRUITER.md](RECRUITER.md) | Para reclutadores · qué demuestra este proyecto |
 
 ---

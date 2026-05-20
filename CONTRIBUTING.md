@@ -100,6 +100,20 @@ Título conventional: `feat(skill): <nombre> — <one-liner>`. Incluye en el bod
 
 ---
 
+## 🚀 Promoción de skills desde uso personal
+
+Si usas skills locales en `~/.claude/skills/<nombre>/` y crees que uno merece formar parte del toolkit público, sigue el flujo formal documentado en [`docs/skill-promotion.md`](docs/skill-promotion.md):
+
+1. **Validación** — frontmatter, `Path.cwd()`, cross-platform, cero deps.
+2. **Copia** al repo bajo `skills/<nombre>/`.
+3. **Actualizaciones en cascada** — README, CHANGELOG, ROADMAP, architecture, tests.
+4. **Validación local** — `unittest` + `yaml-control` en verde.
+5. **Commit + push** — `feat(skills): add <nombre>`.
+
+El agente que mantiene este repo **siempre** pregunta antes de promover. La instalación local es del usuario; el catálogo público es decisión editorial.
+
+---
+
 ## 🤗 Código de conducta
 
 Asume buena fe. Sé directo con el código, amable con las personas. Reviews enfocadas en el cambio, no en quien lo escribió.
