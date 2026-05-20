@@ -13,3 +13,10 @@ Thumbs.db
 .vscode/
 *.tmp
 SECURITY_AUDIT_*.md
+
+# Claude Code session state
+.claude/
+
+# Test artifacts
+.coverage
+htmlcov/

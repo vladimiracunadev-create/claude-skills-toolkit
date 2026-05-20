@@ -1,3 +1,8 @@
+---
+name: md-lint-fix
+description: Detecta y auto-corrige errores de markdownlint-cli2 en archivos .md modificados antes de commit/push. Resuelve MD024 con contexto del heading padre, MD040 infiriendo idioma del bloque, y MD031/32/34/28/27/22/26/29/30/09/12/047 vía --fix. Reporta los que requieren criterio humano (MD025, MD042, MD051). Úsalo cuando el usuario diga "arregla el lint MD", "corrige los markdown", "limpia los .md", "fix markdownlint", o proactivamente después de editar archivos .md. Trabaja sobre Path.cwd() — funciona en cualquier repo.
+---
+
 # md-lint-fix
 
 Detecta, auto-corrige y reporta errores markdownlint en archivos `.md`

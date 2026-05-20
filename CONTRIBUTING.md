@@ -1,50 +1,105 @@
-# Contribuir
+# 🤝 Contribuir
 
-PRs bienvenidos. Este repo busca acumular skills útiles, generales y mantenidos.
+¡Gracias por considerar contribuir! Este repo busca acumular skills **útiles, generales y mantenidos**. Lo que sigue es la guía mínima para que tu PR pase rápido por review.
 
-## Reglas para un skill nuevo
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-2da44e?logo=github)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/pulls)
+[![Code of Conduct](https://img.shields.io/badge/Code%20of-Conduct-4baaaa)](CODE_OF_CONDUCT.md)
 
-1. **Autónomo**: no asume paths absolutos al sistema del autor. Si el script necesita el repo del usuario, usar `Path.cwd()`.
-2. **`SKILL.md` con frontmatter YAML** completo (`name` + `description` con triggers).
-3. **Cero dependencias por defecto**. Si necesita herramienta externa: documentar en SKILL.md y degradar gracefully cuando no esté.
-4. **Cross-platform** o documentar limitación explícita (ej. "requiere bash").
-5. **Honestidad**: documentar qué NO hace y qué riesgos tiene.
+---
 
-## Workflow
+## 📜 Reglas para un skill nuevo
 
-1. Copia el template:
+1. **Autónomo.** No asume paths absolutos al sistema del autor. Si el script necesita el repo del usuario, usa `Path.cwd()`.
+2. **`SKILL.md` con frontmatter completo.** Campos obligatorios: `name`, `description`. El `description` debe incluir los triggers en español **y** en inglés.
+3. **Cero dependencias por defecto.** Si necesita una herramienta externa: docúmentalo en `SKILL.md` y degrada gracefully cuando no esté.
+4. **Cross-platform** o limitación explícita (ej. *"requiere bash"*).
+5. **Honestidad.** Documenta qué **NO** hace y qué riesgos tiene. Un skill que oculta sus límites es peor que un skill que no existe.
 
-   ```bash
-   cp -r skills/_template skills/mi-skill
-   ```
+---
 
-2. Edita `skills/mi-skill/SKILL.md`:
-   - Cambia `name`, `description` (incluyendo triggers en español + inglés)
-   - Documenta cuándo usar / cuándo NO usar
-   - Lista limitaciones y dependencias
+---
 
-3. Implementa el script en `skills/mi-skill/<nombre>.py` o `.sh`.
-4. Actualiza `README.md` raíz agregando tu skill a la tabla de catálogo.
-5. Si la lógica es no-trivial, agrega tests en `tests/test_<skill>.py`.
-6. Abre PR.
+## 🔄 Workflow
 
-## Estilo
+### 1. Clona el template
 
-- Python: ruff + line-length 120
-- Bash: shellcheck-clean
-- Markdown: pasa por `md-lint-fix` (eat your own dog food)
-- Sin emojis decorativos en código (sí en MD del usuario final)
+```bash
+cp -r skills/_template skills/mi-skill
+```
 
-## Tipos de skill que valoramos
+### 2. Edita `skills/mi-skill/SKILL.md`
 
-- **Productividad**: automatizan trabajo repetitivo (lint, format, scaffolding)
-- **Seguridad**: audit, scan, detección de patrones
-- **DevOps**: docker, k8s, CI/CD helpers
-- **Refactoring**: análisis de calidad de código
+- Cambia `name`, `description` (incluyendo triggers).
+- Documenta cuándo usar / cuándo NO usar.
+- Lista limitaciones y dependencias.
 
-## Tipos de skill que NO aceptamos
+### 3. Implementa el script
 
-- Wrappers triviales de una herramienta sin valor añadido (ej. `ls` skill)
-- Específicos de un cliente / empresa / proyecto privado
-- Que requieran credenciales hardcoded
-- Sin documentación de qué hace
+`skills/mi-skill/<nombre>.py` o `.sh`. Sigue las convenciones de la sección [Estilo](#estilo).
+
+### 4. Actualiza el README raíz
+
+Agrega tu skill a la tabla de catálogo en [README.md](README.md).
+
+### 5. (Si aplica) Añade tests
+
+`tests/test_<skill>.py` con al menos un smoke test. Puedes usar el `pytest`-style sin requerir pytest (los tests existentes corren con `python -m unittest`).
+
+### 6. Pasa el lint local
+
+```bash
+# YAML
+python skills/yaml-control/yaml_control.py --all
+
+# Markdown
+python skills/md-lint-fix/fix-md-lint.py --all --dry-run
+```
+
+### 7. Abre el PR
+
+Título conventional: `feat(skill): <nombre> — <one-liner>`. Incluye en el body:
+
+- **Problema** que resuelve.
+- **Triggers** principales.
+- **Limitaciones** conocidas.
+
+---
+
+---
+
+## 🎨 Estilo
+
+| Lenguaje | Convención |
+|---|---|
+| **Python** | `ruff` · line-length 120 · type hints donde aporten · `from __future__ import annotations` |
+| **Bash** | shellcheck-clean · `set -euo pipefail` salvo justificación |
+| **Markdown** | Pasa `md-lint-fix` (eat your own dog food) |
+| **YAML** | Pasa `yaml-control` · indentación 2 espacios · sin tabs |
+
+**Sin emojis decorativos en código.** Los warnings y resúmenes pueden usar `✓` / `⚠` / `✗` con moderación.
+
+---
+
+---
+
+## 💎 Tipos de skill que valoramos
+
+- **Productividad** — automatizan trabajo repetitivo (lint, format, scaffolding).
+- **Seguridad** — audit, scan, detección de patrones.
+- **DevOps** — Docker, Kubernetes, CI/CD helpers.
+- **Refactoring** — análisis de calidad de código.
+
+## 🚫 Tipos de skill que NO aceptamos
+
+- Wrappers triviales de una herramienta sin valor añadido (ej. un skill que solo hace `ls`).
+- Específicos de un cliente / empresa / proyecto privado.
+- Que requieran credenciales hardcoded.
+- Sin documentación de qué hace.
+
+---
+
+---
+
+## 🤗 Código de conducta
+
+Asume buena fe. Sé directo con el código, amable con las personas. Reviews enfocadas en el cambio, no en quien lo escribió.

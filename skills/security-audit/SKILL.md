@@ -5,7 +5,7 @@ description: Audita la seguridad de cualquier repositorio en 9 capas — depende
 
 # security-audit (v2 multi-layer)
 
-Audita CUALQUIER repositorio en **9 capas** complementarias. Produce un informe
+Audita CUALQUIER repositorio en **12 capas** complementarias. Produce un informe
 Markdown reproducible y, si se indica, aplica correcciones en el mismo repo
 dejando trazabilidad en git.
 

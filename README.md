@@ -1,88 +1,251 @@
-# claude-skills-toolkit
+<div align="center">
 
-> Skills agentic para [Claude Code](https://claude.com/claude-code) (y compatibles) que automatizan tareas repetitivas de desarrollo: auditoría de seguridad multi-fuente, lint de YAML/Markdown, limpieza de Docker. **Sin dependencias** salvo donde se indica — la mayoría usa solo Python stdlib.
+# 🧰 claude-skills-toolkit
+
+### ⚡ Skills agentic listos para producción para [Claude Code](https://claude.com/claude-code) y runtimes compatibles
+
+Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de seguridad multi-fuente, 📋 lint de YAML, 📝 lint de Markdown y 🐳 limpieza de Docker.
+**Sin dependencias innecesarias** — la mayoría usa solo Python stdlib.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Skills](https://img.shields.io/badge/skills-4-1f6feb)](#catálogo)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Skills](https://img.shields.io/badge/skills-4-1f6feb)](#-catálogo)
+[![Platforms](https://img.shields.io/badge/platforms-linux%20%7C%20macOS%20%7C%20windows-555?logo=linux&logoColor=white)](#-instalación)
+[![CI](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-8%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?logo=github)](CONTRIBUTING.md)
+[![Made with ❤ in Chile](https://img.shields.io/badge/made_in-Chile-d52b1e)](https://github.com/vladimiracunadev-create)
+
+[**📦 Instalación**](#-instalación) · [**🗂️ Catálogo**](#-catálogo) · [**🚀 Uso**](#-uso) · [**🧭 Diseño**](#-diseño) · [**📚 Documentación**](#-documentación) · [**🤝 Contribuir**](CONTRIBUTING.md)
+
+</div>
 
 ---
 
-## Qué es un "skill"
+## 💡 ¿Qué es un "skill"?
 
-Un **skill** es una carpeta con:
+Un **skill** es una carpeta autocontenida que el agente carga al iniciar la sesión:
 
-- `SKILL.md` — descripción + triggers en frontmatter YAML. Es el contrato que el agente lee para decidir cuándo invocarlo.
-- Uno o más scripts (`.py`, `.sh`) que ejecutan la lógica.
-
-Claude Code (y otros runtimes compatibles) cargan los skills desde `~/.claude/skills/<nombre>/` y los invocan cuando el usuario menciona los triggers definidos.
-
----
-
-## Catálogo
-
-| Skill | Qué hace | Triggers | Dependencias |
-|---|---|---|---|
-| [**security-audit**](skills/security-audit/) | Audita en **9 capas**: OSV.dev + CISA KEV + EPSS + Bandit SAST + trivy/grype + gitleaks + zizmor + hadolint + typosquat. Genera reporte MD con Plan de Remediación transversal. Modo `--apply --verify` con bumps verificados y revert. | "audita seguridad", "scan CVE", "vulnerability scan" | Solo stdlib (opt-in: `pip install bandit`, `trivy`, `gitleaks`, `zizmor`, `hadolint`) |
-| [**yaml-control**](skills/yaml-control/) | Valida YAML en 3 capas: sintaxis + actionlint para workflows GHA + convenciones del repo (actions pinneadas a SHA, permisos explícitos, `fail-fast: false` en matrices grandes). | "valida los yaml", "lint yaml", "actionlint" | `pip install pyyaml` (opt-in: `actionlint`) |
-| [**md-lint-fix**](skills/md-lint-fix/) | Detecta y auto-corrige errores de markdownlint (MD024 duplicate headings con contexto del padre, MD040 idioma inferido, MD031/32/34/28/27/22 auto-fix). Trabaja sobre `.md` modificados según `git`. | "arregla el lint MD", "corrige los markdown" | `markdownlint-cli` (npm) |
-| [**docker-cleanup**](skills/docker-cleanup/) | Limpia completamente Docker: stops + removes containers, images, volumes, custom networks, build cache. Idempotente. Reporta espacio liberado. | "limpia docker", "wipe docker", "reset docker" | `docker` CLI |
-
----
-
-## Instalación
-
-### Linux / macOS
-
-```bash
-git clone https://github.com/<your-user>/claude-skills-toolkit.git
-cd claude-skills-toolkit
-./scripts/install.sh
+```
+skills/<nombre>/
+├── SKILL.md          # Contrato · frontmatter YAML + descripción + triggers
+├── <script>.py|.sh   # Lógica ejecutable
+└── README.md         # (opcional) demo extendido
 ```
 
-### Windows (PowerShell)
+El agente lee el `description` del frontmatter para decidir **cuándo** invocarlo automáticamente. El script vive en `~/.claude/skills/<nombre>/` (instalado vía symlink) y se ejecuta sobre `Path.cwd()` — el repo donde estás trabajando ahora.
+
+```mermaid
+flowchart LR
+    A[👤 Usuario habla] --> B{🧠 Modelo<br/>matchea triggers}
+    B -->|invoca| C[⚙️ Skill script]
+    C -->|Path.cwd| D[📁 Repo del usuario]
+    D --> E[📝 Reporte / cambios]
+    style A fill:#1f6feb,color:#fff
+    style B fill:#8957e5,color:#fff
+    style C fill:#2da44e,color:#fff
+    style D fill:#bf8700,color:#fff
+    style E fill:#cf222e,color:#fff
+```
+
+---
+
+## 🗂️ Catálogo
+
+<table>
+<thead>
+<tr>
+<th width="22%">Skill</th>
+<th width="48%">Qué hace</th>
+<th width="20%">Triggers</th>
+<th width="10%">Deps</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+
+### 🔒 [security-audit](skills/security-audit/)
+<sub>1565 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Auditoría en **12 capas**: OSV.dev · CISA KEV · EPSS · Bandit SAST · trivy/grype · gitleaks · zizmor · hadolint · typosquat heurístico.
+Genera reporte Markdown con **Plan de Remediación transversal**. Modo `--apply --verify` aplica bumps y los revierte si los tests fallan.
+
+</td>
+<td>
+
+🔎 `audita seguridad`<br>
+🛡️ `scan CVE`<br>
+🚨 `vulnerability scan`
+
+</td>
+<td>
+
+stdlib<br>
+<sub>(opt-in: bandit, trivy, gitleaks, zizmor, hadolint)</sub>
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 📋 [yaml-control](skills/yaml-control/)
+<sub>271 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Validación YAML en 3 capas: sintaxis + `actionlint` para workflows + convenciones del repo (actions pinneadas a SHA, permisos explícitos, `fail-fast: false` en matrices).
+
+</td>
+<td>
+
+✅ `valida los yaml`<br>
+🔧 `lint yaml`<br>
+⚙️ `actionlint`
+
+</td>
+<td>
+
+`pyyaml`<br>
+<sub>(opt-in: actionlint)</sub>
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 📝 [md-lint-fix](skills/md-lint-fix/)
+<sub>359 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Detecta y auto-corrige `markdownlint-cli2`: MD024 con contexto del padre, MD040 infiriendo idioma, MD031/32/34/28/27/22 vía `--fix`. Trabaja sobre `.md` modificados según `git`.
+
+</td>
+<td>
+
+✨ `arregla el lint MD`<br>
+📄 `corrige los markdown`
+
+</td>
+<td>
+
+`markdownlint-cli2`<br>
+<sub>(npm)</sub>
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 🐳 [docker-cleanup](skills/docker-cleanup/)
+<sub>67 LOC · Bash · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Wipe completo de Docker: containers + images + volumes + custom networks + build cache. Idempotente. Reporta espacio liberado con `docker system df` antes/después.
+
+</td>
+<td>
+
+🧹 `limpia docker`<br>
+💥 `wipe docker`<br>
+♻️ `reset docker`
+
+</td>
+<td>
+
+`docker` CLI
+
+</td>
+</tr>
+</tbody>
+</table>
+
+---
+
+## 📦 Instalación
+
+> **Prerequisitos:** 🐍 Python 3.11+ · 🌿 Git · 🤖 (opcional) [Claude Code](https://claude.com/claude-code).
+
+### ⚡ Instalación en una máquina nueva (one-liner)
+
+**🐧 Linux · 🍎 macOS · Git Bash:**
+
+```bash
+git clone https://github.com/vladimiracunadev-create/claude-skills-toolkit.git ~/claude-skills-toolkit \
+  && cd ~/claude-skills-toolkit \
+  && ./scripts/install.sh
+```
+
+**🪟 Windows · PowerShell:**
 
 ```powershell
-git clone https://github.com/<your-user>/claude-skills-toolkit.git
-cd claude-skills-toolkit
-.\scripts\install.ps1
+git clone https://github.com/vladimiracunadev-create/claude-skills-toolkit.git $env:USERPROFILE\claude-skills-toolkit; `
+  cd $env:USERPROFILE\claude-skills-toolkit; `
+  .\scripts\install.ps1
 ```
 
-El script crea **symlinks** (no copia) desde `~/.claude/skills/<skill>/` hacia este repo. Esto permite que:
+> 💡 **Windows.** Para que los symlinks funcionen activa **Developer Mode** (*Settings → Privacy & security → For developers*) o ejecuta PowerShell como administrador. Si no, `install.ps1` cae a copia automáticamente.
 
-1. `git pull` actualiza los skills automáticamente
-2. Editas un skill en este repo y el cambio aplica de inmediato
-3. Puedes desinstalar con `unlink` sin perder el código
-
-### Instalación manual (sin script)
+### 🔄 Actualizar en cualquier equipo
 
 ```bash
-cp -r skills/security-audit ~/.claude/skills/
-cp -r skills/yaml-control ~/.claude/skills/
-# ... etc
+cd ~/claude-skills-toolkit && git pull
 ```
+
+Como la instalación usa symlinks, `git pull` propaga los cambios en caliente — sin reinstalar.
+
+### 🔍 Qué hace el instalador
+
+```mermaid
+flowchart TD
+    A[git clone] --> B[./scripts/install.sh]
+    B --> C{Para cada skill}
+    C --> D[¿Existe symlink<br/>previo?]
+    D -->|sí| E[🗑️ rm symlink]
+    D -->|no| F
+    E --> F[🔗 ln -s repo → ~/.claude/skills]
+    F --> G[✅ Claude Code lo<br/>descubre al iniciar]
+    style A fill:#1f6feb,color:#fff
+    style G fill:#2da44e,color:#fff
+```
+
+Es idempotente. Ventajas frente a copiar:
+
+- 🚀 `git pull` basta para actualizar todos los equipos.
+- 🔥 Editar un skill en el repo aplica en caliente.
+- 🧹 Desinstalar = borrar el symlink (el repo queda intacto).
+
+Detalles completos —incluyendo troubleshooting, instalación paso a paso y sincronización de varios equipos— en [INSTALL.md](INSTALL.md).
 
 ---
 
-## Uso
+## 🚀 Uso
 
-Una vez instalados, los skills aparecen disponibles en cualquier sesión de Claude Code. Algunos ejemplos:
+Una vez instalados, los skills se invocan **conversacionalmente** desde Claude Code:
 
 ```text
 > audita la seguridad de este repo
-  → invoca security-audit · genera SECURITY_AUDIT_<fecha>.md
+  → 🔒 invoca security-audit · genera SECURITY_AUDIT_<fecha>.md
 
 > valida los workflows antes de pushear
-  → invoca yaml-control · revisa .github/workflows/*.yml
+  → 📋 invoca yaml-control · revisa .github/workflows/*.yml
 
 > arregla los markdown modificados
-  → invoca md-lint-fix · corrige .md según git status
+  → 📝 invoca md-lint-fix · corrige .md según git status
 
 > limpia docker
-  → invoca docker-cleanup · libera espacio
+  → 🐳 invoca docker-cleanup · libera espacio
 ```
 
-También puedes invocarlos directamente como scripts:
+También como scripts directos:
 
 ```bash
 python ~/.claude/skills/security-audit/security_audit.py --layers all --min-severity high
@@ -92,69 +255,109 @@ bash   ~/.claude/skills/docker-cleanup/scripts/wipe.sh
 
 ---
 
-## Diseño
+## 🧭 Diseño
 
-### Principios
+### 🎯 Principios
 
-1. **Cero dependencias por defecto** — los skills funcionan con Python stdlib. Las capas avanzadas son opt-in y degradan silenciosamente si la herramienta no está instalada.
-2. **Trabajan desde `Path.cwd()`** — no importa desde qué carpeta los invoques; operan sobre el repo actual.
-3. **Honestidad sobre limitaciones** — cada `SKILL.md` documenta qué hace y qué NO hace, incluyendo riesgos conocidos (ej. `security-audit --apply` sin `--verify` puede romper el build).
-4. **Cross-platform** — funcionan en Linux, macOS y Windows (Git Bash / MINGW). Solo el shell script `docker-cleanup/wipe.sh` requiere bash.
+| | |
+|---|---|
+| 🪶 **Zero-deps por defecto** | Funcionan con Python stdlib. Las capas avanzadas son opt-in y degradan silenciosamente si la herramienta no está disponible. |
+| 📁 **`Path.cwd()`-centric** | No importa desde qué carpeta se invoquen — operan sobre el repo actual. |
+| 🔍 **Honestidad sobre límites** | Cada `SKILL.md` documenta qué hace, qué **no** hace, y los riesgos (ej. `--apply` sin `--verify` puede romper el build). |
+| 🌐 **Cross-platform** | Linux, macOS, Windows (Git Bash / MINGW / PowerShell). Solo `docker-cleanup` requiere bash. |
+| 🐕 **Eat your own dog food** | El propio repo se valida con `yaml-control` + `md-lint-fix` en [CI](.github/workflows/ci.yml). |
 
-### Estructura de un skill
+### 🧬 Anatomía de un skill
 
 ```
 skills/<nombre>/
-├── SKILL.md          ← obligatorio: frontmatter + triggers + uso
+├── SKILL.md          ← obligatorio · frontmatter + triggers + uso
 ├── <script>.py|.sh   ← lógica
-└── README.md         ← (opcional) demo extendido / screenshots
+└── README.md         ← opcional · screenshots, demos
 ```
 
-El frontmatter del `SKILL.md` debe tener:
+El frontmatter mínimo:
 
 ```yaml
 ---
 name: nombre-del-skill
-description: Qué hace + cuándo invocarlo (los triggers van aquí).
-              El agente lee este campo para decidir si activarlo.
+description: Qué hace + cuándo invocarlo (triggers en español e inglés).
+             El agente lee este campo para decidir si activarlo.
 ---
 ```
 
 ---
 
-## Crear un skill nuevo
+## 🆕 Crear un skill nuevo
 
 ```bash
 cp -r skills/_template skills/mi-skill
-# Editar skills/mi-skill/SKILL.md y mi_skill.py
+# Editar skills/mi-skill/SKILL.md y main.py
 ./scripts/install.sh
 ```
 
-Ver [`CONTRIBUTING.md`](CONTRIBUTING.md) para más detalles.
+Ver [CONTRIBUTING.md](CONTRIBUTING.md) para las reglas completas.
 
 ---
 
-## Roadmap
+## 📚 Documentación
 
-- [ ] `react-component-scaffold` — genera componente React + tests + stories desde una descripción
-- [ ] `sql-migration-safety` — analiza migraciones DB antes de aplicar (lock holding, fk cascades)
-- [ ] `dependency-cleanup` — detecta deps no usadas en `requirements.txt` / `package.json`
-- [ ] `commit-message-improve` — reescribe commit messages siguiendo conventional commits
-- [ ] integración con [Cursor](https://www.cursor.com/) y [Windsurf](https://codeium.com/windsurf)
+| Documento | Para qué |
+|---|---|
+| 📘 [README.md](README.md) | Entry point · catálogo + quick start *(estás aquí)* |
+| 📦 [INSTALL.md](INSTALL.md) | Instalación, actualización y sincronización entre equipos |
+| 🤝 [CONTRIBUTING.md](CONTRIBUTING.md) | Cómo añadir un skill nuevo + estilo de código |
+| 📋 [CHANGELOG.md](CHANGELOG.md) | Historial de versiones (Keep a Changelog + SemVer) |
+| 🗺️ [ROADMAP.md](ROADMAP.md) | Próximos hitos y no-objetivos explícitos |
+| 🔐 [SECURITY.md](SECURITY.md) | Política de seguridad y cómo reportar vulnerabilidades |
+| 🆘 [SUPPORT.md](SUPPORT.md) | Canales por tipo de problema · cómo pedir ayuda |
+| 🤗 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Código de conducta de la comunidad |
+| 🏗️ [docs/architecture.md](docs/architecture.md) | Arquitectura interna · decisiones de diseño |
+| 💼 [RECRUITER.md](RECRUITER.md) | Para reclutadores · qué demuestra este proyecto |
 
 ---
 
-## Licencia
+## 🗺️ Roadmap
 
-MIT — ver [LICENSE](LICENSE).
+Resumen — versión completa en [ROADMAP.md](ROADMAP.md).
+
+- [ ] ⚛️ `react-component-scaffold` — genera componente React + tests + stories
+- [ ] 🗃️ `sql-migration-safety` — analiza migraciones DB (lock holding, FK cascades)
+- [ ] 🧹 `dependency-cleanup` — detecta dependencias sin uso en `requirements.txt` / `package.json`
+- [ ] ✍️ `commit-message-improve` — reescribe commits siguiendo conventional commits
+- [ ] 🔌 Integración explícita con [Cursor](https://www.cursor.com/) y [Windsurf](https://codeium.com/windsurf)
+
+¿Sugerencias? 💬 Abre un [issue](https://github.com/vladimiracunadev-create/claude-skills-toolkit/issues).
 
 ---
 
-## Contribuir
+## 🤝 Contribuir
 
-PRs bienvenidos. Reglas mínimas:
+PRs bienvenidos. Antes de abrir uno, revisa [CONTRIBUTING.md](CONTRIBUTING.md). Reglas mínimas:
 
-1. Cada skill debe ser **autónomo** (sin paths absolutos al sistema del autor)
-2. `SKILL.md` con frontmatter completo
-3. Si requiere binarios externos: documentarlo + degradar gracefully si no está
-4. Tests en `tests/` si la lógica es no-trivial
+1. 🎒 Cada skill debe ser **autónomo** (sin paths absolutos al sistema del autor).
+2. 📜 `SKILL.md` con frontmatter completo (`name` + `description` con triggers).
+3. 🪶 Cero dependencias por defecto. Si requiere binarios externos: documentarlo y degradar gracefully.
+4. 🧪 Tests en `tests/` si la lógica es no-trivial.
+
+---
+
+## 📄 Licencia
+
+[MIT](LICENSE) © 2026 [Vladimir Acuña](https://github.com/vladimiracunadev-create)
+
+<div align="center">
+
+### 🌟 Otros proyectos del autor
+
+[🤖 langgraph-realworld](https://github.com/vladimiracunadev-create/langgraph-realworld) ·
+[🗄️ gabysql](https://github.com/vladimiracunadev-create/gabysql) ·
+[🧪 problem-driven-systems-lab](https://github.com/vladimiracunadev-create/problem-driven-systems-lab) ·
+[📚 python-data-science-program](https://github.com/vladimiracunadev-create/python-data-science-program) ·
+[🐳 docker-labs](https://github.com/vladimiracunadev-create/docker-labs)
+
+---
+
+<sub>Hecho con ☕ y demasiados PRs revisados a la 1 a.m.</sub>
+
+</div>

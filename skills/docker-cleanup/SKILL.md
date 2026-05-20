@@ -1,6 +1,12 @@
 ---
 name: docker-cleanup
-description: Use this skill when the user asks to wipe / empty / clean / reset Docker — typical phrasings include "limpia docker", "deja docker vacío", "borra todas las imágenes docker", "wipe docker", "docker prune todo", "vacía el docker", "reset docker". Performs a complete cleanup: stops and removes every container, removes every image, removes every named volume, removes every custom network, and clears the build cache. Default networks (bridge, host, none) are kept because Docker recreates them automatically. Single-action skill — no intermediate confirmations.
+description: |
+  Use this skill when the user asks to wipe / empty / clean / reset Docker — typical phrasings include
+  "limpia docker", "deja docker vacío", "borra todas las imágenes docker", "wipe docker",
+  "docker prune todo", "vacía el docker", "reset docker". Performs a complete cleanup — stops and
+  removes every container, removes every image, removes every named volume, removes every custom
+  network, and clears the build cache. Default networks (bridge, host, none) are kept because
+  Docker recreates them automatically. Single-action skill — no intermediate confirmations.
 ---
 
 # docker-cleanup
