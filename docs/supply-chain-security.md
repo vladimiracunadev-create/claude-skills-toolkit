@@ -97,6 +97,64 @@ El skill [`security-audit`](../skills/security-audit/) parsea `package.json` + `
 
 ---
 
+## Gotchas operacionales detectados al aplicar la política
+
+Al migrar 5 repos públicos (mayo 2026) aparecieron 3 trampas que el playbook ingenuo no cubre:
+
+### 1. `pnpm@11.0.0` requiere Node ≥ 22.13
+
+pnpm v11 usa `node:sqlite`, módulo built-in introducido en Node 22.13. Repos con `setup-node` en Node 20 fallan en `Setup pnpm` con:
+
+```
+warn: This version of pnpm requires at least Node.js v22.13
+Error [ERR_UNKNOWN_BUILTIN_MODULE]: No such built-in module: node:sqlite
+```
+
+**Fix:** bumpear `node-version: '22'` en todos los `actions/setup-node` y `FROM node:22-alpine` en Dockerfiles cuando migres a pnpm v11. Si necesitas Node 20 por compatibilidad, fija `pnpm@10.x` en `packageManager` y acepta que `minimumReleaseAge=1d` solo está disponible en v11+.
+
+### 2. `version:` en `pnpm/action-setup` + `packageManager` en `package.json` = conflicto
+
+Si declaras la versión en ambos lugares, el action aborta con `ERR_PNPM_BAD_PM_VERSION`:
+
+```
+Error: Multiple versions of pnpm specified:
+  - version 11 in the GitHub Action config with the key "version"
+  - version pnpm@11.0.0 in the package.json with the key "packageManager"
+```
+
+**Fix:** elige uno. `packageManager` en `package.json` es el single source of truth correcto — quita el `with: { version: ... }` del workflow.
+
+### 3. `pnpm/action-setup` no encuentra `package.json` cuando vive en un sub-package
+
+En repos sin `package.json` raíz (típico en monorepos: solo hay `apps/foo/package.json` o `09-foo/package.json`), el action no detecta `packageManager` y falla con `Error: No pnpm version is specified`.
+
+**Fix:** apunta explícitamente al sub-package:
+
+```yaml
+- name: Setup pnpm
+  uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
+  with:
+    package_json_file: apps/foo/package.json
+```
+
+### 4. Dockerfiles también necesitan migración
+
+Si tu repo tiene Dockerfiles que copian `package-lock.json` y corren `npm ci`, **rompen al hacer build** tras la migración. El playbook estándar olvida esto.
+
+**Fix:** patrón para `node:22-alpine` (corepack incluido):
+
+```dockerfile
+FROM node:22-alpine
+WORKDIR /app
+RUN corepack enable
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile --prod
+COPY --chown=node:node . .
+CMD ["pnpm", "start"]
+```
+
+---
+
 ## Recomendaciones para los usuarios del toolkit
 
 Si tu repo consume paquetes Node:
