@@ -88,7 +88,7 @@ Cada skill documenta explícitamente:
 - Stack: Python · Node.js · Rust · Docker · LangGraph · AWS · Data Science · ML.
 - Portfolio: [vladimiracunadev-create.github.io](https://vladimiracunadev-create.github.io)
 - GitHub: [@vladimiracunadev-create](https://github.com/vladimiracunadev-create)
-- Email: vladimir.acuna.dev@gmail.com
+- Email: [vladimir.acuna.dev@gmail.com](mailto:vladimir.acuna.dev@gmail.com)
 
 Otros repos que pueden interesarte:
 

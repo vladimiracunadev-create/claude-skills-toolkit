@@ -51,6 +51,7 @@ Bumps se aplican a la **versión mínima que arregla** (minimal blast radius), n
 ## Cuándo invocar este skill
 
 Triggers en español:
+
 - "audita la seguridad del repo / del proyecto"
 - "busca vulnerabilidades / CVEs"
 - "revisa ataques de ciberseguridad al repo"
@@ -59,6 +60,7 @@ Triggers en español:
 - "scan CVE / security scan"
 
 Triggers en inglés:
+
 - "security audit", "vulnerability scan", "CVE check"
 - "audit dependencies", "find vulnerable packages"
 
@@ -182,6 +184,7 @@ python ~/.claude/skills/security-audit/security_audit.py
 ### 4) Aplicación de fixes (`--apply`)
 
 Para cada hallazgo con `fixed_versions` disponible:
+
 - Si el manifest es `requirements.txt` / `requirements.in` con pin `pkg==X`,
   reemplaza por `pkg==<fixed_version>`.
 - Si es `pyproject.toml` / `package.json` con constraint range, ajusta.
@@ -215,7 +218,7 @@ Después del bump, intenta correr `pip-compile` para `.in` → `.txt` si está d
 
 ## Salida esperada (ejemplo)
 
-```
+```text
 Security audit — repo: C:/dev/langgraph-realworld
   Detectados: 26 manifests PyPI, 0 npm, 0 otros
   Consultando OSV.dev (batch 26 grupos)... OK

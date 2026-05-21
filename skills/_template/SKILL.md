@@ -12,11 +12,13 @@ Descripción extendida del skill. Qué problema resuelve. Por qué existe.
 ## Cuándo invocar este skill
 
 Triggers explícitos:
+
 - "frase en español 1"
 - "frase en español 2"
 - "english phrase 1"
 
 Triggers proactivos (cuándo el agente debería usarlo sin que se lo pidan):
+
 - Después de X
 - Antes de Y
 
@@ -63,6 +65,6 @@ python .../main.py --flag         # variante
 
 ## Ejemplos de salida
 
-```
+```text
 ejemplo de output
 ```

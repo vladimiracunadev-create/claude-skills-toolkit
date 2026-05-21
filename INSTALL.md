@@ -184,7 +184,7 @@ Get-ChildItem $env:USERPROFILE\.claude\skills | Where-Object { $_.LinkType -eq "
 |---|---|---|
 | **security-audit** | Python stdlib | `pip install bandit` · `trivy` · `grype` · `gitleaks` · `zizmor` · `hadolint` |
 | **yaml-control** | `pip install pyyaml` | [`actionlint`](https://github.com/rhysd/actionlint) |
-| **md-lint-fix** | Node + `npm install -g markdownlint-cli2` | — |
+| **md-lint-fix** | Node + `pnpm add -g markdownlint-cli2` | — |
 | **docker-cleanup** | `docker` CLI + bash | — |
 
 Las dependencias opcionales **no son requeridas**: el skill detecta su ausencia, salta esa capa y deja constancia en el reporte.

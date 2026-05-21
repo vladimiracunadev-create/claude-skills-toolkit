@@ -46,8 +46,16 @@ jobs:
         with:
           node-version: "20"
 
+      # Usamos pnpm en lugar de npm para reducir superficie ante ataques tipo
+      # Shai-Hulud (postinstall bloqueado por defecto + minimumReleaseAge=1d).
+      # Ver docs/supply-chain-security.md.
+      - name: Install pnpm
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
+        with:
+          version: 11
+
       - name: Install markdownlint-cli2
-        run: npm install -g markdownlint-cli2
+        run: pnpm add -g markdownlint-cli2
 
       - name: Lint Markdown files (report-only)
         run: |

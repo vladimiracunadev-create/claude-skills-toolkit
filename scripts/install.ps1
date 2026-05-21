@@ -16,19 +16,21 @@ Write-Host ""
 
 $count = 0
 Get-ChildItem -Path "$RepoDir\skills" -Directory | ForEach-Object {
-    $skillName = $_.Name
+    $skill = $_
+    $skillName = $skill.Name
     if ($skillName -eq "_template") { return }
     $target = Join-Path $SkillsDir $skillName
     if (Test-Path $target) {
         Remove-Item $target -Recurse -Force
     }
     try {
-        New-Item -ItemType SymbolicLink -Path $target -Target $_.FullName -Force | Out-Null
-        Write-Host "  + $skillName -> $($_.FullName)"
+        New-Item -ItemType SymbolicLink -Path $target -Target $skill.FullName -Force | Out-Null
+        Write-Host "  + $skillName -> $($skill.FullName)"
     } catch {
         # Fallback a copia si symlink falla (sin Dev Mode/admin)
-        Write-Host "  ! symlink falló ($_), copiando..."
-        Copy-Item $_.FullName -Destination $target -Recurse -Force
+        $errMsg = $_.Exception.Message
+        Write-Host "  ! symlink fallo ($errMsg), copiando..."
+        Copy-Item -Path $skill.FullName -Destination $target -Recurse -Force
         Write-Host "  + $skillName (copiado)"
     }
     $count++

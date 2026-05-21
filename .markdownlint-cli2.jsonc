@@ -1,0 +1,41 @@
+// markdownlint-cli2 config para claude-skills-toolkit
+// Aplicado tanto por CI (.github/workflows/ci.yml) como por skills/md-lint-fix.
+{
+  "config": {
+    // Default: solo aceptar headings duplicados si están bajo distinto padre.
+    // Esto es lo idiomático para Keep a Changelog (cada release tiene "### Añadido")
+    // y para docs que repiten "### Linux · macOS" / "### Windows" en varias secciones.
+    "MD024": { "siblings_only": true },
+
+    // MD013 (line-length) — desactivado: el README usa tablas HTML y bloques largos
+    // intencionalmente para legibilidad en GitHub.
+    "MD013": false,
+
+    // MD033 (no-inline-html) — desactivado: el README usa <table>, <sub>, <br>, <details>
+    // intencionalmente para layout que markdown puro no soporta.
+    "MD033": false,
+
+    // MD060 (table-column-style) — desactivado: el repo usa el estilo "compact"
+    // de forma consistente; reformatearlo no aporta valor.
+    "MD060": false,
+
+    // MD041 (first-line-h1) — desactivado: el README empieza con <div align="center">
+    // para el banner de badges; el h1 viene justo después.
+    "MD041": false,
+
+    // MD001 (heading-increment) — desactivado: el banner centrado usa h1 + h3
+    // (subtítulo) intencionalmente, sin h2 intermedio.
+    "MD001": false,
+
+    // MD051 (link-fragments) — desactivado: GitHub resuelve correctamente los
+    // anchors con emojis y acentos (#-catálogo, #-instalación, etc.),
+    // pero markdownlint no los valida bien.
+    "MD051": false
+  },
+  "ignores": [
+    "node_modules",
+    ".venv",
+    "**/.venv-validation",
+    "**/worktrees/**"
+  ]
+}

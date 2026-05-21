@@ -13,6 +13,7 @@ Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de segur
 [![Platforms](https://img.shields.io/badge/platforms-linux%20%7C%20macOS%20%7C%20windows-555?logo=linux&logoColor=white)](#-instalación)
 [![CI](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-8%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
+[![Supply chain hardened](https://img.shields.io/badge/supply%20chain-hardened-2da44e?logo=shieldsdotio&logoColor=white)](docs/supply-chain-security.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?logo=github)](CONTRIBUTING.md)
 [![Made with ❤ in Chile](https://img.shields.io/badge/made_in-Chile-d52b1e)](https://github.com/vladimiracunadev-create)
 
@@ -26,7 +27,7 @@ Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de segur
 
 Un **skill** es una carpeta autocontenida que el agente carga al iniciar la sesión:
 
-```
+```text
 skills/<nombre>/
 ├── SKILL.md          # Contrato · frontmatter YAML + descripción + triggers
 ├── <script>.py|.sh   # Lógica ejecutable
@@ -66,6 +67,7 @@ flowchart LR
 <td>
 
 ### 🔒 [security-audit](skills/security-audit/)
+
 <sub>1565 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
 
 </td>
@@ -93,6 +95,7 @@ stdlib<br>
 <td>
 
 ### 📋 [yaml-control](skills/yaml-control/)
+
 <sub>271 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
 
 </td>
@@ -119,6 +122,7 @@ Validación YAML en 3 capas: sintaxis + `actionlint` para workflows + convencion
 <td>
 
 ### 📝 [md-lint-fix](skills/md-lint-fix/)
+
 <sub>359 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
 
 </td>
@@ -136,7 +140,7 @@ Detecta y auto-corrige `markdownlint-cli2`: MD024 con contexto del padre, MD040 
 <td>
 
 `markdownlint-cli2`<br>
-<sub>(npm)</sub>
+<sub>(pnpm)</sub>
 
 </td>
 </tr>
@@ -144,6 +148,7 @@ Detecta y auto-corrige `markdownlint-cli2`: MD024 con contexto del padre, MD040 
 <td>
 
 ### 🐳 [docker-cleanup](skills/docker-cleanup/)
+
 <sub>67 LOC · Bash · ![status](https://img.shields.io/badge/stable-green)</sub>
 
 </td>
@@ -266,10 +271,11 @@ bash   ~/.claude/skills/docker-cleanup/scripts/wipe.sh
 | 🔍 **Honestidad sobre límites** | Cada `SKILL.md` documenta qué hace, qué **no** hace, y los riesgos (ej. `--apply` sin `--verify` puede romper el build). |
 | 🌐 **Cross-platform** | Linux, macOS, Windows (Git Bash / MINGW / PowerShell). Solo `docker-cleanup` requiere bash. |
 | 🐕 **Eat your own dog food** | El propio repo se valida con `yaml-control` + `md-lint-fix` en [CI](.github/workflows/ci.yml). |
+| 🛡️ **Supply chain hardened** | Cualquier dependencia Node usa `pnpm v11` (postinstall bloqueado + cuarentena de 24 h por defecto). Actions pinneadas a SHA. Ver [docs/supply-chain-security.md](docs/supply-chain-security.md). |
 
 ### 🧬 Anatomía de un skill
 
-```
+```text
 skills/<nombre>/
 ├── SKILL.md          ← obligatorio · frontmatter + triggers + uso
 ├── <script>.py|.sh   ← lógica
@@ -310,6 +316,7 @@ Ver [CONTRIBUTING.md](CONTRIBUTING.md) para las reglas completas.
 | 📋 [CHANGELOG.md](CHANGELOG.md) | Historial de versiones (Keep a Changelog + SemVer) |
 | 🗺️ [ROADMAP.md](ROADMAP.md) | Próximos hitos y no-objetivos explícitos |
 | 🔐 [SECURITY.md](SECURITY.md) | Política de seguridad y cómo reportar vulnerabilidades |
+| 🛡️ [docs/supply-chain-security.md](docs/supply-chain-security.md) | Política frente a ataques Shai-Hulud · por qué `pnpm` en vez de `npm` |
 | 🆘 [SUPPORT.md](SUPPORT.md) | Canales por tipo de problema · cómo pedir ayuda |
 | 🤗 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Código de conducta de la comunidad |
 | 🏗️ [docs/architecture.md](docs/architecture.md) | Arquitectura interna · decisiones de diseño |

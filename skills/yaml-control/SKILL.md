@@ -74,10 +74,12 @@ Sólo se ejecuta si el archivo está en `.github/workflows/`.
 ### Capa 3 — convenciones del repo
 
 - **Actions con SHA pinneado**: `uses: actions/checkout@<sha>` no `@v4`. Catches:
+
   ```yaml
   - uses: actions/checkout@v4   # ❌ warning
   - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # ✅
   ```
+
 - **Permisos explícitos**: cada workflow debe declarar `permissions: ...` a nivel root.
 - **`fail-fast: false`** en matrices con más de 5 elementos (para que un fallo no cancele el resto).
 
@@ -102,7 +104,7 @@ Si `actionlint` no está disponible, sigue con sólo las capas 1 y 3 y reporta:
 
 ## Salida esperada
 
-```
+```text
 YAML control — repo: C:/dev/langgraph-realworld
   scope: 3 archivos modificados (.github/workflows/ci.yml, .github/workflows/security.yml, cases/22-.../compose.yml)
 

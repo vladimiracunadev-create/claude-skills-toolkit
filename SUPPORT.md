@@ -77,4 +77,4 @@ Idealmente sobre un repo público o un mínimo reproducible.
 
 ## 📧 ¿Y si nada de esto funciona?
 
-Email directo al mantenedor: **vladimir.acuna.dev@gmail.com**. Úsalo como **último recurso** — los canales públicos son más rápidos porque cualquier contribuyente puede responder.
+Email directo al mantenedor: **[vladimir.acuna.dev@gmail.com](mailto:vladimir.acuna.dev@gmail.com)**. Úsalo como **último recurso** — los canales públicos son más rápidos porque cualquier contribuyente puede responder.

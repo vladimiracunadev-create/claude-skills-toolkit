@@ -6,7 +6,7 @@
 
 ## 🌳 Vista en árbol
 
-```
+```text
 claude-skills-toolkit/
 ├── 📘 README.md              ← entry point · catálogo + quick start
 ├── 📦 INSTALL.md             ← instalación / desinstalación / troubleshooting

@@ -11,8 +11,14 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## 🚧 [Unreleased]
 
+### 🛡️ Seguridad
+
+- Migración de `npm` → `pnpm v11` para `md-lint-fix` y CI. Razón: campaña Shai-Hulud en npm (sept 2025 – mayo 2026, 700+ paquetes comprometidos, 14 000 secretos filtrados). pnpm v11 trae postinstall scripts bloqueados por defecto y `minimumReleaseAge=24h` — habría bloqueado todas las oleadas conocidas sin configuración. Documentado en `docs/supply-chain-security.md` con fuentes (CISA, Microsoft, Unit 42, Snyk).
+- Badge "Supply chain hardened" en README + entrada en la tabla de principios.
+
 ### ✨ Añadido
 
+- `docs/supply-chain-security.md` — política frente a ataques de cadena de suministro Node, comparativa npm/pnpm/yarn, decisiones aplicadas en el repo y recomendaciones para usuarios.
 - `docs/skill-promotion.md` — flujo formal de promoción de skills desde `~/.claude/skills/` (uso personal) al catálogo público del toolkit. Incluye checklist, criterio universal/específico, diagrama Mermaid del contrato con el agente y caso de despromoción. Enlazado desde README y CONTRIBUTING.
 - `CHANGELOG.md`, `ROADMAP.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, `SUPPORT.md`, `RECRUITER.md` — alineación con la plantilla del resto de repos del autor.
 - `scripts/uninstall.ps1` — paridad con `uninstall.sh` para Windows.

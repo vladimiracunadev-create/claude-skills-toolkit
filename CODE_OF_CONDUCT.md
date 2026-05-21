@@ -46,7 +46,7 @@ Este código aplica tanto en espacios del proyecto (issues, PRs, discussions, c�
 
 ## ⚖️ Aplicación
 
-Casos de comportamiento abusivo, acosador o de cualquier otra forma inaceptable pueden reportarse contactando al mantenedor en **vladimir.acuna.dev@gmail.com**. Todas las quejas serán revisadas e investigadas, y resultarán en una respuesta proporcional al incidente.
+Casos de comportamiento abusivo, acosador o de cualquier otra forma inaceptable pueden reportarse contactando al mantenedor en [vladimir.acuna.dev@gmail.com](mailto:vladimir.acuna.dev@gmail.com). Todas las quejas serán revisadas e investigadas, y resultarán en una respuesta proporcional al incidente.
 
 El mantenedor está obligado a mantener la confidencialidad respecto a la persona que reportó el incidente.
 

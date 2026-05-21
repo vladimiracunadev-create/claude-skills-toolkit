@@ -172,9 +172,38 @@ def _heading_text(line: str) -> str:
     return re.sub(r"^#{1,6}\s+", "", line).strip()
 
 
-def _parent_heading(lines: list[str], current_idx: int, current_level: int) -> str:
+def _code_block_lines(lines: list[str]) -> set[int]:
+    """Indices de líneas que están dentro de un fence ```...``` o ~~~...~~~.
+
+    Crítico: las líneas dentro de bloques de código suelen empezar con `#`
+    (comentarios shell/python), pero NO son headings markdown — debemos
+    excluirlas de la detección de duplicados y de la búsqueda de padre.
+    """
+    inside: set[int] = set()
+    fence = None  # None | "`" | "~"
+    fence_len = 0
+    for i, line in enumerate(lines):
+        stripped = line.lstrip()
+        m = re.match(r"^(`{3,}|~{3,})", stripped)
+        if m:
+            ch = m.group(1)[0]
+            n = len(m.group(1))
+            if fence is None:
+                fence, fence_len = ch, n
+            elif ch == fence and n >= fence_len:
+                fence, fence_len = None, 0
+            continue
+        if fence is not None:
+            inside.add(i)
+    return inside
+
+
+def _parent_heading(lines: list[str], current_idx: int, current_level: int,
+                    code_idx: set[int]) -> str:
     """Busca el heading padre mas cercano (nivel menor) antes de current_idx."""
     for i in range(current_idx - 1, -1, -1):
+        if i in code_idx:
+            continue
         lvl = _heading_level(lines[i])
         if lvl is not None and lvl < current_level:
             text = _heading_text(lines[i])
@@ -187,14 +216,23 @@ def fix_md024(path: Path, dry_run: bool = False) -> int:
     """Resuelve headings duplicados agregando contexto del heading padre."""
     content = path.read_text(encoding="utf-8")
     lines = content.splitlines(keepends=True)
+    code_idx = _code_block_lines([l.rstrip("\n") for l in lines])
 
-    # Detectar duplicados: (nivel, texto_normalizado) -> lista de indices
-    seen: dict[tuple[int, str], list[int]] = defaultdict(list)
+    # Detectar duplicados respetando "siblings_only" de markdownlint:
+    # dos headings sólo son duplicados si comparten el mismo padre inmediato.
+    # Esto refleja la convención idiomática para CHANGELOGs (cada release tiene
+    # "### Añadido") y docs con secciones espejo "### Linux" / "### Windows".
+    stripped_lines = [l.rstrip("\n") for l in lines]
+    seen: dict[tuple[int, str, str], list[int]] = defaultdict(list)
     for i, line in enumerate(lines):
+        if i in code_idx:
+            continue
         lvl = _heading_level(line)
-        if lvl is not None:
-            key = (lvl, _heading_text(line).lower())
-            seen[key].append(i)
+        if lvl is None:
+            continue
+        parent = _parent_heading(stripped_lines, i, lvl, code_idx).lower()
+        key = (lvl, _heading_text(line).lower(), parent)
+        seen[key].append(i)
 
     duplicates = {key: idxs for key, idxs in seen.items() if len(idxs) > 1}
     if not duplicates:
@@ -209,7 +247,7 @@ def fix_md024(path: Path, dry_run: bool = False) -> int:
 
         for position, idx in enumerate(idxs[1:], start=2):
             original = result[idx]
-            parent = _parent_heading([r.rstrip("\n") for r in result], idx, lvl)
+            parent = _parent_heading([r.rstrip("\n") for r in result], idx, lvl, code_idx)
             hashes = "#" * lvl
             orig_text = _heading_text(original)
 
@@ -243,8 +281,11 @@ def run_markdownlint(files: list[Path], fix: bool = False) -> tuple[int, str]:
     rel_paths = [str(f.relative_to(ROOT)).replace("\\", "/") for f in files]
     npx = "npx.cmd" if sys.platform == "win32" else "npx"
     cmd = [npx, "markdownlint-cli2"] + (["--fix"] if fix else []) + rel_paths
-    result = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
-    return result.returncode, result.stdout + result.stderr
+    result = subprocess.run(
+        cmd, capture_output=True, text=True, cwd=ROOT,
+        encoding="utf-8", errors="replace",
+    )
+    return result.returncode, (result.stdout or "") + (result.stderr or "")
 
 
 def parse_error_count(output: str) -> int:
