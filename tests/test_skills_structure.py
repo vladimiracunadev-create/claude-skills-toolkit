@@ -18,7 +18,14 @@ except ImportError as exc:  # pragma: no cover
 
 REPO = Path(__file__).resolve().parent.parent
 SKILLS_DIR = REPO / "skills"
-PRODUCTION_SKILLS = {"security-audit", "yaml-control", "md-lint-fix", "docker-cleanup"}
+PRODUCTION_SKILLS = {
+    "security-audit",
+    "yaml-control",
+    "md-lint-fix",
+    "docker-cleanup",
+    "docker-compose-doctor",
+    "pre-push-guard",
+}
 
 
 def parse_frontmatter(path: Path) -> dict:

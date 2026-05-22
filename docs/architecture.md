@@ -27,10 +27,12 @@ claude-skills-toolkit/
 │
 ├── 🗂️ skills/
 │   ├── _template/         ← copia para crear skills nuevos
-│   ├── 🔒 security-audit/    ← 12 capas · OSV/KEV/EPSS/SAST/...
-│   ├── 📋 yaml-control/      ← yaml + actionlint + convenciones repo
-│   ├── 📝 md-lint-fix/       ← wrapper inteligente de markdownlint-cli2
-│   └── 🐳 docker-cleanup/    ← wipe completo de Docker (bash)
+│   ├── 🔒 security-audit/         ← 12 capas · OSV/KEV/EPSS/SAST/...
+│   ├── 📋 yaml-control/           ← yaml + actionlint + convenciones repo
+│   ├── 📝 md-lint-fix/            ← wrapper inteligente de markdownlint-cli2
+│   ├── 🐳 docker-cleanup/         ← wipe completo de Docker (bash)
+│   ├── 🩺 docker-compose-doctor/  ← análisis estático de compose.yml
+│   └── 🛡️ pre-push-guard/         ← orquestador pre-push (yaml + md + pytest)
 │
 ├── 🧪 tests/                 ← smoke tests (unittest, sin dependencias extras)
 │   └── test_skills_structure.py

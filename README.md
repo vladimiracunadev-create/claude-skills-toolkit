@@ -4,12 +4,12 @@
 
 ### ⚡ Skills agentic listos para producción para [Claude Code](https://claude.com/claude-code) y runtimes compatibles
 
-Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de seguridad multi-fuente, 📋 lint de YAML, 📝 lint de Markdown y 🐳 limpieza de Docker.
+Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de seguridad multi-fuente, 📋 lint de YAML, 📝 lint de Markdown, 🐳 limpieza de Docker, 🩺 diagnóstico de `compose.yml` y 🛡️ guardián pre-push.
 **Sin dependencias innecesarias** — la mayoría usa solo Python stdlib.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Skills](https://img.shields.io/badge/skills-4-1f6feb)](#-catálogo)
+[![Skills](https://img.shields.io/badge/skills-6-1f6feb)](#-catálogo)
 [![Platforms](https://img.shields.io/badge/platforms-linux%20%7C%20macOS%20%7C%20windows-555?logo=linux&logoColor=white)](#-instalación)
 [![CI](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-8%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
@@ -167,6 +167,59 @@ Wipe completo de Docker: containers + images + volumes + custom networks + build
 <td>
 
 `docker` CLI
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 🩺 [docker-compose-doctor](skills/docker-compose-doctor/)
+
+<sub>400 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Análisis estático de `compose.yml`: puertos host duplicados, healthchecks faltantes, `depends_on` sin `condition: service_healthy`, imágenes con `:latest`, volúmenes huérfanos, `env_file` inexistentes. Detecta lo que el schema oficial no captura.
+
+</td>
+<td>
+
+🩺 `revisa el compose`<br>
+🧰 `docker compose lint`<br>
+🚦 `por qué no levanta`
+
+</td>
+<td>
+
+`pyyaml`
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 🛡️ [pre-push-guard](skills/pre-push-guard/)
+
+<sub>322 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Orquestador pre-push: corre `yaml-control` + `md-lint-fix --dry-run` + `pytest` sobre el diff vs `origin/<branch>`. Fail-fast con reporte unificado. Opt-in como git hook con `--install-hook`.
+
+</td>
+<td>
+
+🛡️ `valida antes de pushear`<br>
+✅ `corre todos los checks`<br>
+🪝 `pre-push hook`
+
+</td>
+<td>
+
+stdlib<br>
+<sub>(opt-in: pytest)</sub>
 
 </td>
 </tr>
