@@ -9,7 +9,7 @@
 
 ## 📍 Estado actual — v0.1.0
 
-- 4 skills de producción operativos: [`security-audit`](skills/security-audit/), [`yaml-control`](skills/yaml-control/), [`md-lint-fix`](skills/md-lint-fix/), [`docker-cleanup`](skills/docker-cleanup/).
+- 7 skills de producción operativos: [`security-audit`](skills/security-audit/), [`yaml-control`](skills/yaml-control/), [`md-lint-fix`](skills/md-lint-fix/), [`docker-cleanup`](skills/docker-cleanup/), [`docker-compose-doctor`](skills/docker-compose-doctor/), [`pre-push-guard`](skills/pre-push-guard/), [`web-snap`](skills/web-snap/).
 - Instalación cross-platform (Linux · macOS · Windows) vía symlinks idempotentes.
 - CI propio que valida YAML/Markdown del repo + suite de smoke tests cross-platform.
 - Cobertura documental completa: README, INSTALL, CONTRIBUTING, CHANGELOG, ROADMAP, SECURITY, SUPPORT.

@@ -25,6 +25,7 @@ PRODUCTION_SKILLS = {
     "docker-cleanup",
     "docker-compose-doctor",
     "pre-push-guard",
+    "web-snap",
 }
 
 

@@ -9,7 +9,7 @@ Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de segur
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Skills](https://img.shields.io/badge/skills-6-1f6feb)](#-catálogo)
+[![Skills](https://img.shields.io/badge/skills-7-1f6feb)](#-catálogo)
 [![Platforms](https://img.shields.io/badge/platforms-linux%20%7C%20macOS%20%7C%20windows-555?logo=linux&logoColor=white)](#-instalación)
 [![CI](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-8%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
@@ -220,6 +220,32 @@ Orquestador pre-push: corre `yaml-control` + `md-lint-fix --dry-run` + `pytest` 
 
 stdlib<br>
 <sub>(opt-in: pytest)</sub>
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 📸 [web-snap](skills/web-snap/)
+
+<sub>213 LOC · Python · ![status](https://img.shields.io/badge/stable-green) · ![platform](https://img.shields.io/badge/windows-only-0078D6)</sub>
+
+</td>
+<td>
+
+Screenshots de URLs web en **Windows** usando Chrome/Edge ya instalado. Sin Selenium ni Playwright. Trae al frente la ventana vía `user32.SetWindowPos(HWND_TOPMOST)` antes de capturar. Modo single o batch desde JSON.
+
+</td>
+<td>
+
+📸 `captura pantalla`<br>
+🌐 `screenshot de esta URL`<br>
+📋 `evidencia visual de despliegue`
+
+</td>
+<td>
+
+`pillow`
 
 </td>
 </tr>
