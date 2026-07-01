@@ -11,6 +11,17 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## 🚧 [Unreleased]
 
+_(sin cambios por el momento)_
+
+---
+
+## 🎉 [0.2.0] — 2026-07-01
+
+### ✨ Añadido (highlight)
+
+- `skills/python-version-control/` — nuevo skill: audita drift de versión de Python entre 12+ fuentes de verdad. Primer hito de v0.2.0.
+- `.github/workflows/release.yml` — automatiza publicación de releases: al pushear un tag `v*` empaqueta cada skill como zip individual + un bundle completo del toolkit y crea el GitHub Release con notas extraídas del CHANGELOG.
+
 ### 🛡️ Seguridad
 
 - Migración de `npm` → `pnpm v11` para `md-lint-fix` y CI. Razón: campaña Shai-Hulud en npm (sept 2025 – mayo 2026, 700+ paquetes comprometidos, 14 000 secretos filtrados). pnpm v11 trae postinstall scripts bloqueados por defecto y `minimumReleaseAge=24h` — habría bloqueado todas las oleadas conocidas sin configuración. Documentado en `docs/supply-chain-security.md` con fuentes (CISA, Microsoft, Unit 42, Snyk).
@@ -58,5 +69,6 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ---
 
-[Unreleased]: https://github.com/vladimiracunadev-create/claude-skills-toolkit/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/vladimiracunadev-create/claude-skills-toolkit/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/vladimiracunadev-create/claude-skills-toolkit/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/vladimiracunadev-create/claude-skills-toolkit/releases/tag/v0.1.0

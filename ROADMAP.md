@@ -3,15 +3,16 @@
 > Dirección de `claude-skills-toolkit`. No es un compromiso de fechas — es un orden de prioridades.
 
 [![Status](https://img.shields.io/badge/status-active-2da44e)](https://github.com/vladimiracunadev-create/claude-skills-toolkit)
-[![Version](https://img.shields.io/badge/version-0.1.0-1f6feb)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.2.0-1f6feb)](CHANGELOG.md)
 
 ---
 
-## 📍 Estado actual — v0.1.0 → v0.2.0 en curso
+## 📍 Estado actual — v0.2.0 ✅
 
-- **8 skills de producción operativos**: [`security-audit`](skills/security-audit/), [`yaml-control`](skills/yaml-control/), [`md-lint-fix`](skills/md-lint-fix/), [`docker-cleanup`](skills/docker-cleanup/), [`docker-compose-doctor`](skills/docker-compose-doctor/), [`pre-push-guard`](skills/pre-push-guard/), [`web-snap`](skills/web-snap/), [`python-version-control`](skills/python-version-control/) *(primer hito de v0.2.0)*.
+- **8 skills de producción operativos**: [`security-audit`](skills/security-audit/), [`yaml-control`](skills/yaml-control/), [`md-lint-fix`](skills/md-lint-fix/), [`docker-cleanup`](skills/docker-cleanup/), [`docker-compose-doctor`](skills/docker-compose-doctor/), [`pre-push-guard`](skills/pre-push-guard/), [`web-snap`](skills/web-snap/), [`python-version-control`](skills/python-version-control/).
 - Instalación cross-platform (Linux · macOS · Windows) vía symlinks idempotentes.
 - CI propio que valida YAML/Markdown del repo + suite de smoke tests cross-platform.
+- **Workflow de release automatizado**: cada tag `v*` publica zip por skill + bundle completo.
 - Cobertura documental completa: README, INSTALL, CONTRIBUTING, CHANGELOG, ROADMAP, SECURITY, SUPPORT.
 
 ---
@@ -32,20 +33,24 @@ gantt
     Interoperabilidad    :v04, after v03, 3M
 ```
 
-### 🚀 v0.2.0 — Más skills útiles *(en curso)*
+### 🎉 v0.2.0 — Más skills útiles *(completado 2026-07-01)*
 
-- [x] **`python-version-control`** — audita la coherencia de versión de Python entre 12+ fuentes de verdad (`pyproject.toml`, `Dockerfile`, workflows con `setup-python`, `.python-version`, `runtime.txt`, `tox.ini`, `noxfile.py`, `pre-commit`). Detecta drift y propone versión canónica. `--fix` opt-in con confirmación. *(promovido desde `~/.claude/skills/` — primer hito v0.2.0)*
-- [ ] **`react-component-scaffold`** — genera componente React + tests + stories desde una descripción.
-- [ ] **`sql-migration-safety`** — analiza migraciones de base de datos antes de aplicar (lock holding, FK cascades, full table scans).
-- [ ] **`dependency-cleanup`** — detecta dependencias sin uso en `requirements.txt` / `package.json` / `Cargo.toml`.
-- [ ] **`commit-message-improve`** — reescribe commit messages siguiendo conventional commits.
+- [x] **`python-version-control`** — audita la coherencia de versión de Python entre 12+ fuentes de verdad (`pyproject.toml`, `Dockerfile`, workflows con `setup-python`, `.python-version`, `runtime.txt`, `tox.ini`, `noxfile.py`, `pre-commit`). Detecta drift y propone versión canónica. `--fix` opt-in con confirmación.
+- [x] **Versionado SemVer + tags de release publicados en GitHub** *(adelantado desde v0.3.0)*.
+- [x] **Workflow `release.yml`** que empaqueta cada skill como zip y publica el GitHub Release automáticamente al pushear un tag `v*` *(adelantado desde v0.3.0)*.
+- [ ] **`react-component-scaffold`** — pasa a v0.3.0.
+- [ ] **`sql-migration-safety`** — pasa a v0.3.0.
+- [ ] **`dependency-cleanup`** — pasa a v0.3.0.
+- [ ] **`commit-message-improve`** — pasa a v0.3.0.
 
-### 🏆 v0.3.0 — Calidad y madurez
+### 🏆 v0.3.0 — Calidad, madurez y más skills
 
 - [ ] Tests por skill (no solo estructura) — al menos un happy path por cada uno.
-- [ ] Versionado SemVer + tags de release publicados en GitHub.
-- [ ] Workflow `release.yml` que publique zips de cada skill como release artifact.
 - [ ] `pre-commit` hook configurable que invoque `yaml-control` + `md-lint-fix` localmente.
+- [ ] **`dependency-cleanup`** — detecta dependencias sin uso en `requirements.txt` / `package.json` / `Cargo.toml` (heredado de v0.2.0, siguiente prioridad).
+- [ ] **`commit-message-improve`** — reescribe commit messages siguiendo conventional commits (heredado).
+- [ ] **`sql-migration-safety`** — analiza migraciones de base de datos antes de aplicar (heredado).
+- [ ] **`react-component-scaffold`** — genera componente React + tests + stories desde una descripción (heredado).
 
 ### 🔌 v0.4.0 — Interoperabilidad
 

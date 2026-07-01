@@ -8,6 +8,7 @@ Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de segur
 **Sin dependencias innecesarias** — la mayoría usa solo Python stdlib.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/vladimiracunadev-create/claude-skills-toolkit?logo=github&color=8957e5)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/releases)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![Skills](https://img.shields.io/badge/skills-8-1f6feb)](#-catálogo)
 [![Platforms](https://img.shields.io/badge/platforms-linux%20%7C%20macOS%20%7C%20windows-555?logo=linux&logoColor=white)](#-instalación)
@@ -435,13 +436,16 @@ Ver [CONTRIBUTING.md](CONTRIBUTING.md) para las reglas completas.
 
 Resumen — versión completa en [ROADMAP.md](ROADMAP.md).
 
-**v0.2.0 · en curso:**
+**v0.2.0 · ✅ publicada 2026-07-01** — 🐍 `python-version-control` + workflow de release automatizado.
 
-- [x] 🐍 `python-version-control` — audita drift de versión Python entre 12+ fuentes de verdad
-- [ ] ⚛️ `react-component-scaffold` — genera componente React + tests + stories
-- [ ] 🗃️ `sql-migration-safety` — analiza migraciones DB (lock holding, FK cascades)
+**v0.3.0 · próximo hito:**
+
 - [ ] 🧹 `dependency-cleanup` — detecta dependencias sin uso en `requirements.txt` / `package.json`
 - [ ] ✍️ `commit-message-improve` — reescribe commits siguiendo conventional commits
+- [ ] 🗃️ `sql-migration-safety` — analiza migraciones DB (lock holding, FK cascades)
+- [ ] ⚛️ `react-component-scaffold` — genera componente React + tests + stories
+- [ ] 🧪 Tests por skill (happy path por cada uno)
+- [ ] 🪝 `pre-commit` hook configurable
 - [ ] 🔌 Integración explícita con [Cursor](https://www.cursor.com/) y [Windsurf](https://codeium.com/windsurf)
 
 ¿Sugerencias? 💬 Abre un [issue](https://github.com/vladimiracunadev-create/claude-skills-toolkit/issues).
