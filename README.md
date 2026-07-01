@@ -4,12 +4,12 @@
 
 ### ⚡ Skills agentic listos para producción para [Claude Code](https://claude.com/claude-code) y runtimes compatibles
 
-Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de seguridad multi-fuente, 📋 lint de YAML, 📝 lint de Markdown, 🐳 limpieza de Docker, 🩺 diagnóstico de `compose.yml` y 🛡️ guardián pre-push.
+Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de seguridad multi-fuente, 📋 lint de YAML, 📝 lint de Markdown, 🐳 limpieza de Docker, 🩺 diagnóstico de `compose.yml`, 🛡️ guardián pre-push, 📸 screenshots web y 🐍 coherencia de versión de Python.
 **Sin dependencias innecesarias** — la mayoría usa solo Python stdlib.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Skills](https://img.shields.io/badge/skills-7-1f6feb)](#-catálogo)
+[![Skills](https://img.shields.io/badge/skills-8-1f6feb)](#-catálogo)
 [![Platforms](https://img.shields.io/badge/platforms-linux%20%7C%20macOS%20%7C%20windows-555?logo=linux&logoColor=white)](#-instalación)
 [![CI](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-8%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
@@ -249,6 +249,33 @@ Screenshots de URLs web en **Windows** usando Chrome/Edge ya instalado. Sin Sele
 
 </td>
 </tr>
+<tr>
+<td>
+
+### 🐍 [python-version-control](skills/python-version-control/)
+
+<sub>~540 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Audita la coherencia de versión de Python entre 12+ fuentes de verdad: `pyproject.toml` (`requires-python`, classifiers, `target-version` de ruff/mypy/black), `Dockerfile FROM`, `.github/workflows/*.yml` (`setup-python`), `.python-version`, `runtime.txt`, `tox.ini`, `noxfile.py`, `pre-commit`. Detecta drift y propone versión canónica. `--fix` es opt-in con confirmación.
+
+</td>
+<td>
+
+🐍 `audita versión python`<br>
+🔀 `drift python`<br>
+📌 `python version control`
+
+</td>
+<td>
+
+stdlib<br>
+<sub>(opt-in: `tomli` para Python < 3.11)</sub>
+
+</td>
+</tr>
 </tbody>
 </table>
 
@@ -408,6 +435,9 @@ Ver [CONTRIBUTING.md](CONTRIBUTING.md) para las reglas completas.
 
 Resumen — versión completa en [ROADMAP.md](ROADMAP.md).
 
+**v0.2.0 · en curso:**
+
+- [x] 🐍 `python-version-control` — audita drift de versión Python entre 12+ fuentes de verdad
 - [ ] ⚛️ `react-component-scaffold` — genera componente React + tests + stories
 - [ ] 🗃️ `sql-migration-safety` — analiza migraciones DB (lock holding, FK cascades)
 - [ ] 🧹 `dependency-cleanup` — detecta dependencias sin uso en `requirements.txt` / `package.json`

@@ -7,9 +7,9 @@
 
 ---
 
-## 📍 Estado actual — v0.1.0
+## 📍 Estado actual — v0.1.0 → v0.2.0 en curso
 
-- 7 skills de producción operativos: [`security-audit`](skills/security-audit/), [`yaml-control`](skills/yaml-control/), [`md-lint-fix`](skills/md-lint-fix/), [`docker-cleanup`](skills/docker-cleanup/), [`docker-compose-doctor`](skills/docker-compose-doctor/), [`pre-push-guard`](skills/pre-push-guard/), [`web-snap`](skills/web-snap/).
+- **8 skills de producción operativos**: [`security-audit`](skills/security-audit/), [`yaml-control`](skills/yaml-control/), [`md-lint-fix`](skills/md-lint-fix/), [`docker-cleanup`](skills/docker-cleanup/), [`docker-compose-doctor`](skills/docker-compose-doctor/), [`pre-push-guard`](skills/pre-push-guard/), [`web-snap`](skills/web-snap/), [`python-version-control`](skills/python-version-control/) *(primer hito de v0.2.0)*.
 - Instalación cross-platform (Linux · macOS · Windows) vía symlinks idempotentes.
 - CI propio que valida YAML/Markdown del repo + suite de smoke tests cross-platform.
 - Cobertura documental completa: README, INSTALL, CONTRIBUTING, CHANGELOG, ROADMAP, SECURITY, SUPPORT.
@@ -32,8 +32,9 @@ gantt
     Interoperabilidad    :v04, after v03, 3M
 ```
 
-### 🚀 v0.2.0 — Más skills útiles
+### 🚀 v0.2.0 — Más skills útiles *(en curso)*
 
+- [x] **`python-version-control`** — audita la coherencia de versión de Python entre 12+ fuentes de verdad (`pyproject.toml`, `Dockerfile`, workflows con `setup-python`, `.python-version`, `runtime.txt`, `tox.ini`, `noxfile.py`, `pre-commit`). Detecta drift y propone versión canónica. `--fix` opt-in con confirmación. *(promovido desde `~/.claude/skills/` — primer hito v0.2.0)*
 - [ ] **`react-component-scaffold`** — genera componente React + tests + stories desde una descripción.
 - [ ] **`sql-migration-safety`** — analiza migraciones de base de datos antes de aplicar (lock holding, FK cascades, full table scans).
 - [ ] **`dependency-cleanup`** — detecta dependencias sin uso en `requirements.txt` / `package.json` / `Cargo.toml`.

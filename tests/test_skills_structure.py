@@ -26,6 +26,7 @@ PRODUCTION_SKILLS = {
     "docker-compose-doctor",
     "pre-push-guard",
     "web-snap",
+    "python-version-control",
 }
 
 
