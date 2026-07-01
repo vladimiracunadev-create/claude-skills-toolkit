@@ -32,6 +32,7 @@ claude-skills-toolkit/
 │   ├── 📝 md-lint-fix/            ← wrapper inteligente de markdownlint-cli2
 │   ├── 🐳 docker-cleanup/         ← wipe completo de Docker (bash)
 │   ├── 🩺 docker-compose-doctor/  ← análisis estático de compose.yml
+│   ├── 🪝 pre-commit-guard/       ← orquestador pre-commit (yaml + md sobre staged, sin pytest)
 │   ├── 🛡️ pre-push-guard/         ← orquestador pre-push (yaml + md + pytest)
 │   ├── 📸 web-snap/               ← screenshots de URLs en Windows (Chrome/Edge + Pillow)
 │   └── 🐍 python-version-control/ ← audita drift de versión Python (12+ fuentes)

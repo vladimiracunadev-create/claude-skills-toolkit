@@ -4,13 +4,13 @@
 
 ### ⚡ Skills agentic listos para producción para [Claude Code](https://claude.com/claude-code) y runtimes compatibles
 
-Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de seguridad multi-fuente, 📋 lint de YAML, 📝 lint de Markdown, 🐳 limpieza de Docker, 🩺 diagnóstico de `compose.yml`, 🛡️ guardián pre-push, 📸 screenshots web y 🐍 coherencia de versión de Python.
+Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de seguridad multi-fuente, 📋 lint de YAML, 📝 lint de Markdown, 🐳 limpieza de Docker, 🩺 diagnóstico de `compose.yml`, 🪝 guardián pre-commit, 🛡️ guardián pre-push, 📸 screenshots web y 🐍 coherencia de versión de Python.
 **Sin dependencias innecesarias** — la mayoría usa solo Python stdlib.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/vladimiracunadev-create/claude-skills-toolkit?logo=github&color=8957e5)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/releases)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Skills](https://img.shields.io/badge/skills-8-1f6feb)](#-catálogo)
+[![Skills](https://img.shields.io/badge/skills-9-1f6feb)](#-catálogo)
 [![Platforms](https://img.shields.io/badge/platforms-linux%20%7C%20macOS%20%7C%20windows-555?logo=linux&logoColor=white)](#-instalación)
 [![CI](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-8%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
@@ -194,6 +194,32 @@ Análisis estático de `compose.yml`: puertos host duplicados, healthchecks falt
 <td>
 
 `pyyaml`
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 🪝 [pre-commit-guard](skills/pre-commit-guard/)
+
+<sub>~260 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Gemelo rápido de `pre-push-guard` pero sobre lo **staged**: corre `yaml-control` + `md-lint-fix --dry-run` sobre `git diff --cached` antes de cada commit. Bloquea que un YAML roto o un Markdown malformado entre al historial local. No corre pytest — mantiene el commit < 2s.
+
+</td>
+<td>
+
+🪝 `pre-commit`<br>
+✅ `valida antes de commitear`<br>
+🚦 `guard antes de commit`
+
+</td>
+<td>
+
+stdlib
 
 </td>
 </tr>
@@ -438,14 +464,14 @@ Resumen — versión completa en [ROADMAP.md](ROADMAP.md).
 
 **v0.2.0 · ✅ publicada 2026-07-01** — 🐍 `python-version-control` + workflow de release automatizado.
 
-**v0.3.0 · próximo hito:**
+**v0.3.0 · en curso:**
 
+- [x] 🪝 `pre-commit-guard` — gemelo rápido de `pre-push-guard` sobre lo staged *(primer hito v0.3.0)*
 - [ ] 🧹 `dependency-cleanup` — detecta dependencias sin uso en `requirements.txt` / `package.json`
 - [ ] ✍️ `commit-message-improve` — reescribe commits siguiendo conventional commits
 - [ ] 🗃️ `sql-migration-safety` — analiza migraciones DB (lock holding, FK cascades)
 - [ ] ⚛️ `react-component-scaffold` — genera componente React + tests + stories
 - [ ] 🧪 Tests por skill (happy path por cada uno)
-- [ ] 🪝 `pre-commit` hook configurable
 - [ ] 🔌 Integración explícita con [Cursor](https://www.cursor.com/) y [Windsurf](https://codeium.com/windsurf)
 
 ¿Sugerencias? 💬 Abre un [issue](https://github.com/vladimiracunadev-create/claude-skills-toolkit/issues).

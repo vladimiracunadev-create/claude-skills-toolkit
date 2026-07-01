@@ -11,7 +11,9 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## 🚧 [Unreleased]
 
-_(sin cambios por el momento)_
+### ✨ Añadido
+
+- `skills/pre-commit-guard/` — nuevo skill: gemelo rápido de `pre-push-guard` sobre archivos **staged**. Corre `yaml-control` + `md-lint-fix --dry-run` sobre `git diff --cached --name-only --diff-filter=ACMR` antes de cada `git commit`, con reporte unificado y fail-fast. Objetivo de tiempo < 2s — no corre pytest (los tests pesados quedan para `pre-push-guard`). Soporta `--install-hook` / `--uninstall-hook` para registrarse como git `pre-commit` hook (opt-in, backup automático de hook previo como `.pre-commit.bak`). Cierra el item `pre-commit hook configurable` del ROADMAP v0.3.0. **Justificación:** hasta ahora un YAML roto o Markdown malformado entraba al historial local y forzaba `git commit --amend`/rebase; con este skill el commit se aborta antes. Complementa a `pre-push-guard` sin solaparse (dos capas de defensa: rápida por commit / completa por push). Triggers: "valida antes de commitear", "pre-commit", "guard antes de commit", "instala pre-commit hook".
 
 ---
 

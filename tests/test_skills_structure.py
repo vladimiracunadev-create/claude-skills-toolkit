@@ -27,6 +27,7 @@ PRODUCTION_SKILLS = {
     "pre-push-guard",
     "web-snap",
     "python-version-control",
+    "pre-commit-guard",
 }
 
 
