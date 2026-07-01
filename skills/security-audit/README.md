@@ -13,6 +13,8 @@
 
 Escanea CUALQUIER repositorio contra 12 fuentes de verdad de seguridad, cruza CVEs con explotación activa (CISA KEV) y probabilidad de exploit (EPSS), y produce un **Plan de Remediación transversal** como un único checklist accionable. Opcionalmente aplica los fixes (`--apply`), los verifica corriendo tests (`--verify`) y publica un PR con auto-merge (`--pr`).
 
+**Honestidad sobre cobertura:** el reporte declara explícitamente qué quedó **fuera del scan** — deps sin pin exacto (`flask>=2.0`), sin versión (`pandas`), o manifests sin lockfile — con archivo, línea y % de cobertura real. Un "0 vulnerabilidades" nunca se disfraza de cobertura completa.
+
 ```mermaid
 flowchart LR
     R[📁 Repo cwd] --> D[🔍 Detecta stack<br/>10 ecosistemas]
@@ -160,6 +162,7 @@ Ejemplo de salida resumida:
 ```text
 Security audit — repo: C:/dev/langgraph-realworld
   Detectados: 26 manifests PyPI, 0 npm
+  ⚠ Cobertura: 4 dependencia(s) declaradas FUERA del scan (sin pin exacto o sin lockfile) — detalle en el reporte
   OSV.dev batch (26 grupos) → OK
   CISA KEV → 1342 CVEs vivos (cached)
 Resultados:
@@ -167,6 +170,17 @@ Resultados:
     - 1 critical (CVE-2026-XXXXX en pkg-foo → fix 1.2.5) [CISA KEV ✓]
     - 2 high
 Reporte: SECURITY_AUDIT_2026-05-19.md
+```
+
+Y en el reporte, la sección de cobertura hace el gap explícito:
+
+```markdown
+## 🔍 Cobertura del scan de dependencias
+
+| Dependencia | Declarada como | Archivo | Motivo |
+|---|---|---|---|
+| `flask` | `flask>=2.0` | `requirements.txt:2` | sin pin exacto o formato no soportado |
+| (12 deps) | — | `frontend/package.json` | sin package-lock.json — versiones no resueltas |
 ```
 
 ---
@@ -222,9 +236,11 @@ Todas las opcionales **degradan con warning explícito**, no fallan.
 ## ⚠️ Limitaciones
 
 - **Falsos positivos**: OSV.dev es agresivo. Sin `--apply` el revisor humano decide.
+- **Solo audita versiones exactas resueltas** — pero el gap es **explícito, no silencioso**: la sección "🔍 Cobertura del scan" del reporte lista cada dep sin pin exacto o sin lockfile con archivo:línea, y el resumen ejecutivo muestra el % de cobertura real. Si NINGUNA dep es escaneable, sale con exit 1 y aviso en consola en vez de un engañoso "0 vulnerabilidades".
 - **Deps transitivas**: si el manifest no las pinnea, no se auditan directamente — regenera el lockfile con la herramienta nativa.
 - **Sin red**: falla con mensaje claro si OSV.dev no responde. CISA KEV se cachea 24h en `~/.cache/security-audit/cisa_kev.json`.
 - **Bumps solo a "minimum fixed version"** — evita salto de major innecesario, pero no cierra CVEs que requieren refactor.
+- **No "asegura" la seguridad** — ningún scanner puede. Detecta clases específicas de riesgo *conocido* (CVEs publicadas, secrets commiteados, antipatterns). 0-days, fallas de lógica de negocio y configuración insegura del despliegue quedan fuera de alcance por definición.
 
 ---
 

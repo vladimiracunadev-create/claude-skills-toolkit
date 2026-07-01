@@ -84,6 +84,10 @@ def find_manifests(repo: Path) -> dict[str, list[Path]]:
             found["go_sum"].append(p)
         elif name == "cargo.lock":
             found["cargo_lock"].append(p)
+        elif name == "go.mod":
+            found["go_mod"].append(p)
+        elif name == "cargo.toml":
+            found["cargo_toml"].append(p)
         elif name == "gemfile.lock":
             found["gem_lock"].append(p)
         elif name == "pom.xml":
@@ -211,6 +215,147 @@ def collect_dependencies(repo: Path) -> list[tuple[str, str, str, Path]]:
     for p in manifests.get("cargo_lock", []):
         deps.extend(parse_cargo_lock(p))
     return deps
+
+
+# -------------------------------------------------------------------------
+# Cobertura — deps declaradas que quedaron FUERA del scan
+# -------------------------------------------------------------------------
+
+REQ_NAME_RE = re.compile(r"^([A-Za-z0-9][A-Za-z0-9._\-]*)")
+
+
+def _canon(name: str) -> str:
+    """Canonicaliza nombre de paquete (PEP 503): case-insensitive, -/_ equivalentes."""
+    return name.lower().replace("_", "-")
+
+
+def _declared_in_requirements(path: Path) -> list[tuple[str, str, int]]:
+    """(nombre, línea_cruda, nº_línea) de cada dep declarada en requirements*.txt,
+    incluidas las que el scanner no puede resolver (sin pin, editable, URL)."""
+    out: list[tuple[str, str, int]] = []
+    try:
+        text = path.read_text(encoding="utf-8", errors="replace")
+    except Exception:  # noqa: BLE001
+        return out
+    for lineno, line in enumerate(text.splitlines(), start=1):
+        stripped = line.split("#", 1)[0].strip()
+        if not stripped:
+            continue
+        if stripped.startswith(("-e ", "--editable")):
+            out.append(("(editable)", stripped, lineno))
+            continue
+        if stripped.startswith("-"):
+            continue  # -r, -c, --hash… opciones, no deps
+        if stripped.startswith(("git+", "http://", "https://", "./", "/", "file:")):
+            out.append(("(url/path)", stripped, lineno))
+            continue
+        m = REQ_NAME_RE.match(stripped)
+        if m:
+            out.append((m.group(1), stripped, lineno))
+    return out
+
+
+def _declared_in_pyproject(path: Path) -> list[tuple[str, str]]:
+    """(nombre, spec_cruda) de deps declaradas en pyproject.toml —
+    [project.dependencies], optional-dependencies y [tool.poetry.*]."""
+    try:
+        import tomllib
+    except ImportError:  # pragma: no cover — Python < 3.11
+        return []
+    try:
+        data = tomllib.loads(path.read_text(encoding="utf-8", errors="replace"))
+    except Exception:  # noqa: BLE001
+        return []
+    out: list[tuple[str, str]] = []
+    proj = data.get("project") or {}
+    reqs: list[str] = list(proj.get("dependencies") or [])
+    for lst in (proj.get("optional-dependencies") or {}).values():
+        reqs.extend(lst or [])
+    for raw in reqs:
+        m = REQ_NAME_RE.match(str(raw).strip())
+        if m:
+            out.append((m.group(1), str(raw)))
+    poetry = (data.get("tool") or {}).get("poetry") or {}
+    dep_tables = [poetry.get("dependencies") or {}, poetry.get("dev-dependencies") or {}]
+    for group in (poetry.get("group") or {}).values():
+        dep_tables.append((group or {}).get("dependencies") or {})
+    for table in dep_tables:
+        for name, spec in table.items():
+            if str(name).lower() == "python":
+                continue
+            if isinstance(spec, dict):
+                spec = spec.get("version") or "(tabla compleja)"
+            out.append((str(name), f'{name} = "{spec}"'))
+    return out
+
+
+def _count_package_json_deps(path: Path) -> int:
+    try:
+        data = json.loads(path.read_text(encoding="utf-8", errors="replace"))
+    except Exception:  # noqa: BLE001
+        return 0
+    return len(data.get("dependencies") or {}) + len(data.get("devDependencies") or {})
+
+
+def compute_coverage(repo: Path, deps: list[tuple[str, str, str, Path]]) -> dict:
+    """Detecta dependencias declaradas que quedaron FUERA del scan.
+
+    Compara lo declarado en cada manifest contra lo que los parsers realmente
+    capturaron (deps) — por construcción reporta exactamente el gap del scan,
+    sin duplicar la lógica de parseo. No modifica el comportamiento del scan;
+    solo produce metadatos de cobertura para el reporte.
+    """
+    scanned_by_file: dict[Path, set[str]] = defaultdict(set)
+    for _eco, name, _ver, p in deps:
+        scanned_by_file[p].add(_canon(name))
+
+    unpinned: list[dict] = []
+    not_resolved: list[dict] = []
+    manifests = find_manifests(repo)
+
+    for p in manifests.get("pypi_txt", []):
+        rel = p.relative_to(repo).as_posix()
+        for name, raw, lineno in _declared_in_requirements(p):
+            if _canon(name) not in scanned_by_file.get(p, set()):
+                unpinned.append({"eco": "PyPI", "name": name, "spec": raw,
+                                 "file": f"{rel}:{lineno}",
+                                 "reason": "sin pin exacto o formato no soportado"})
+
+    for p in manifests.get("pypi_pyproject", []):
+        rel = p.relative_to(repo).as_posix()
+        for name, raw in _declared_in_pyproject(p):
+            if _canon(name) not in scanned_by_file.get(p, set()):
+                unpinned.append({"eco": "PyPI", "name": name, "spec": raw,
+                                 "file": rel,
+                                 "reason": "sin pin exacto o formato no soportado"})
+
+    npm_lock_dirs = {p.parent for p in manifests.get("npm_lock", [])}
+    for p in manifests.get("npm_pkg", []):
+        if p.parent in npm_lock_dirs:
+            continue
+        n = _count_package_json_deps(p)
+        if n:
+            not_resolved.append({"eco": "npm", "count": n,
+                                 "file": p.relative_to(repo).as_posix(),
+                                 "reason": "sin package-lock.json — versiones no resueltas"})
+
+    go_sum_dirs = {p.parent for p in manifests.get("go_sum", [])}
+    for p in manifests.get("go_mod", []):
+        if p.parent not in go_sum_dirs:
+            not_resolved.append({"eco": "Go", "count": 0,
+                                 "file": p.relative_to(repo).as_posix(),
+                                 "reason": "sin go.sum — módulos no resueltos"})
+
+    cargo_lock_dirs = {p.parent for p in manifests.get("cargo_lock", [])}
+    for p in manifests.get("cargo_toml", []):
+        if p.parent not in cargo_lock_dirs:
+            not_resolved.append({"eco": "crates.io", "count": 0,
+                                 "file": p.relative_to(repo).as_posix(),
+                                 "reason": "sin Cargo.lock — crates no resueltos"})
+
+    outside = len(unpinned) + sum((x["count"] or 1) for x in not_resolved)
+    return {"unpinned": unpinned, "not_resolved": not_resolved,
+            "scanned_entries": len(deps), "outside_entries": outside}
 
 
 # -------------------------------------------------------------------------
@@ -1014,6 +1159,7 @@ def build_report(
     min_severity: str = "low",
     epss_scores: dict[str, dict] | None = None,
     extra_layers: dict[str, list[dict]] | None = None,
+    coverage: dict | None = None,
 ) -> str:
     epss_scores = epss_scores or {}
     extra_layers = extra_layers or {}
@@ -1052,6 +1198,22 @@ def build_report(
         counts[r["severity"]] += 1
     kev_count = sum(1 for r in rows if r["kev"])
 
+    # Línea de cobertura para el resumen ejecutivo
+    coverage_line = None
+    if coverage is not None:
+        cov_outside = coverage.get("outside_entries", 0)
+        cov_scanned = coverage.get("scanned_entries", len(deps))
+        cov_total = cov_scanned + cov_outside
+        if cov_outside:
+            cov_pct = round(100 * cov_scanned / cov_total) if cov_total else 0
+            coverage_line = (
+                f"- **⚠ Cobertura del scan de deps:** {cov_scanned} de {cov_total} entradas "
+                f"declaradas ({cov_pct}%) — **{cov_outside} FUERA del scan** "
+                f"(ver sección 🔍 Cobertura)")
+        else:
+            coverage_line = ("- **Cobertura del scan de deps:** completa — todas las "
+                             "dependencias declaradas tienen versión exacta resuelta")
+
     extra_total = sum(len(v) for v in extra_layers.values())
     md = [
         f"# Auditoría de seguridad — `{repo.name}` — {now}",
@@ -1067,6 +1229,7 @@ def build_report(
         f"- **Ecosistemas auditados:** {', '.join(ecosystems) or 'ninguno detectado'}",
         f"- **Dependencias revisadas:** {len({(d[0], d[1], d[2]) for d in deps})} únicas "
         f"(total entradas: {len(deps)})",
+        *([coverage_line] if coverage_line else []),
         f"- **Vulnerabilidades en deps (OSV):** {len(rows)} "
         f"(critical: {counts['critical']}, high: {counts['high']}, "
         f"medium: {counts['medium']+counts['moderate']}, low: {counts['low']}, "
@@ -1076,6 +1239,33 @@ def build_report(
         f"({', '.join(f'{k}: {len(v)}' for k, v in extra_layers.items() if v and not k.startswith('__')) or 'ninguna activa'})",
         "",
     ]
+
+    # ---- Sección Cobertura (antes del early-return: "0 vulns" con baja
+    # cobertura es exactamente el caso que NO debe quedar oculto) ----
+    if coverage and (coverage.get("unpinned") or coverage.get("not_resolved")):
+        md.append("## 🔍 Cobertura del scan de dependencias")
+        md.append("")
+        md.append("La capa OSV solo audita versiones **exactas** resueltas. Las siguientes "
+                  "dependencias declaradas quedaron **fuera del scan** y pueden contener "
+                  "CVEs no reflejadas en este reporte:")
+        md.append("")
+        md.append("| Dependencia | Declarada como | Archivo | Motivo |")
+        md.append("|---|---|---|---|")
+        unpinned_items = coverage.get("unpinned", [])
+        for u in unpinned_items[:50]:
+            md.append(f"| `{u['name']}` | `{u['spec']}` | `{u['file']}` | {u['reason']} |")
+        for nr in coverage.get("not_resolved", []):
+            what = f"({nr['count']} deps)" if nr.get("count") else "(módulos)"
+            md.append(f"| {what} | — | `{nr['file']}` | {nr['reason']} |")
+        if len(unpinned_items) > 50:
+            md.append("")
+            md.append(f"_…y {len(unpinned_items) - 50} más (truncado a 50)._")
+        md.append("")
+        md.append("> **Sugerencia:** pinnea con `pip freeze` / `pip-compile`, o añade el "
+                  "lockfile del ecosistema (`package-lock.json`, `poetry.lock`, `go.sum`, "
+                  "`Cargo.lock`) para llevar la cobertura a 100%. Un resultado de "
+                  '"0 vulnerabilidades" solo aplica a lo efectivamente escaneado.')
+        md.append("")
 
     if not rows and not any(extra_layers.values()):
         md.append("## ✅ Sin vulnerabilidades por encima del umbral configurado")
@@ -1469,17 +1659,36 @@ def main() -> int:
 
     print(f"Security audit — repo: {REPO}")
     deps = collect_dependencies(REPO)
+    coverage = compute_coverage(REPO, deps)
     if args.ecosystem:
         eco_set = set(args.ecosystem)
         deps = [d for d in deps if d[0] in eco_set]
+        coverage["unpinned"] = [u for u in coverage["unpinned"] if u["eco"] in eco_set]
+        coverage["not_resolved"] = [n for n in coverage["not_resolved"] if n["eco"] in eco_set]
+        coverage["outside_entries"] = len(coverage["unpinned"]) + sum(
+            (n["count"] or 1) for n in coverage["not_resolved"])
+        coverage["scanned_entries"] = len(deps)
 
     counts_by_eco = defaultdict(int)
     for d in deps:
         counts_by_eco[d[0]] += 1
     if not counts_by_eco:
+        if coverage["outside_entries"]:
+            print(f"  ⚠ 0 dependencias escaneables, pero {coverage['outside_entries']} "
+                  "declaradas SIN pin exacto o sin lockfile.")
+            print("    El scan NO cubre nada de este repo — pinnea versiones o añade "
+                  "lockfiles y vuelve a correr.")
+            for u in coverage["unpinned"][:10]:
+                print(f"      - {u['spec']}  ({u['file']})")
+            for n in coverage["not_resolved"][:10]:
+                print(f"      - {n['file']}  ({n['reason']})")
+            return 1
         print("No se detectaron manifests. Verifica que estés en la raíz del repo.")
         return 0
     print("  Detectados:", ", ".join(f"{c} {e}" for e, c in counts_by_eco.items()))
+    if coverage["outside_entries"]:
+        print(f"  ⚠ Cobertura: {coverage['outside_entries']} dependencia(s) declaradas "
+              "FUERA del scan (sin pin exacto o sin lockfile) — detalle en el reporte")
 
     findings: dict = {}
     kev_set: set[str] = set()
@@ -1542,7 +1751,8 @@ def main() -> int:
     if blocked:
         extra_layers["__blocked__"] = blocked
     report = build_report(deps, findings, kev_set, REPO, applied, args.min_severity,
-                          epss_scores=epss_scores, extra_layers=extra_layers)
+                          epss_scores=epss_scores, extra_layers=extra_layers,
+                          coverage=coverage)
     n_vulns = sum(len(v) for v in findings.values()) + sum(len(v) for v in extra_layers.values())
     today = datetime.now().strftime("%Y-%m-%d")
     out_dir = (REPO / args.out_dir).resolve()

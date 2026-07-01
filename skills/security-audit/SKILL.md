@@ -1,6 +1,6 @@
 ---
 name: security-audit
-description: Audita la seguridad de cualquier repositorio en 9 capas — dependencias (Python, Node, Go, Java, Rust, Ruby, .NET) vs OSV.dev/NVD/GHSA/PyPA/RustSec; CISA KEV (explotación activa); EPSS (probabilidad de exploit); Bandit SAST sobre el código propio; trivy/grype sobre OS layer del contenedor; gitleaks/detect-secrets en histórico; zizmor para GitHub Actions workflows; hadolint para Dockerfile; typosquat heurístico sobre nombres de paquetes. Genera informe Markdown en el propio repo y opcionalmente aplica correcciones (bump de versiones) con rama git + PR auto-merge. Úsalo cuando el usuario diga "audita seguridad", "busca vulnerabilidades", "scan CVE", "revisa ataques de ciberseguridad", "vulnerability scan", "qué CVEs tiene este repo", "actualiza por seguridad", "SAST", "container scan", "secrets scan" o similar. Trabaja sobre `cwd` por defecto — funciona en cualquier repo. Cada capa es opt-in con `--layers`; las que requieren binarios externos degradan silenciosamente si no están instalados.
+description: Audita la seguridad de cualquier repositorio en 12 capas — dependencias (Python, Node, Go, Java, Rust, Ruby, .NET) vs OSV.dev/NVD/GHSA/PyPA/RustSec; CISA KEV (explotación activa); EPSS (probabilidad de exploit); Bandit SAST sobre el código propio; trivy/grype sobre OS layer del contenedor; gitleaks/detect-secrets en histórico; zizmor para GitHub Actions workflows; hadolint para Dockerfile; typosquat heurístico sobre nombres de paquetes. Reporta la cobertura real del scan — dependencias declaradas sin pin exacto o sin lockfile se listan explícitamente como FUERA del scan (nunca infla la cobertura). Genera informe Markdown en el propio repo y opcionalmente aplica correcciones (bump de versiones) con rama git + PR auto-merge. Úsalo cuando el usuario diga "audita seguridad", "busca vulnerabilidades", "scan CVE", "revisa ataques de ciberseguridad", "vulnerability scan", "qué CVEs tiene este repo", "actualiza por seguridad", "SAST", "container scan", "secrets scan" o similar. Trabaja sobre `cwd` por defecto — funciona en cualquier repo. Cada capa es opt-in con `--layers`; las que requieren binarios externos degradan silenciosamente si no están instalados.
 ---
 
 # security-audit (v2 multi-layer)
@@ -149,9 +149,16 @@ estructura:
 ## Resumen ejecutivo
 - Ecosistemas auditados: <list>
 - Dependencias revisadas: <N>
+- ⚠ Cobertura del scan de deps: <N> de <M> entradas declaradas (<pct>%) — <K> FUERA del scan
 - Vulnerabilidades encontradas: <N> (critical: X, high: Y, medium: Z, low: W)
 - En CISA KEV (explotación activa): <N>
 - Fuentes: OSV.dev, CISA KEV, GHSA
+
+## 🔍 Cobertura del scan de dependencias
+| Dependencia | Declarada como | Archivo | Motivo |
+|---|---|---|---|
+| flask | `flask>=2.0` | requirements.txt:2 | sin pin exacto o formato no soportado |
+| (12 deps) | — | frontend/package.json | sin package-lock.json — versiones no resueltas |
 
 ## Hallazgos críticos (explotación activa según CISA KEV)
 ### CVE-2024-XXXX — <paquete> <vuln_version>
@@ -208,6 +215,15 @@ Después del bump, intenta correr `pip-compile` para `.in` → `.txt` si está d
   al uso real del proyecto (e.g. vuln en una función no usada). El reporte
   los lista igualmente — la decisión de bumpear queda en el revisor humano cuando
   no usa `--apply`.
+- **Solo audita versiones exactas resueltas**: deps declaradas sin pin exacto
+  (`flask>=2.0`, `pandas` sin versión) o manifests sin lockfile (`package.json`
+  sin `package-lock.json`, `go.mod` sin `go.sum`, `Cargo.toml` sin `Cargo.lock`)
+  **no se escanean — pero el reporte lo dice explícitamente**: la sección
+  "🔍 Cobertura del scan" lista cada dep fuera del scan con archivo:línea y
+  motivo, y el resumen ejecutivo muestra el % de cobertura real. Un "0
+  vulnerabilidades" nunca se presenta como cobertura completa si no lo es.
+  Si NINGUNA dep es escaneable, el skill sale con exit 1 y aviso claro en
+  consola (antes salía 0 con "no se detectaron manifests", que era engañoso).
 - **Dependencias transitivas**: si el manifest no las pinea, no se auditan
   directamente (la herramienta del ecosistema debe regenerar el lockfile).
 - **Sin red**: el skill falla con mensaje claro si OSV.dev no responde.

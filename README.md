@@ -13,7 +13,7 @@ Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de segur
 [![Skills](https://img.shields.io/badge/skills-9-1f6feb)](#-catálogo)
 [![Platforms](https://img.shields.io/badge/platforms-linux%20%7C%20macOS%20%7C%20windows-555?logo=linux&logoColor=white)](#-instalación)
 [![CI](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-8%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
+[![Tests](https://img.shields.io/badge/tests-17%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
 [![Supply chain hardened](https://img.shields.io/badge/supply%20chain-hardened-2da44e?logo=shieldsdotio&logoColor=white)](docs/supply-chain-security.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?logo=github)](CONTRIBUTING.md)
 [![Made with ❤ in Chile](https://img.shields.io/badge/made_in-Chile-d52b1e)](https://github.com/vladimiracunadev-create)
@@ -75,7 +75,7 @@ flowchart LR
 <td>
 
 Auditoría en **12 capas**: OSV.dev · CISA KEV · EPSS · Bandit SAST · trivy/grype · gitleaks · zizmor · hadolint · typosquat heurístico.
-Genera reporte Markdown con **Plan de Remediación transversal**. Modo `--apply --verify` aplica bumps y los revierte si los tests fallan.
+Genera reporte Markdown con **Plan de Remediación transversal** y **cobertura real del scan** (deps sin pin exacto o sin lockfile quedan listadas explícitamente como fuera del scan — nunca infla la cobertura). Modo `--apply --verify` aplica bumps y los revierte si los tests fallan.
 
 </td>
 <td>

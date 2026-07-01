@@ -46,7 +46,7 @@ gantt
 ### 🏆 v0.3.0 — Calidad, madurez y más skills *(en curso)*
 
 - [x] **`pre-commit-guard`** — gemelo rápido de `pre-push-guard` sobre archivos staged (`yaml-control` + `md-lint-fix --dry-run`, sin pytest). Se instala como git hook con `--install-hook`. Cierra el item "pre-commit hook configurable" y lo entrega como un skill de primera clase, coherente con el patrón de `pre-push-guard`.
-- [ ] Tests por skill (no solo estructura) — al menos un happy path por cada uno.
+- [ ] Tests por skill (no solo estructura) — al menos un happy path por cada uno. *(progreso: 1/9 — `security-audit` ya tiene 8 tests funcionales de `compute_coverage`)*
 - [ ] **`dependency-cleanup`** — detecta dependencias sin uso en `requirements.txt` / `package.json` / `Cargo.toml` (heredado de v0.2.0, siguiente prioridad).
 - [ ] **`commit-message-improve`** — reescribe commit messages siguiendo conventional commits (heredado).
 - [ ] **`sql-migration-safety`** — analiza migraciones de base de datos antes de aplicar (heredado).
