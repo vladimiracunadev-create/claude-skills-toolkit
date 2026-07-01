@@ -67,7 +67,7 @@ flowchart LR
 <tr>
 <td>
 
-### 🔒 [security-audit](skills/security-audit/)
+### 🔒 [security-audit](skills/security-audit/README.md)
 
 <sub>1565 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
 
@@ -95,7 +95,7 @@ stdlib<br>
 <tr>
 <td>
 
-### 📋 [yaml-control](skills/yaml-control/)
+### 📋 [yaml-control](skills/yaml-control/README.md)
 
 <sub>271 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
 
@@ -122,7 +122,7 @@ Validación YAML en 3 capas: sintaxis + `actionlint` para workflows + convencion
 <tr>
 <td>
 
-### 📝 [md-lint-fix](skills/md-lint-fix/)
+### 📝 [md-lint-fix](skills/md-lint-fix/README.md)
 
 <sub>359 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
 
@@ -148,7 +148,7 @@ Detecta y auto-corrige `markdownlint-cli2`: MD024 con contexto del padre, MD040 
 <tr>
 <td>
 
-### 🐳 [docker-cleanup](skills/docker-cleanup/)
+### 🐳 [docker-cleanup](skills/docker-cleanup/README.md)
 
 <sub>67 LOC · Bash · ![status](https://img.shields.io/badge/stable-green)</sub>
 
@@ -174,7 +174,7 @@ Wipe completo de Docker: containers + images + volumes + custom networks + build
 <tr>
 <td>
 
-### 🩺 [docker-compose-doctor](skills/docker-compose-doctor/)
+### 🩺 [docker-compose-doctor](skills/docker-compose-doctor/README.md)
 
 <sub>400 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
 
@@ -200,7 +200,7 @@ Análisis estático de `compose.yml`: puertos host duplicados, healthchecks falt
 <tr>
 <td>
 
-### 🪝 [pre-commit-guard](skills/pre-commit-guard/)
+### 🪝 [pre-commit-guard](skills/pre-commit-guard/README.md)
 
 <sub>~260 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
 
@@ -226,7 +226,7 @@ stdlib
 <tr>
 <td>
 
-### 🛡️ [pre-push-guard](skills/pre-push-guard/)
+### 🛡️ [pre-push-guard](skills/pre-push-guard/README.md)
 
 <sub>322 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
 
@@ -253,7 +253,7 @@ stdlib<br>
 <tr>
 <td>
 
-### 📸 [web-snap](skills/web-snap/)
+### 📸 [web-snap](skills/web-snap/README.md)
 
 <sub>213 LOC · Python · ![status](https://img.shields.io/badge/stable-green) · ![platform](https://img.shields.io/badge/windows-only-0078D6)</sub>
 
@@ -279,7 +279,7 @@ Screenshots de URLs web en **Windows** usando Chrome/Edge ya instalado. Sin Sele
 <tr>
 <td>
 
-### 🐍 [python-version-control](skills/python-version-control/)
+### 🐍 [python-version-control](skills/python-version-control/README.md)
 
 <sub>~540 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
 
@@ -410,10 +410,12 @@ bash   ~/.claude/skills/docker-cleanup/scripts/wipe.sh
 
 ```text
 skills/<nombre>/
-├── SKILL.md          ← obligatorio · frontmatter + triggers + uso
-├── <script>.py|.sh   ← lógica
-└── README.md         ← opcional · screenshots, demos
+├── SKILL.md          ← obligatorio · frontmatter + triggers (contrato con el agente)
+├── README.md         ← obligatorio · docs para humanos con diagramas + casos de uso
+└── <script>.py|.sh   ← lógica ejecutable
 ```
+
+**Dos archivos, dos audiencias.** `SKILL.md` es el contrato que el agente lee para decidir cuándo invocar el skill — descripción densa optimizada para matching semántico. `README.md` es la documentación para humanos que llegan al skill vía GitHub, con diagramas Mermaid, casos de uso reales y referencias externas. Cada skill del toolkit tiene ambos.
 
 El frontmatter mínimo:
 

@@ -54,6 +54,24 @@ class TestSkillsStructure(unittest.TestCase):
                 skill_md = SKILLS_DIR / skill / "SKILL.md"
                 self.assertTrue(skill_md.is_file(), f"Falta {skill_md}")
 
+    def test_each_skill_has_readme_md(self):
+        """Cada skill de producción debe tener un README.md humano-legible
+        con diagramas y casos de uso — complementa al SKILL.md (contrato agente)."""
+        for skill in PRODUCTION_SKILLS:
+            with self.subTest(skill=skill):
+                readme = SKILLS_DIR / skill / "README.md"
+                self.assertTrue(readme.is_file(), f"Falta {readme}")
+                content = readme.read_text(encoding="utf-8")
+                self.assertGreater(
+                    len(content), 1000,
+                    f"{skill}: README.md demasiado corto (<1000 chars) — debe cubrir instalación, uso, casos, diagramas",
+                )
+                for section in ("## 🎯", "## 📦", "## 🚀"):
+                    self.assertIn(
+                        section, content,
+                        f"{skill}: README.md falta sección '{section}' (qué hace / instalación / uso)",
+                    )
+
     def test_frontmatter_has_required_fields(self):
         for skill in PRODUCTION_SKILLS:
             with self.subTest(skill=skill):
