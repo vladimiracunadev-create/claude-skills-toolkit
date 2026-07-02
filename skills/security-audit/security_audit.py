@@ -563,7 +563,7 @@ def run_bandit(repo: Path, verbose: bool = False) -> list[dict]:
             print("  bandit: no instalado (pip install bandit)", flush=True)
         return []
     targets = []
-    for cand in ("src", "cases", "shared", "scripts", "app", "backend"):
+    for cand in ("src", "cases", "shared", "scripts", "app", "backend", "skills", "lib"):
         p = repo / cand
         if p.is_dir():
             targets.append(str(p))
@@ -1672,6 +1672,7 @@ def main() -> int:
     counts_by_eco = defaultdict(int)
     for d in deps:
         counts_by_eco[d[0]] += 1
+    REPO_LEVEL_LAYERS = {"sast", "container", "secrets", "workflows", "dockerfile"}
     if not counts_by_eco:
         if coverage["outside_entries"]:
             print(f"  ⚠ 0 dependencias escaneables, pero {coverage['outside_entries']} "
@@ -1683,9 +1684,17 @@ def main() -> int:
             for n in coverage["not_resolved"][:10]:
                 print(f"      - {n['file']}  ({n['reason']})")
             return 1
-        print("No se detectaron manifests. Verifica que estés en la raíz del repo.")
-        return 0
-    print("  Detectados:", ", ".join(f"{c} {e}" for e, c in counts_by_eco.items()))
+        repo_level = layers & REPO_LEVEL_LAYERS
+        if repo_level:
+            # Sin deps que escanear, pero las capas repo-level (SAST, secrets,
+            # workflows, dockerfile, container) auditan el repo en sí — siguen.
+            print("  Sin manifests de dependencias — continuando solo con capas "
+                  f"repo-level: {', '.join(sorted(repo_level))}")
+        else:
+            print("No se detectaron manifests. Verifica que estés en la raíz del repo.")
+            return 0
+    else:
+        print("  Detectados:", ", ".join(f"{c} {e}" for e, c in counts_by_eco.items()))
     if coverage["outside_entries"]:
         print(f"  ⚠ Cobertura: {coverage['outside_entries']} dependencia(s) declaradas "
               "FUERA del scan (sin pin exacto o sin lockfile) — detalle en el reporte")

@@ -48,6 +48,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ### 🐛 Corregido
 
+- `security-audit`: las capas repo-level (`sast`, `secrets`, `workflows`, `dockerfile`, `container`) ahora corren aunque el repo no declare dependencias. Antes, un repo sin manifests hacía return temprano con "No se detectaron manifests" y se saltaba TODAS las capas — incluso las que auditan el repo en sí (Bandit sobre el código propio, gitleaks sobre el histórico, zizmor sobre workflows). Detectado al auditar el propio toolkit (cero deps por diseño): el fix habilitó a Bandit encontrar 54 hallazgos SAST reales que antes eran invisibles. Además `skills/` y `lib/` se añaden a los directorios candidatos de Bandit (antes solo `src/cases/shared/scripts/app/backend`).
 - `security-audit`: crash (`ValueError` en `Path.relative_to`) al usar `--out-dir` apuntando fuera del repo auditado. El reporte se escribía bien pero el print final del path fallaba. Detectado en demo real auditando `langgraph-realworld` con reporte dirigido a un directorio temporal. Ahora si el path no es relativo al repo se muestra absoluto.
 - `skills/md-lint-fix/SKILL.md` no tenía frontmatter — el agente lo cargaba sin contrato declarado.
 - `skills/docker-cleanup/SKILL.md` tenía un `:` sin escapar en `description:` que rompía el parser YAML — convertido a block scalar `|`.

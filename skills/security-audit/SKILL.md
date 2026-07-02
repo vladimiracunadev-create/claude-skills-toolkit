@@ -209,6 +209,12 @@ Después del bump, intenta correr `pip-compile` para `.in` → `.txt` si está d
 
 ---
 
+## Repos sin dependencias declaradas
+
+Si el repo no tiene manifests (proyecto stdlib-only, repo de scripts, etc.), las capas de deps no tienen material — pero las capas **repo-level** (`sast`, `secrets`, `workflows`, `dockerfile`, `container`) corren igual, porque auditan el repo en sí y no sus dependencias. El skill lo anuncia: `Sin manifests de dependencias — continuando solo con capas repo-level: ...`. Solo si tampoco se pidió ninguna capa repo-level hace return temprano.
+
+---
+
 ## Limitaciones
 
 - **Falsos positivos**: OSV.dev es agresivo; algunos hallazgos pueden no aplicar

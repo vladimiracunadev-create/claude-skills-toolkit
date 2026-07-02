@@ -242,6 +242,8 @@ Todas las opcionales **degradan con warning explícito**, no fallan.
 - **Bumps solo a "minimum fixed version"** — evita salto de major innecesario, pero no cierra CVEs que requieren refactor.
 - **No "asegura" la seguridad** — ningún scanner puede. Detecta clases específicas de riesgo *conocido* (CVEs publicadas, secrets commiteados, antipatterns). 0-days, fallas de lógica de negocio y configuración insegura del despliegue quedan fuera de alcance por definición.
 
+> 💡 **Repos sin dependencias:** las capas repo-level (`sast`, `secrets`, `workflows`, `dockerfile`, `container`) corren aunque el repo no declare ningún manifest — auditan el código y la configuración del repo en sí, no sus dependencias.
+
 ---
 
 ## 🔗 Skills relacionados
