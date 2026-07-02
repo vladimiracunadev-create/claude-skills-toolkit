@@ -1759,7 +1759,11 @@ def main() -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
     report_path = out_dir / f"SECURITY_AUDIT_{today}.md"
     report_path.write_text(report, encoding="utf-8")
-    print(f"  Reporte: {report_path.relative_to(REPO).as_posix()}")
+    try:
+        shown_path = report_path.relative_to(REPO).as_posix()
+    except ValueError:  # --out-dir fuera del repo
+        shown_path = str(report_path)
+    print(f"  Reporte: {shown_path}")
 
     if args.git and applied:
         branch = git_commit_and_push(report_path, applied)

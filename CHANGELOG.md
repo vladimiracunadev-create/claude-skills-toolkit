@@ -48,6 +48,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ### 🐛 Corregido
 
+- `security-audit`: crash (`ValueError` en `Path.relative_to`) al usar `--out-dir` apuntando fuera del repo auditado. El reporte se escribía bien pero el print final del path fallaba. Detectado en demo real auditando `langgraph-realworld` con reporte dirigido a un directorio temporal. Ahora si el path no es relativo al repo se muestra absoluto.
 - `skills/md-lint-fix/SKILL.md` no tenía frontmatter — el agente lo cargaba sin contrato declarado.
 - `skills/docker-cleanup/SKILL.md` tenía un `:` sin escapar en `description:` que rompía el parser YAML — convertido a block scalar `|`.
 - `skills/security-audit/SKILL.md` decía "9 capas" pero listaba 12 — corregido a 12.
