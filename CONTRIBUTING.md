@@ -9,11 +9,12 @@
 
 ## 📜 Reglas para un skill nuevo
 
-1. **Autónomo.** No asume paths absolutos al sistema del autor. Si el script necesita el repo del usuario, usa `Path.cwd()`.
+1. **Autónomo.** No asume paths absolutos al sistema del autor. Si el script necesita el repo del usuario, usa `Path.cwd()`. Esto aplica también a los **ejemplos de salida** en la documentación — usa `/ruta/a/mi-proyecto`, no rutas reales de tu máquina.
 2. **`SKILL.md` con frontmatter completo.** Campos obligatorios: `name`, `description`. El `description` debe incluir los triggers en español **y** en inglés.
-3. **Cero dependencias por defecto.** Si necesita una herramienta externa: docúmentalo en `SKILL.md` y degrada gracefully cuando no esté.
-4. **Cross-platform** o limitación explícita (ej. *"requiere bash"*).
-5. **Honestidad.** Documenta qué **NO** hace y qué riesgos tiene. Un skill que oculta sus límites es peor que un skill que no existe.
+3. **`README.md` del skill obligatorio.** Documentación para humanos con al menos las secciones **🎯 Qué hace**, **📦 Instalación** y **🚀 Uso** (el test estructural las exige). Diagramas Mermaid y casos de uso con outputs esperados son bienvenidos. Dos archivos, dos audiencias: `SKILL.md` es el contrato que lee el agente; `README.md` es para quien llega por GitHub.
+4. **Cero dependencias por defecto.** Si necesita una herramienta externa: docúmentalo en `SKILL.md` y degrada gracefully cuando no esté.
+5. **Cross-platform** o limitación explícita (ej. *"requiere bash"*).
+6. **Honestidad.** Documenta qué **NO** hace y qué riesgos tiene. Un skill que oculta sus límites es peor que un skill que no existe.
 
 ---
 
@@ -37,15 +38,22 @@ cp -r skills/_template skills/mi-skill
 
 `skills/mi-skill/<nombre>.py` o `.sh`. Sigue las convenciones de la sección [Estilo](#estilo).
 
-### 4. Actualiza el README raíz
+### 4. Escribe el `README.md` del skill
 
-Agrega tu skill a la tabla de catálogo en [README.md](README.md).
+Documentación humana con las secciones obligatorias (🎯 Qué hace / 📦 Instalación / 🚀 Uso) y, idealmente, un diagrama Mermaid del flujo + casos de uso con outputs. El template en `skills/_template/README.md` trae el esqueleto. Mira cualquier README existente (ej. [pre-commit-guard](skills/pre-commit-guard/README.md)) como referencia de formato.
 
-### 5. (Si aplica) Añade tests
+### 5. Actualiza la documentación en cascada
 
-`tests/test_<skill>.py` con al menos un smoke test. Puedes usar el `pytest`-style sin requerir pytest (los tests existentes corren con `python -m unittest`).
+- [README.md](README.md) — fila en el catálogo (enlazando a tu `README.md`) + badge `skills-N`.
+- [CHANGELOG.md](CHANGELOG.md) — entrada bajo `[Unreleased]`.
+- [docs/architecture.md](docs/architecture.md) — entrada en el árbol.
+- `tests/test_skills_structure.py` — añade tu skill al set `PRODUCTION_SKILLS`.
 
-### 6. Pasa el lint local
+### 6. (Si aplica) Añade tests funcionales
+
+`tests/test_<skill>.py` con al menos un happy path (ver `tests/test_security_audit_coverage.py` como ejemplo). Los tests corren con `python -m unittest` — sin requerir pytest. Los tests estructurales ya validan tu frontmatter y README automáticamente.
+
+### 7. Pasa el lint + tests local
 
 ```bash
 # YAML
@@ -53,9 +61,12 @@ python skills/yaml-control/yaml_control.py --all
 
 # Markdown
 python skills/md-lint-fix/fix-md-lint.py --all --dry-run
+
+# Tests (estructura + funcionales)
+python -m unittest discover -s tests
 ```
 
-### 7. Abre el PR
+### 8. Abre el PR
 
 Título conventional: `feat(skill): <nombre> — <one-liner>`. Incluye en el body:
 

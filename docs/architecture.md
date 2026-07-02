@@ -25,9 +25,9 @@ claude-skills-toolkit/
 │   ├── uninstall.sh       ← solo remueve symlinks que apunten al repo
 │   └── uninstall.ps1      ← idem, versión PowerShell
 │
-├── 🗂️ skills/
+├── 🗂️ skills/                     (cada skill: SKILL.md + README.md + script)
 │   ├── _template/         ← copia para crear skills nuevos
-│   ├── 🔒 security-audit/         ← 12 capas · OSV/KEV/EPSS/SAST/...
+│   ├── 🔒 security-audit/         ← 12 capas · OSV/KEV/EPSS/SAST/... + cobertura real del scan
 │   ├── 📋 yaml-control/           ← yaml + actionlint + convenciones repo
 │   ├── 📝 md-lint-fix/            ← wrapper inteligente de markdownlint-cli2
 │   ├── 🐳 docker-cleanup/         ← wipe completo de Docker (bash)
@@ -37,22 +37,26 @@ claude-skills-toolkit/
 │   ├── 📸 web-snap/               ← screenshots de URLs en Windows (Chrome/Edge + Pillow)
 │   └── 🐍 python-version-control/ ← audita drift de versión Python (12+ fuentes)
 │
-├── 🧪 tests/                 ← smoke tests (unittest, sin dependencias extras)
-│   └── test_skills_structure.py
+├── 🧪 tests/                 ← unittest, sin dependencias extras
+│   ├── test_skills_structure.py        ← estructura: frontmatter + README + scripts
+│   └── test_security_audit_coverage.py ← funcionales: compute_coverage happy paths
 │
 ├── 📚 docs/
-│   └── architecture.md    ← este archivo
+│   ├── architecture.md            ← este archivo
+│   ├── skill-promotion.md         ← flujo local → toolkit
+│   └── supply-chain-security.md   ← política npm/pnpm · Shai-Hulud
 │
 └── ⚙️ .github/
     └── workflows/
-        └── ci.yml         ← yaml-control + md-lint + tests cross-platform
+        ├── ci.yml         ← yaml-control + md-lint + tests cross-platform
+        └── release.yml    ← tag v* → zip por skill + bundle + GitHub Release
 ```
 
 ---
 
 ## 🧠 Modelo mental
 
-Un **skill** = un contrato + un ejecutable. El contrato vive en `SKILL.md` (frontmatter YAML con `name` + `description` + triggers); el ejecutable es Python o Bash.
+Un **skill** = un contrato + un ejecutable + docs humanas. El contrato vive en `SKILL.md` (frontmatter YAML con `name` + `description` + triggers — lo lee el agente); el ejecutable es Python o Bash; el `README.md` documenta para humanos (diagramas, casos de uso, limitaciones).
 
 El runtime (Claude Code) carga todos los directorios bajo `~/.claude/skills/`. Cuando el usuario habla, el modelo compara la intención con cada `description` y decide invocar el skill apropiado.
 
@@ -133,7 +137,7 @@ Los skills nunca asumen una ruta absoluta del autor. Todo lo relativo se calcula
 
 ### 3️⃣ Cero dependencias por defecto
 
-Los 4 skills funcionan con Python stdlib + herramientas estándar del SO (git, docker). Las capas avanzadas (Bandit, trivy, gitleaks, etc.) son **opt-in** y degradan silenciosamente si no están instaladas. El reporte deja constancia de qué capa se saltó y por qué.
+Los 9 skills funcionan con Python stdlib + herramientas estándar del SO (git, docker) — las excepciones (`pyyaml`, `pillow`, `markdownlint-cli2`) están documentadas por skill en [INSTALL.md](../INSTALL.md). Las capas avanzadas (Bandit, trivy, gitleaks, etc.) son **opt-in** y degradan silenciosamente si no están instaladas. El reporte deja constancia de qué capa se saltó y por qué.
 
 ### 4️⃣ Honestidad sobre limitaciones
 
@@ -194,7 +198,18 @@ El workflow [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) corre en c
 |---|---|---|
 | 📋 `yaml-lint` | Ejecuta `yaml-control --all` + `actionlint` sobre el propio repo | 🐧 ubuntu-latest |
 | 📝 `markdown-lint` | `markdownlint-cli2` sobre todos los `.md` (report-only) | 🐧 ubuntu-latest |
-| 🧪 `python-tests` | `python -m unittest discover -s tests` | 🐧🍎🪟 ubuntu / macOS / windows · Python 3.11 + 3.12 |
+| 🧪 `python-tests` | `python -m unittest discover -s tests` (17 tests) | 🐧🍎🪟 ubuntu / macOS / windows · Python 3.11 + 3.12 |
+
+## 🚀 Release automation
+
+El workflow [`.github/workflows/release.yml`](../.github/workflows/release.yml) se dispara al pushear un tag `v*`:
+
+1. Empaqueta **cada skill como zip individual** (`<skill>-vX.Y.Z.zip`).
+2. Empaqueta el **bundle completo** del toolkit (skills + scripts + docs).
+3. Extrae las release notes de la sección correspondiente del `CHANGELOG.md`.
+4. Crea el GitHub Release con todos los assets (o actualiza los assets si ya existe).
+
+Flujo de release: mover `[Unreleased]` → `[X.Y.Z]` en CHANGELOG → commit → `git tag -a vX.Y.Z` → `git push origin vX.Y.Z`. Todo lo demás es automático.
 
 ### Matriz de tests
 

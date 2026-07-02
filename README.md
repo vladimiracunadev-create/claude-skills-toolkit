@@ -69,7 +69,7 @@ flowchart LR
 
 ### 🔒 [security-audit](skills/security-audit/README.md)
 
-<sub>1565 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+<sub>1788 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
 
 </td>
 <td>
@@ -124,7 +124,7 @@ Validación YAML en 3 capas: sintaxis + `actionlint` para workflows + convencion
 
 ### 📝 [md-lint-fix](skills/md-lint-fix/README.md)
 
-<sub>359 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+<sub>400 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
 
 </td>
 <td>
@@ -202,7 +202,7 @@ Análisis estático de `compose.yml`: puertos host duplicados, healthchecks falt
 
 ### 🪝 [pre-commit-guard](skills/pre-commit-guard/README.md)
 
-<sub>~260 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+<sub>286 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
 
 </td>
 <td>
@@ -281,7 +281,7 @@ Screenshots de URLs web en **Windows** usando Chrome/Edge ya instalado. Sin Sele
 
 ### 🐍 [python-version-control](skills/python-version-control/README.md)
 
-<sub>~540 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+<sub>449 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
 
 </td>
 <td>

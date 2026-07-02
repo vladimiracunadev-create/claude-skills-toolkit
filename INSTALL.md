@@ -12,7 +12,7 @@
 
 | Componente | Versión | Notas |
 |---|---|---|
-| **Python** | 3.11+ | Necesario para 3 de los 4 skills |
+| **Python** | 3.11+ | Necesario para 8 de los 9 skills (todos menos `docker-cleanup`, que es bash) |
 | **Git** | cualquiera reciente | Para clonar y para `git status` en los skills |
 | **Claude Code** | opcional | Runtime agentic que carga los skills automáticamente — también funciona con cualquier runtime que lea `~/.claude/skills/` |
 
@@ -46,7 +46,7 @@ git clone https://github.com/vladimiracunadev-create/claude-skills-toolkit.git $
   .\scripts\install.ps1
 ```
 
-Esto deja los 4 skills disponibles en `~/.claude/skills/` y el repo clonable/actualizable con un simple `git pull`.
+Esto deja los 9 skills disponibles en `~/.claude/skills/` y el repo clonable/actualizable con un simple `git pull`.
 
 > **Tip para equipos.** El repo en sí no contiene secretos ni configuración por-usuario, así que se puede instalar tal cual en cualquier máquina. Si tu organización mantiene un fork con skills internos adicionales, basta con cambiar la URL del `git clone`.
 
@@ -106,7 +106,9 @@ cd ~/claude-skills-toolkit    # o $env:USERPROFILE\claude-skills-toolkit en Wind
 git pull
 ```
 
-Si la instalación es por **symlink** (default), los skills se actualizan en caliente — no hace falta reinstalar. Si está en modo copia (Windows sin Dev Mode), re-ejecuta `install.ps1` para refrescar las copias.
+Si la instalación es por **symlink** (default), los skills se actualizan en caliente — no hace falta reinstalar. Si está en modo copia (Windows sin Dev Mode), **re-ejecuta `install.ps1` después de cada `git pull`** — las copias NO se actualizan solas.
+
+> ⚠️ **Cómo saber si estás en modo copia.** En PowerShell: `Get-Item $env:USERPROFILE\.claude\skills\security-audit | Select-Object LinkType`. Si `LinkType` sale vacío, es copia — tus skills locales pueden quedar desactualizados silenciosamente respecto al repo. Verifica con: `git -C $env:USERPROFILE\claude-skills-toolkit log -1 --format=%cd` vs la fecha de la copia.
 
 ---
 
@@ -121,17 +123,17 @@ Para asegurarte de que dos máquinas tienen exactamente los mismos skills:
 cd ~/claude-skills-toolkit
 git pull
 git rev-parse --short HEAD     # debe coincidir entre máquinas
-ls ~/.claude/skills/           # debe listar los mismos 4 skills
+ls ~/.claude/skills/           # debe listar los mismos 9 skills
 ```
 
 Si trabajas en equipo y quieres pinear todos a un commit concreto:
 
 ```bash
 git fetch --tags
-git checkout v1.0.0      # o el tag que uses
+git checkout v0.2.0      # o el tag que uses
 ```
 
-(Los releases con tag aún no existen — están en el roadmap.)
+Los releases tag-eados están en [GitHub Releases](https://github.com/vladimiracunadev-create/claude-skills-toolkit/releases) — cada uno incluye un zip por skill individual y un bundle completo del toolkit.
 
 ---
 
@@ -163,10 +165,10 @@ Para cada carpeta dentro de `skills/` (excepto `_template`):
 ### Linux · macOS · Git Bash
 
 ```bash
-ls -la ~/.claude/skills/ | grep -E "security-audit|yaml-control|md-lint-fix|docker-cleanup"
+ls -la ~/.claude/skills/ | grep -E "security-audit|yaml-control|md-lint-fix|docker-cleanup|docker-compose-doctor|pre-commit-guard|pre-push-guard|python-version-control|web-snap"
 ```
 
-Deberías ver **4 entradas** con flecha `->` apuntando a `claude-skills-toolkit/skills/...`.
+Deberías ver **9 entradas** con flecha `->` apuntando a `claude-skills-toolkit/skills/...` (o carpetas si la instalación cayó a modo copia).
 
 ### PowerShell
 
@@ -186,6 +188,11 @@ Get-ChildItem $env:USERPROFILE\.claude\skills | Where-Object { $_.LinkType -eq "
 | **yaml-control** | `pip install pyyaml` | [`actionlint`](https://github.com/rhysd/actionlint) |
 | **md-lint-fix** | Node + `pnpm add -g markdownlint-cli2` | — |
 | **docker-cleanup** | `docker` CLI + bash | — |
+| **docker-compose-doctor** | `pip install pyyaml` | — |
+| **pre-commit-guard** | Python stdlib | yaml-control + md-lint-fix instalados (degrada si faltan) |
+| **pre-push-guard** | Python stdlib | `pip install pytest` (solo si el repo tiene tests) |
+| **python-version-control** | Python stdlib | `pip install tomli` (solo Python < 3.11) |
+| **web-snap** | `pip install pillow` + Chrome/Edge | — (solo Windows) |
 
 Las dependencias opcionales **no son requeridas**: el skill detecta su ausencia, salta esa capa y deja constancia en el reporte.
 
@@ -210,10 +217,10 @@ Las dependencias opcionales **no son requeridas**: el skill detecta su ausencia,
 ### Manual
 
 ```bash
-rm ~/.claude/skills/security-audit
-rm ~/.claude/skills/yaml-control
-rm ~/.claude/skills/md-lint-fix
-rm ~/.claude/skills/docker-cleanup
+for s in security-audit yaml-control md-lint-fix docker-cleanup docker-compose-doctor \
+         pre-commit-guard pre-push-guard python-version-control web-snap; do
+  rm -rf ~/.claude/skills/$s
+done
 ```
 
 Los uninstallers **solo borran symlinks que apunten a este repo**. Si hay un directorio real con el mismo nombre (no es symlink), se deja en su sitio por seguridad y se avisa.
@@ -244,5 +251,22 @@ Activa Developer Mode o ejecuta como administrador. Si no es posible, el script 
 <summary><strong>El skill se invoca pero falla con <code>ModuleNotFoundError</code></strong></summary>
 
 Probablemente falte una dependencia opcional. Revisa la tabla de [dependencias por skill](#dependencias-por-skill).
+
+</details>
+
+<details>
+<summary><strong>El skill se comporta "viejo" — le faltan features que sí están en el repo</strong></summary>
+
+Tu instalación está en **modo copia** (Windows sin Developer Mode) y quedó desactualizada respecto al repo. Las copias no se actualizan con `git pull`.
+
+```powershell
+# Verificar: LinkType vacío = copia
+Get-Item $env:USERPROFILE\.claude\skills\security-audit | Select-Object LinkType
+
+# Solución: re-sincronizar
+cd $env:USERPROFILE\claude-skills-toolkit; git pull; .\scripts\install.ps1
+```
+
+Solución permanente: activa Developer Mode (*Settings → Privacy & security → For developers*) y reinstala — con symlinks, `git pull` basta para siempre.
 
 </details>

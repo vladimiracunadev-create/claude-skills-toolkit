@@ -4,7 +4,7 @@
 
 ![Skill](https://img.shields.io/badge/skill-pre--commit--guard-1f6feb)
 ![Status](https://img.shields.io/badge/status-stable-2da44e)
-![LOC](https://img.shields.io/badge/LOC-260-8957e5)
+![LOC](https://img.shields.io/badge/LOC-286-8957e5)
 ![Runtime](https://img.shields.io/badge/runtime-Python%203.11+-3776AB?logo=python&logoColor=white)
 
 ---

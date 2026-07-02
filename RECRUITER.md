@@ -11,11 +11,12 @@
 
 ## 🎯 TL;DR
 
-`claude-skills-toolkit` es un toolkit de automatización para [Claude Code](https://claude.com/claude-code) — el agente de coding de Anthropic — que empaqueta 4 skills de producción para tareas que cualquier developer hace todos los días: auditar seguridad, lint de YAML, lint de Markdown y limpiar Docker.
+`claude-skills-toolkit` es un toolkit de automatización para [Claude Code](https://claude.com/claude-code) — el agente de coding de Anthropic — que empaqueta 9 skills de producción para tareas que cualquier developer hace todos los días: auditar seguridad multi-fuente, lint de YAML y Markdown, diagnóstico y limpieza de Docker, guardianes pre-commit/pre-push, screenshots web y coherencia de versión de Python.
 
-**Lenguajes**: Python (1500+ LOC), Bash, PowerShell.
+**Lenguajes**: Python (4100+ LOC), Bash, PowerShell.
 **Stack**: Python stdlib · PyYAML · PowerShell · Bash · GitHub Actions · unittest.
-**Sin dependencias innecesarias** — los 4 skills funcionan zero-deps por defecto.
+**Sin dependencias innecesarias** — los 9 skills funcionan zero-deps (o casi) por defecto.
+**Releases automatizados** — cada tag `v*` publica un zip por skill + bundle completo vía GitHub Actions.
 
 ---
 
@@ -31,8 +32,9 @@
 
 - **Cross-platform real** — Linux, macOS, Windows (PowerShell + Git Bash). No "funciona en mi máquina".
 - **CI cross-matrix** — `.github/workflows/ci.yml` corre tests en ubuntu/windows/macOS × Python 3.11/3.12.
-- **Eat your own dog food** — el repo valida sus propios YAML y Markdown con sus propios skills en CI.
-- **Tests reales** detectan bugs reales — el primer run de `tests/test_skills_structure.py` encontró 2 bugs de frontmatter en producción.
+- **Eat your own dog food** — el repo valida sus propios YAML y Markdown con sus propios skills en CI, y `security-audit` auditó su propio código (Bandit SAST sobre el toolkit encontró y clasificó 54 hallazgos).
+- **Tests reales** detectan bugs reales — el primer run de `tests/test_skills_structure.py` encontró 2 bugs de frontmatter en producción; la suite (17 tests, estructura + funcionales) corre en matriz de 3 OS × 2 versiones de Python.
+- **Honestidad sobre cobertura** — `security-audit` reporta explícitamente qué dependencias quedaron FUERA del scan (sin pin exacto o sin lockfile) en vez de presentar "0 vulnerabilidades" como cobertura total.
 
 ### 3️⃣ Diseño de API / DX
 
@@ -59,7 +61,7 @@ Cada skill documenta explícitamente:
 |---|---|
 | Cómo se usa el toolkit | [README.md](README.md) |
 | Arquitectura y decisiones de diseño | [docs/architecture.md](docs/architecture.md) |
-| El skill más complejo (1500+ LOC) | [skills/security-audit/](skills/security-audit/) — SKILL.md y `security_audit.py` |
+| El skill más complejo (1800~ LOC) | [skills/security-audit/](skills/security-audit/README.md) — README, SKILL.md y `security_audit.py` |
 | Cómo está organizado el CI | [.github/workflows/ci.yml](.github/workflows/ci.yml) |
 | Política de versionado y futuro | [CHANGELOG.md](CHANGELOG.md) · [ROADMAP.md](ROADMAP.md) |
 

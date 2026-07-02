@@ -29,7 +29,7 @@ Cuando un skill se completa en `~/.claude/skills/<nombre>/` y se decide promover
 ### 1️⃣ Validación previa
 
 - [ ] `SKILL.md` tiene **frontmatter YAML** con `name` + `description` (incluyendo triggers en ES + EN).
-- [ ] El script funciona desde **`Path.cwd()`** — no asume rutas del autor.
+- [ ] El script funciona desde **`Path.cwd()`** — no asume rutas del autor. Los **ejemplos de la documentación** tampoco usan rutas ni nombres de repos personales (usa `/ruta/a/mi-proyecto`).
 - [ ] **Cero dependencias** por defecto (las capas avanzadas son opt-in y degradan).
 - [ ] **Cross-platform** o documenta su limitación explícitamente (ej. "requiere bash").
 - [ ] Documenta **qué NO hace** y los riesgos conocidos.
@@ -48,18 +48,22 @@ Cada promoción **debe** actualizar estos archivos:
 
 | Archivo | Qué cambia |
 |---|---|
-| `README.md` | Fila nueva en `## 🗂️ Catálogo` con icono + LOC + triggers + deps. Badge `skills-N` incrementado. Icono nuevo al hero. |
+| `skills/<nombre>/README.md` | **Crear** — documentación humana con secciones 🎯 Qué hace / 📦 Instalación / 🚀 Uso (obligatorias, el test las exige), idealmente con diagrama Mermaid y casos de uso. |
+| `README.md` | Fila nueva en `## 🗂️ Catálogo` (enlazando al `README.md` del skill) con icono + LOC + triggers + deps. Badge `skills-N` incrementado. Icono nuevo al hero. |
 | `CHANGELOG.md` | Entrada en `## 🚧 [Unreleased]` → `### ✨ Añadido`. |
 | `ROADMAP.md` | Si el skill estaba en "Próximos hitos" o "Backlog", marcarlo `- [x]` y moverlo a "Estado actual". |
 | `docs/architecture.md` | Añadir entrada al árbol bajo `🗂️ skills/`. |
 | `tests/test_skills_structure.py` | Añadir `"<nombre>"` al set `PRODUCTION_SKILLS`. |
+| `INSTALL.md` | Fila en la tabla "Dependencias por skill". |
 
 ### 4️⃣ Validación local
 
 ```bash
-python -m unittest discover -s tests          # los 8 smoke tests + 1 nuevo deben pasar
+python -m unittest discover -s tests          # suite completa en verde (estructura + funcionales)
 python skills/yaml-control/yaml_control.py --all   # 0 errores
 ```
+
+Los tests estructurales validan automáticamente: frontmatter con `name`/`description`, `README.md` presente con las secciones obligatorias, y que el skill esté en `PRODUCTION_SKILLS`.
 
 ### 5️⃣ Commit + push
 

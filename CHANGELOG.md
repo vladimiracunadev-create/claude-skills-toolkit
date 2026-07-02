@@ -17,6 +17,24 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 - **`README.md` profesional en cada skill** (9 archivos, uno por skill de producción). Cada uno cubre: qué hace (con diagrama Mermaid), triggers de activación, instalación (vía toolkit installer o standalone desde release), uso con tabla de flags, casos de uso reales con outputs esperados, cómo funciona por dentro, dependencias, limitaciones y skills relacionados. Enlazados desde el catálogo del README principal (`skills/<name>/README.md` en lugar de `skills/<name>/`). Test estructural nuevo `test_each_skill_has_readme_md` que verifica presencia, longitud mínima y secciones obligatorias. Sección "Anatomía de un skill" del README principal actualizada para reflejar que README.md ahora es obligatorio junto con SKILL.md (dos archivos, dos audiencias: contrato-agente vs docs-humanos).
 - `skills/pre-commit-guard/` — nuevo skill: gemelo rápido de `pre-push-guard` sobre archivos **staged**. Corre `yaml-control` + `md-lint-fix --dry-run` sobre `git diff --cached --name-only --diff-filter=ACMR` antes de cada `git commit`, con reporte unificado y fail-fast. Objetivo de tiempo < 2s — no corre pytest (los tests pesados quedan para `pre-push-guard`). Soporta `--install-hook` / `--uninstall-hook` para registrarse como git `pre-commit` hook (opt-in, backup automático de hook previo como `.pre-commit.bak`). Cierra el item `pre-commit hook configurable` del ROADMAP v0.3.0. **Justificación:** hasta ahora un YAML roto o Markdown malformado entraba al historial local y forzaba `git commit --amend`/rebase; con este skill el commit se aborta antes. Complementa a `pre-push-guard` sin solaparse (dos capas de defensa: rápida por commit / completa por push). Triggers: "valida antes de commitear", "pre-commit", "guard antes de commit", "instala pre-commit hook".
+- `skills/_template/README.md` — esqueleto nuevo con las secciones obligatorias (🎯/📦/🚀), para que cada skill nuevo parta con la estructura que exigen los tests.
+
+### 🐛 Corregido
+
+- `security-audit`: las capas repo-level (`sast`, `secrets`, `workflows`, `dockerfile`, `container`) ahora corren aunque el repo no declare dependencias. Antes, un repo sin manifests hacía return temprano con "No se detectaron manifests" y se saltaba TODAS las capas — incluso las que auditan el repo en sí (Bandit sobre el código propio, gitleaks sobre el histórico, zizmor sobre workflows). Detectado al auditar el propio toolkit (cero deps por diseño): el fix habilitó a Bandit encontrar 54 hallazgos SAST reales que antes eran invisibles. Además `skills/` y `lib/` se añaden a los directorios candidatos de Bandit (antes solo `src/cases/shared/scripts/app/backend`).
+- `security-audit`: crash (`ValueError` en `Path.relative_to`) al usar `--out-dir` apuntando fuera del repo auditado. El reporte se escribía bien pero el print final del path fallaba. Detectado en demo real con reporte dirigido a un directorio temporal. Ahora si el path no es relativo al repo se muestra absoluto.
+- `security-audit`: la sección "Cómo reproducir" del reporte generado embebía un path absoluto del autor (`C:/Users/vbav/...`) — cada reporte de cualquier usuario incluía esa ruta ajena. Ahora usa `~/.claude/skills/...`. Además, los ejemplos de salida en la documentación de `security-audit`, `yaml-control` y `docker-compose-doctor` usaban nombres de repos personales del autor — sustituidos por `/ruta/a/mi-proyecto`.
+
+### 🔄 Cambiado
+
+- **Barrido documental completo** — toda la documentación alineada con el estado real del toolkit (9 skills, 17 tests, release v0.2.0 publicado):
+  - `INSTALL.md`: "los 4 skills" → 9; tabla de dependencias ampliada a los 9 skills; `git checkout v0.2.0` como ejemplo real (los tags ya existen); guía para detectar instalaciones en modo copia desactualizadas + troubleshooting nuevo "el skill se comporta viejo"; desinstalación manual en loop.
+  - `CONTRIBUTING.md`: `README.md` por skill ahora es regla obligatoria (con las secciones que exige el test estructural); workflow ampliado de 7 a 8 pasos con cascada documental explícita; regla de no usar rutas personales ni en ejemplos.
+  - `docs/skill-promotion.md`: checklist de promoción incluye crear el `README.md` humano y la fila en `INSTALL.md`; validación menciona los tests estructurales de README.
+  - `docs/architecture.md`: árbol actualizado (release.yml, test_security_audit_coverage.py, docs completos, nota "cada skill: SKILL.md + README.md + script"); modelo mental con las dos audiencias; "los 4 skills" → 9; sección nueva "Release automation" con el flujo de tag → release.
+  - `RECRUITER.md`: 4 skills/1500 LOC → 9 skills/4100+ LOC; menciona release automation, la suite de 17 tests y el dogfooding de security-audit sobre su propio código (54 hallazgos SAST).
+  - `SECURITY.md`: tabla de versiones soportadas — `v0.2.x` release activa, `v0.1.x` sin soporte.
+  - LOC badges sincronizados con el código real: security-audit 1565→1788, md-lint-fix 359→400, pre-commit-guard 260→286, python-version-control 540→449 (README raíz + READMEs de los skills).
 
 ---
 
@@ -48,8 +66,6 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ### 🐛 Corregido
 
-- `security-audit`: las capas repo-level (`sast`, `secrets`, `workflows`, `dockerfile`, `container`) ahora corren aunque el repo no declare dependencias. Antes, un repo sin manifests hacía return temprano con "No se detectaron manifests" y se saltaba TODAS las capas — incluso las que auditan el repo en sí (Bandit sobre el código propio, gitleaks sobre el histórico, zizmor sobre workflows). Detectado al auditar el propio toolkit (cero deps por diseño): el fix habilitó a Bandit encontrar 54 hallazgos SAST reales que antes eran invisibles. Además `skills/` y `lib/` se añaden a los directorios candidatos de Bandit (antes solo `src/cases/shared/scripts/app/backend`).
-- `security-audit`: crash (`ValueError` en `Path.relative_to`) al usar `--out-dir` apuntando fuera del repo auditado. El reporte se escribía bien pero el print final del path fallaba. Detectado en demo real auditando `langgraph-realworld` con reporte dirigido a un directorio temporal. Ahora si el path no es relativo al repo se muestra absoluto.
 - `skills/md-lint-fix/SKILL.md` no tenía frontmatter — el agente lo cargaba sin contrato declarado.
 - `skills/docker-cleanup/SKILL.md` tenía un `:` sin escapar en `description:` que rompía el parser YAML — convertido a block scalar `|`.
 - `skills/security-audit/SKILL.md` decía "9 capas" pero listaba 12 — corregido a 12.

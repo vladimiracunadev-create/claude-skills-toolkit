@@ -14,7 +14,8 @@ Solo la rama `main` recibe parches de seguridad. Si usas una versión tag-eada, 
 | Versión | Soporte |
 |---|:-:|
 | `main` (HEAD) | sí |
-| `v0.1.x` | sí (release activa) |
+| `v0.2.x` | sí (release activa) |
+| `v0.1.x` | no — actualiza a `v0.2.x` |
 | pre-`v0.1.0` | no |
 
 ---
