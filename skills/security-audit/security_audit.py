@@ -1440,7 +1440,7 @@ def build_report(
     md.append("## Cómo reproducir")
     md.append("")
     md.append("```bash")
-    md.append("python C:/Users/vbav/.claude/skills/security-audit/security_audit.py")
+    md.append("python ~/.claude/skills/security-audit/security_audit.py")
     md.append("```")
     md.append("")
     return "\n".join(md)

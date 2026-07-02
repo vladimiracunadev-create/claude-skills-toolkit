@@ -235,7 +235,7 @@ Después del bump, intenta correr `pip-compile` para `.in` → `.txt` si está d
 ## Salida esperada (ejemplo)
 
 ```text
-Security audit — repo: C:/dev/langgraph-realworld
+Security audit — repo: /ruta/a/mi-proyecto
   Detectados: 26 manifests PyPI, 0 npm, 0 otros
   Consultando OSV.dev (batch 26 grupos)... OK
   Descargando CISA KEV catalog... OK (cached, 1342 CVEs vivos)

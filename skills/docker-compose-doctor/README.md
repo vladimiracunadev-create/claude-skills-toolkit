@@ -108,7 +108,7 @@ Busca `compose.yml`, `compose.yaml`, `docker-compose.yml`, `docker-compose.yaml`
 
 ```text
 $ python ~/.claude/skills/docker-compose-doctor/docker_compose_doctor.py
-docker-compose-doctor — repo: C:/dev/ferremarket
+docker-compose-doctor — repo: /ruta/a/mi-proyecto
   archivo: compose.yml (5 servicios)
 
 [errors]

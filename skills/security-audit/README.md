@@ -160,7 +160,7 @@ python ~/.claude/skills/security-audit/security_audit.py --layers all --min-seve
 Ejemplo de salida resumida:
 
 ```text
-Security audit — repo: C:/dev/langgraph-realworld
+Security audit — repo: /ruta/a/mi-proyecto
   Detectados: 26 manifests PyPI, 0 npm
   ⚠ Cobertura: 4 dependencia(s) declaradas FUERA del scan (sin pin exacto o sin lockfile) — detalle en el reporte
   OSV.dev batch (26 grupos) → OK

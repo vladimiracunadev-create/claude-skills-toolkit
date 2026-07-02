@@ -114,7 +114,7 @@ Valida solo los `.yml`/`.yaml` que aparezcan modificados según `git status`.
 
 ```bash
 $ python ~/.claude/skills/yaml-control/yaml_control.py
-YAML control — repo: C:/dev/langgraph-realworld
+YAML control — repo: /ruta/a/mi-proyecto
   scope: 3 archivos modificados
 
 [1/3] .github/workflows/ci.yml

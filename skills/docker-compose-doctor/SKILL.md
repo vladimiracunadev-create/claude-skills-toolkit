@@ -102,7 +102,7 @@ Sin binarios externos. No invoca `docker` ni `docker compose`.
 ### Caso con hallazgos
 
 ```text
-docker-compose-doctor — repo: C:/dev/ferremarket
+docker-compose-doctor — repo: /ruta/a/mi-proyecto
   archivo: compose.yml (5 servicios)
 
 [errors]
@@ -129,7 +129,7 @@ Exit `1` (errores presentes).
 ### Caso limpio
 
 ```text
-docker-compose-doctor — repo: C:/dev/ferremarket
+docker-compose-doctor — repo: /ruta/a/mi-proyecto
   archivo: compose.yml (5 servicios)
 
 ✓ Puertos: sin conflictos

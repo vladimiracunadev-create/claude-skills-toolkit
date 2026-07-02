@@ -105,7 +105,7 @@ Si `actionlint` no está disponible, sigue con sólo las capas 1 y 3 y reporta:
 ## Salida esperada
 
 ```text
-YAML control — repo: C:/dev/langgraph-realworld
+YAML control — repo: /ruta/a/mi-proyecto
   scope: 3 archivos modificados (.github/workflows/ci.yml, .github/workflows/security.yml, cases/22-.../compose.yml)
 
 [1/3] .github/workflows/ci.yml
