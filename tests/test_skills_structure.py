@@ -28,6 +28,7 @@ PRODUCTION_SKILLS = {
     "web-snap",
     "python-version-control",
     "pre-commit-guard",
+    "repo-coherence-audit",
 }
 
 

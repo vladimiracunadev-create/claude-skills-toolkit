@@ -165,10 +165,10 @@ Para cada carpeta dentro de `skills/` (excepto `_template`):
 ### Linux · macOS · Git Bash
 
 ```bash
-ls -la ~/.claude/skills/ | grep -E "security-audit|yaml-control|md-lint-fix|docker-cleanup|docker-compose-doctor|pre-commit-guard|pre-push-guard|python-version-control|web-snap"
+ls -la ~/.claude/skills/ | grep -E "security-audit|yaml-control|md-lint-fix|docker-cleanup|docker-compose-doctor|pre-commit-guard|pre-push-guard|python-version-control|repo-coherence-audit|web-snap"
 ```
 
-Deberías ver **9 entradas** con flecha `->` apuntando a `claude-skills-toolkit/skills/...` (o carpetas si la instalación cayó a modo copia).
+Deberías ver **10 entradas** con flecha `->` apuntando a `claude-skills-toolkit/skills/...` (o carpetas si la instalación cayó a modo copia).
 
 ### PowerShell
 
@@ -192,6 +192,7 @@ Get-ChildItem $env:USERPROFILE\.claude\skills | Where-Object { $_.LinkType -eq "
 | **pre-commit-guard** | Python stdlib | yaml-control + md-lint-fix instalados (degrada si faltan) |
 | **pre-push-guard** | Python stdlib | `pip install pytest` (solo si el repo tiene tests) |
 | **python-version-control** | Python stdlib | `pip install tomli` (solo Python < 3.11) |
+| **repo-coherence-audit** | Python stdlib | `pip install pytest` (solo para el conteo de tests) |
 | **web-snap** | `pip install pillow` + Chrome/Edge | — (solo Windows) |
 
 Las dependencias opcionales **no son requeridas**: el skill detecta su ausencia, salta esa capa y deja constancia en el reporte.
@@ -218,7 +219,7 @@ Las dependencias opcionales **no son requeridas**: el skill detecta su ausencia,
 
 ```bash
 for s in security-audit yaml-control md-lint-fix docker-cleanup docker-compose-doctor \
-         pre-commit-guard pre-push-guard python-version-control web-snap; do
+         pre-commit-guard pre-push-guard python-version-control repo-coherence-audit web-snap; do
   rm -rf ~/.claude/skills/$s
 done
 ```

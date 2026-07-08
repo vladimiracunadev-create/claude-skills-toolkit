@@ -4,13 +4,13 @@
 
 ### ⚡ Skills agentic listos para producción para [Claude Code](https://claude.com/claude-code) y runtimes compatibles
 
-Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de seguridad multi-fuente, 📋 lint de YAML, 📝 lint de Markdown, 🐳 limpieza de Docker, 🩺 diagnóstico de `compose.yml`, 🪝 guardián pre-commit, 🛡️ guardián pre-push, 📸 screenshots web y 🐍 coherencia de versión de Python.
+Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de seguridad multi-fuente, 📋 lint de YAML, 📝 lint de Markdown, 🐳 limpieza de Docker, 🩺 diagnóstico de `compose.yml`, 🪝 guardián pre-commit, 🛡️ guardián pre-push, 📸 screenshots web, 🐍 coherencia de versión de Python y 🧭 auditoría de coherencia docs↔repo.
 **Sin dependencias innecesarias** — la mayoría usa solo Python stdlib.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/vladimiracunadev-create/claude-skills-toolkit?logo=github&color=8957e5)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/releases)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Skills](https://img.shields.io/badge/skills-9-1f6feb)](#-catálogo)
+[![Skills](https://img.shields.io/badge/skills-10-1f6feb)](#-catálogo)
 [![Platforms](https://img.shields.io/badge/platforms-linux%20%7C%20macOS%20%7C%20windows-555?logo=linux&logoColor=white)](#-instalación)
 [![CI](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-17%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
@@ -303,6 +303,33 @@ stdlib<br>
 
 </td>
 </tr>
+<tr>
+<td>
+
+### 🧭 [repo-coherence-audit](skills/repo-coherence-audit/README.md)
+
+<sub>243 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Reconcilia lo que los **docs afirman** contra las **fuentes de verdad** del repo: versión (todos los manifests), conteo de tests (`pytest --collect-only`), workflows (lista + conteo), pins de acciones a SHA, prerequisitos. Distingue el marcador de estado **ACTUAL** (se sincroniza) de la referencia **HISTÓRICA** (se conserva). Modo `report` por defecto; `fix` acotado opt-in.
+
+</td>
+<td>
+
+🧭 `audita coherencia`<br>
+🔀 `drift de docs`<br>
+📊 `los conteos no cuadran`
+
+</td>
+<td>
+
+stdlib<br>
+<sub>(opt-in: pytest para el conteo)</sub>
+
+</td>
+</tr>
 </tbody>
 </table>
 
@@ -469,6 +496,7 @@ Resumen — versión completa en [ROADMAP.md](ROADMAP.md).
 **v0.3.0 · en curso:**
 
 - [x] 🪝 `pre-commit-guard` — gemelo rápido de `pre-push-guard` sobre lo staged *(primer hito v0.3.0)*
+- [x] 🧭 `repo-coherence-audit` — reconcilia afirmaciones de los docs (versión, conteos, workflows, pins) contra la verdad del repo
 - [ ] 🧹 `dependency-cleanup` — detecta dependencias sin uso en `requirements.txt` / `package.json`
 - [ ] ✍️ `commit-message-improve` — reescribe commits siguiendo conventional commits
 - [ ] 🗃️ `sql-migration-safety` — analiza migraciones DB (lock holding, FK cascades)
