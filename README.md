@@ -311,19 +311,20 @@ stdlib<br>
 
 ### 🧭 [repo-coherence-audit](skills/repo-coherence-audit/README.md)
 
-<sub>243 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+<sub>389 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
 
 </td>
 <td>
 
-Reconcilia lo que los **docs afirman** contra las **fuentes de verdad** del repo: versión (todos los manifests), conteo de tests (`pytest --collect-only`), workflows (lista + conteo), pins de acciones a SHA, prerequisitos. Distingue el marcador de estado **ACTUAL** (se sincroniza) de la referencia **HISTÓRICA** (se conserva). Modo `report` por defecto; `fix` acotado opt-in.
+Reconcilia lo que los **docs afirman** contra las **fuentes de verdad** del repo: versión (todos los manifests), conteo de tests (`pytest --collect-only`), workflows (lista + conteo), pins de acciones a SHA, prerequisitos, **encoding/mojibake** (`mojibake_probe.py`, round-trip sloppy-cp1252) y **metadatos del remoto** (el "About" de GitHub vía `gh api`). Distingue el marcador de estado **ACTUAL** (se sincroniza) de la referencia **HISTÓRICA** (se conserva). Modo `report` por defecto; `fix` acotado opt-in.
 
 </td>
 <td>
 
 🧭 `audita coherencia`<br>
 🔀 `drift de docs`<br>
-📊 `los conteos no cuadran`
+📊 `los conteos no cuadran`<br>
+🔤 `encoding roto`
 
 </td>
 <td>

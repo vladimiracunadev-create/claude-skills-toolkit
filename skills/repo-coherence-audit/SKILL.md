@@ -11,7 +11,9 @@ description: >-
   PROACTIVAMENTE después de editar manifests, workflows, añadir/quitar tests, o
   cambiar dependencias — porque esos cambios dejan afirmaciones stale en los docs.
   Distingue SIEMPRE el marcador de estado ACTUAL (se sincroniza) de la referencia
-  HISTÓRICA (se conserva). Trabaja sobre cualquier repositorio y cualquier stack.
+  HISTÓRICA (se conserva). Cubre también el drift de CODIFICACIÓN (mojibake):
+  "símbolos especiales", "caracteres raros", "se ven mal los acentos o los emoji",
+  "mÃ¡s", "ðŸ", "encoding roto". Trabaja sobre cualquier repositorio y cualquier stack.
 ---
 
 # Repo Coherence Audit
@@ -84,6 +86,77 @@ usuario lo pida o cuando el arreglo sea obvio y de bajo riesgo.
 | **Pins de acciones** | los `uses: …@<sha>  # vX` reales de los workflows | tablas de "SHAs activos", ejemplos de pin, "último pin pendiente" |
 | **Prerequisitos** | versión en CI (`setup-node`/`setup-python`) y `engines`/`requires-python` | "Node.js 20+", "Python 3.11+", tablas de "Runtime" |
 | **Dependencias/CVEs** | lockfile / manifest | "usa X>=Y", listas de "CVEs cerrados" |
+| **Encoding (mojibake)** | `scripts/mojibake_probe.py` (round-trip sloppy-cp1252) | acentos y emoji del README/docs/generadores: `mÃ¡s`, `ðŸ›¡ï¸`, `Â·`, `â€"` |
+| **Metadatos del remoto** | `gh api repos/<owner>/<repo>` (description, homepage, topics) | el "About" de GitHub: conteos, versión, % de cobertura, URL del sitio |
+
+## Dimensión: metadatos del remoto (el "About" de GitHub)
+
+Punto ciego clásico: el About **no está en el repo**, así que ningún `grep` local
+lo alcanza y ninguna review de PR lo mira — pero es lo PRIMERO que lee quien
+llega. Se queda stale con total impunidad. Caso real: el README decía "340
+clases, 19 partes" (correcto) mientras el About seguía anunciando "330 clases,
+18 partes" a todo el mundo.
+
+```bash
+gh api repos/<owner>/<repo> --jq '{description, homepage, topics}'
+```
+
+Contrasta con las mismas fuentes de verdad que el resto de dimensiones y corrige
+**solo** lo que esté desincronizado (verifica antes cada número: en el caso real
+el "7 certificaciones" y el "86–92% de cobertura" del About SÍ cuadraban con
+`_mapeo.json`; solo mentían los conteos).
+
+Dos cautelas al escribir:
+
+- **No pases el texto por el shell.** Un `--description "🛡️ …más…"` puede
+  corromperse en tránsito (ver trampa 1 de la dimensión de encoding) y acabas
+  *metiendo* mojibake justo al arreglar la coherencia. Construye el JSON en
+  Python y usa `gh api --method PATCH repos/<r> --input payload.json`.
+- **Verifica releyendo de la API**, no por lo que imprimió tu consola, y con el
+  texto escapado a ASCII (`unicode_escape`).
+
+Otras superficies remotas con el mismo problema, si el proyecto las usa: el
+`homepage`, los topics, la descripción del paquete en npm/PyPI, y el texto de la
+release más reciente.
+
+## Dimensión: encoding / mojibake
+
+Es drift de codificación: nadie escribió `mÃ¡s`, se degradó solo cuando algo
+decodificó UTF-8 como cp1252 y lo re-guardó como UTF-8. Los docs en español son
+las víctimas naturales (acentos, `¿`, `·`, emoji). Corre siempre:
+
+```bash
+python scripts/mojibake_probe.py .          # informe
+python scripts/mojibake_probe.py . --fix    # repara in situ
+```
+
+Tres trampas que cuestan tiempo real — están todas resueltas dentro del probe,
+pero hay que conocerlas para no "verificar" en falso:
+
+1. **No detectes mojibake con `grep 'Ã'`.** El patrón no-ASCII viaja por el
+   shell y puede llegar corrupto, con lo que acabas buscando los *bytes del
+   texto sano*: `Ã`→`C3` matchea toda vocal acentuada (`á`=`C3A1`), `ðŸ`→`F0`
+   matchea todo emoji, `Â·`→`C2B7` matchea el `·` **correcto**. Resultado: grep
+   "encuentra" mojibake en ficheros impecables y te manda a arreglar lo que ya
+   está bien. Detecta por round-trip programático (el probe), nunca por patrón.
+
+2. **cp1252 puro falla en silencio con los emoji.** cp1252 deja sin definir los
+   bytes `81 8D 8F 90 9D`, y los emoji los llevan (VS16 `U+FE0F` → `EF B8 8F`).
+   Con `encode('cp1252')` esas líneas lanzan `UnicodeEncodeError` y se quedan
+   **sin reparar**: el fichero *parece* arreglado porque los acentos se
+   corrigen, pero los emoji siguen rotos. Usa el mapa *sloppy* (cp1252 +
+   latin-1 en esos 5 huecos), que es lo que hace el probe.
+
+3. **Tu canal de observación miente.** Si stdout es cp1252, un `print` del texto
+   reparado lo re-mangla y parece que la reparación lo rompió — cuando el fichero
+   está bien. Juzga por `xxd`/hexdump o por `repr()`/`unicode_escape`, nunca por
+   texto crudo impreso en consola.
+
+Verificación de esta dimensión: el probe re-corrido debe dar `residual = 0`, los
+`.py` tocados deben seguir compilando (`python -m py_compile`), y el diff debe
+ser **simétrico** (mismas líneas `+` que `-`): solo cambian caracteres, no
+estructura. Si un generador estaba corrupto, regenera y comprueba que su salida
+reproduce el fichero reparado — eso valida el pipeline entero.
 
 ### Fuente canónica de versión por stack
 
@@ -148,3 +221,18 @@ distinta: usa el skill **`version-bump`** para esa mitad. Regla práctica:
 6. Afirmar "coherente" sin correr la prueba de fuego ni re-verificar la verdad.
 7. Olvidar los marcadores no-obvios: endpoint de versión en runtime, tags de
    imagen Docker de ejemplo, comentarios `# N tests` junto a comandos.
+8. Buscar mojibake con `grep 'Ã'` y creerse el resultado: el patrón se corrompe
+   en tránsito y matchea los bytes del texto SANO (`Ã`→`C3` = toda vocal
+   acentuada). Da falsos positivos en ficheros impecables. Usa el probe.
+9. Reparar mojibake con `cp1252` puro: arregla los acentos y deja los emoji
+   rotos sin avisar (los bytes `81 8D 8F 90 9D` no existen en cp1252). Sloppy.
+10. Juzgar una reparación de encoding por lo que imprime la consola: si stdout
+    es cp1252 re-mangla el texto y verás "roto" algo que está bien. Usa hexdump.
+11. Reparar un fichero generado y no el generador que lo emite: vuelve en el
+    siguiente build. Repara la fuente y regenera para verificar.
+12. Auditar solo lo que hay DENTRO del repo y dar por coherente el proyecto: el
+    About de GitHub (y la descripción en npm/PyPI) no la ve ningún grep local y
+    es lo primero que lee la gente. Compruebalo con `gh api`.
+13. Corregir el About pasando el texto por el shell: los emoji/tildes pueden
+    corromperse y acabas publicando mojibake al arreglar los conteos. JSON +
+    `--input`, y verifica releyendo de la API.

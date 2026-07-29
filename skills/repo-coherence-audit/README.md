@@ -1,10 +1,10 @@
 # 🧭 repo-coherence-audit
 
-> Reconcilia lo que la **documentación afirma** contra las **fuentes de verdad verificables** del repo — versión, conteo de tests, workflows, pins de acciones a SHA, prerequisitos. Detecta *drift* de estado y lo reporta con `fichero:línea`. Modo `fix` opt-in.
+> Reconcilia lo que la **documentación afirma** contra las **fuentes de verdad verificables** del repo — versión, conteo de tests, workflows, pins de acciones a SHA, prerequisitos, encoding (mojibake) y metadatos del remoto (el "About" de GitHub). Detecta *drift* de estado y lo reporta con `fichero:línea`. Modo `fix` opt-in.
 
 ![Skill](https://img.shields.io/badge/skill-repo--coherence--audit-1f6feb)
 ![Status](https://img.shields.io/badge/status-stable-2da44e)
-![LOC](https://img.shields.io/badge/LOC-243-8957e5)
+![LOC](https://img.shields.io/badge/LOC-389-8957e5)
 ![Runtime](https://img.shields.io/badge/runtime-Python%203.11+-3776AB?logo=python&logoColor=white)
 
 ---
@@ -56,8 +56,10 @@ Regla mental: *¿esta línea afirma cómo está el repo AHORA, o narra qué pas�
 | **Workflows** | `ls .github/workflows/*.y*ml` | "N workflows", enumeraciones |
 | **Pins de acciones** | los `uses: …@<sha>` reales | tablas de "SHAs activos", ejemplos de pin |
 | **Prerequisitos** | versión en CI (`setup-node`/`setup-python`) + `engines`/`requires-python` | "Node.js 20+", "Python 3.11+" |
+| **Encoding (mojibake)** | `mojibake_probe.py` (round-trip sloppy-cp1252) | acentos y emoji degradados en docs/generadores: `mÃ¡s`, `ðŸ›¡ï¸`, `Â·` |
+| **Metadatos del remoto** | `gh api repos/<owner>/<repo>` | el "About" de GitHub: description, homepage, topics — invisible para todo `grep` local |
 
-El script `coherence_probe.py` reúne versión + workflows + tests + pins **de una sola pasada**, degradando silenciosamente lo que no aplique al stack.
+El script `coherence_probe.py` reúne versión + workflows + tests + pins **de una sola pasada**, degradando silenciosamente lo que no aplique al stack. El script `mojibake_probe.py` cubre la dimensión de encoding: detecta por **round-trip programático** (nunca por `grep` de patrones no-ASCII, que se corrompen en tránsito y matchean los bytes del texto *sano*), repara con el mapa *sloppy-cp1252* (cp1252 + latin-1 en los 5 bytes que cp1252 deja sin definir — sin él los emoji quedan rotos en silencio), y verifica con `residual = 0` releyendo del disco.
 
 ---
 
@@ -68,6 +70,7 @@ El script `coherence_probe.py` reúne versión + workflows + tests + pins **de u
 - `"audita coherencia"` · `"revisa que los docs cuadren"` · `"hay incoherencias"`
 - `"los conteos no cuadran"` · `"la versión está desincronizada"` · `"drift de versión/docs"`
 - `"el README dice X pero el repo tiene Y"`
+- `"caracteres raros"` · `"se ven mal los acentos o los emoji"` · `"encoding roto"` · `"mÃ¡s"`
 
 **Triggers proactivos:**
 
@@ -107,6 +110,16 @@ python ~/.claude/skills/repo-coherence-audit/scripts/coherence_probe.py [ruta-re
 ```
 
 Sin argumentos opera sobre `Path.cwd()`. Imprime versiones (todos los manifests), workflows (lista + conteo), conteo de tests y pins de acciones. **No modifica nada** — es la base contra la que el agente compara los docs.
+
+### Auditar encoding — el mojibake probe
+
+```bash
+python ~/.claude/skills/repo-coherence-audit/scripts/mojibake_probe.py [ruta-repo]          # informe
+python ~/.claude/skills/repo-coherence-audit/scripts/mojibake_probe.py [ruta-repo] --fix    # repara in situ
+python ~/.claude/skills/repo-coherence-audit/scripts/mojibake_probe.py [ruta-repo] --show   # antes/después escapado a ASCII
+```
+
+Detecta texto degradado por decodificación errónea (UTF-8 leído como cp1252 y re-guardado): `más` → `mÃ¡s`, `🛡️` → `ðŸ›¡ï¸`. Tras `--fix` re-corre el probe internamente y reporta `Residual tras reparar: 0` — si no es 0, sale con código 1.
 
 ### Los dos modos del skill
 
@@ -172,6 +185,7 @@ Este skill **reconcilia** versión como una afirmación más. Pero si la conclus
 |---|:-:|---|
 | Python 3.11+ | ✅ | usa `tomllib` de stdlib |
 | `pytest` | opt | solo para el conteo de tests; degrada si falta |
+| `gh` (GitHub CLI) | opt | solo para la dimensión de metadatos del remoto (About de GitHub) |
 
 **Cero binarios externos.** Todo Python stdlib.
 
