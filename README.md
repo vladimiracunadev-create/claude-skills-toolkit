@@ -50,6 +50,9 @@ flowchart LR
     style E fill:#cf222e,color:#fff
 ```
 
+> [!IMPORTANT]
+> **Skill ≠ agente.** Un **skill** es *conocimiento empaquetado* (instrucciones + scripts) que el modelo **carga en su propio contexto** y ejecuta él mismo — como una receta con su caja de herramientas. Un **agente** (o subagente) es *una instancia de Claude que corre por separado*, con su propio contexto y herramientas, a la que se **delega** una tarea — como un ayudante al que le encargas un plato completo. Un agente puede *usar* skills; un skill puede *pedir* que se lancen agentes. **Este repo colecciona skills, no agentes** — ver [Qué es y qué no es este repo](#-qué-es-y-qué-no-es-este-repo).
+
 ---
 
 ## 🗂️ Catálogo
@@ -516,6 +519,41 @@ PRs bienvenidos. Antes de abrir uno, revisa [CONTRIBUTING.md](CONTRIBUTING.md). 
 2. 📜 `SKILL.md` con frontmatter completo (`name` + `description` con triggers).
 3. 🪶 Cero dependencias por defecto. Si requiere binarios externos: documentarlo y degradar gracefully.
 4. 🧪 Tests en `tests/` si la lógica es no-trivial.
+
+---
+
+## 🎯 Qué es y qué no es este repo
+
+<table>
+<tr>
+<td valign="top" width="50%">
+
+### ✅ Lo que este repo sí es
+
+- 🧰 una colección de **skills** universales de tooling de desarrollo (seguridad, YAML, Markdown, Docker, versiones, coherencia docs↔repo);
+- 🐍 lógica **ejecutable y probada** — la mayoría en Python stdlib, con tests en `tests/`;
+- 🌐 skills **agnósticos del repo**: corren sobre `Path.cwd()`, funcionan en cualquier proyecto;
+- 📜 un contrato claro por skill (`SKILL.md` + `README.md`), instalable vía symlink en `~/.claude/skills/`;
+- 🪶 **cero dependencias por defecto**: los binarios externos son opt-in y degradan gracefully.
+
+</td>
+<td valign="top" width="50%">
+
+### ❌ Lo que este repo no es
+
+- 🚫 un repo de **agentes / subagentes**: un skill no es una instancia de Claude que actúe sola (ver el aviso [Skill ≠ agente](#-qué-es-un-skill) arriba);
+- 🚫 una colección de skills **de dominio** (scraping de cursos, generación de PDFs, automatización de un proyecto puntual): esos viven fuera del toolkit;
+- 🚫 un plugin de distribución con `agents/` empaquetados — aquí solo hay `skills/`;
+- 🚫 un framework ni un runtime: no reemplaza a Claude Code, lo **extiende**;
+- 🚫 un cajón de scripts sueltos: cada skill tiene contrato, docs humanas y límites explícitos.
+
+</td>
+</tr>
+</table>
+
+## 💡 Idea fuerza
+
+> El valor de este toolkit no está en acumular scripts, sino en **empaquetar conocimiento reutilizable con un contrato claro**: skills universales, probados y honestos sobre sus límites, que el modelo carga en el momento justo y ejecuta sobre el repo en el que estás trabajando. Skills, no agentes; universales, no de dominio.
 
 ---
 

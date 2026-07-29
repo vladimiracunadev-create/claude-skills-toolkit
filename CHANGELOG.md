@@ -29,6 +29,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ### 🔄 Cambiado
 
+- **`README.md`: nueva sección "🎯 Qué es y qué no es este repo"** (mismo formato de dos columnas usado en los otros repos del autor) + aviso **"Skill ≠ agente"** dentro de "¿Qué es un skill?". Aclara explícitamente que el toolkit colecciona *skills* (conocimiento empaquetado que el modelo carga y ejecuta él mismo), no *agentes/subagentes* (instancias de Claude que corren por separado), y que son skills *universales de tooling*, no de dominio. Motivación: la distinción skill↔agente no estaba documentada y generaba dudas sobre el alcance del repo. Cambio solo de documentación — 0 issues de markdownlint, 17 tests siguen en verde.
 - **Barrido documental completo** — toda la documentación alineada con el estado real del toolkit (9 skills, 17 tests, release v0.2.0 publicado):
   - `INSTALL.md`: "los 4 skills" → 9; tabla de dependencias ampliada a los 9 skills; `git checkout v0.2.0` como ejemplo real (los tags ya existen); guía para detectar instalaciones en modo copia desactualizadas + troubleshooting nuevo "el skill se comporta viejo"; desinstalación manual en loop.
   - `CONTRIBUTING.md`: `README.md` por skill ahora es regla obligatoria (con las secciones que exige el test estructural); workflow ampliado de 7 a 8 pasos con cascada documental explícita; regla de no usar rutas personales ni en ejemplos.
