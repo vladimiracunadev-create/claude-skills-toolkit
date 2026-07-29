@@ -11,11 +11,11 @@
 
 ## 🎯 TL;DR
 
-`claude-skills-toolkit` es un toolkit de automatización para [Claude Code](https://claude.com/claude-code) — el agente de coding de Anthropic — que empaqueta 9 skills de producción para tareas que cualquier developer hace todos los días: auditar seguridad multi-fuente, lint de YAML y Markdown, diagnóstico y limpieza de Docker, guardianes pre-commit/pre-push, screenshots web y coherencia de versión de Python.
+`claude-skills-toolkit` es un toolkit de automatización para [Claude Code](https://claude.com/claude-code) — el agente de coding de Anthropic — que empaqueta 10 skills de producción para tareas que cualquier developer hace todos los días: auditar seguridad multi-fuente, lint de YAML y Markdown, diagnóstico y limpieza de Docker, guardianes pre-commit/pre-push, screenshots web, coherencia de versión de Python y coherencia docs↔repo.
 
 **Lenguajes**: Python (4100+ LOC), Bash, PowerShell.
 **Stack**: Python stdlib · PyYAML · PowerShell · Bash · GitHub Actions · unittest.
-**Sin dependencias innecesarias** — los 9 skills funcionan zero-deps (o casi) por defecto.
+**Sin dependencias innecesarias** — los 10 skills funcionan zero-deps (o casi) por defecto.
 **Releases automatizados** — cada tag `v*` publica un zip por skill + bundle completo vía GitHub Actions.
 
 ---
@@ -26,7 +26,7 @@
 
 ### 1️⃣ Diseño de sistemas — más allá de "hacer que funcione"
 
-[`security-audit`](skills/security-audit/) integra **12 fuentes oficiales** distintas (OSV.dev, CISA KEV, EPSS, Bandit, trivy, grype, gitleaks, zizmor, hadolint, heurística de typosquat) y produce un **Plan de Remediación transversal** priorizado por explotación activa. Modo `--apply --verify` aplica bumps y los revierte si los tests fallan — minimal blast radius.
+[`security-audit`](skills/security-audit/) integra **12 capas de análisis** complementarias (OSV.dev, CISA KEV, EPSS, Bandit SAST, trivy/grype, gitleaks, zizmor, hadolint, heurística de typosquat, entre otras) y produce un **Plan de Remediación transversal** priorizado por explotación activa. Modo `--apply --verify` aplica bumps y los revierte si los tests fallan — minimal blast radius.
 
 ### 2️⃣ Calidad de software
 

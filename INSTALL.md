@@ -12,7 +12,7 @@
 
 | Componente | Versión | Notas |
 |---|---|---|
-| **Python** | 3.11+ | Necesario para 8 de los 9 skills (todos menos `docker-cleanup`, que es bash) |
+| **Python** | 3.11+ | Necesario para 9 de los 10 skills (todos menos `docker-cleanup`, que es bash) |
 | **Git** | cualquiera reciente | Para clonar y para `git status` en los skills |
 | **Claude Code** | opcional | Runtime agentic que carga los skills automáticamente — también funciona con cualquier runtime que lea `~/.claude/skills/` |
 
@@ -46,7 +46,7 @@ git clone https://github.com/vladimiracunadev-create/claude-skills-toolkit.git $
   .\scripts\install.ps1
 ```
 
-Esto deja los 9 skills disponibles en `~/.claude/skills/` y el repo clonable/actualizable con un simple `git pull`.
+Esto deja los 10 skills disponibles en `~/.claude/skills/` y el repo clonable/actualizable con un simple `git pull`.
 
 > **Tip para equipos.** El repo en sí no contiene secretos ni configuración por-usuario, así que se puede instalar tal cual en cualquier máquina. Si tu organización mantiene un fork con skills internos adicionales, basta con cambiar la URL del `git clone`.
 
@@ -123,7 +123,7 @@ Para asegurarte de que dos máquinas tienen exactamente los mismos skills:
 cd ~/claude-skills-toolkit
 git pull
 git rev-parse --short HEAD     # debe coincidir entre máquinas
-ls ~/.claude/skills/           # debe listar los mismos 9 skills
+ls ~/.claude/skills/           # debe listar los mismos 10 skills
 ```
 
 Si trabajas en equipo y quieres pinear todos a un commit concreto:
