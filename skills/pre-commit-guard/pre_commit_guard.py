@@ -6,12 +6,14 @@ Detecta los archivos staged (`git diff --cached --name-only`), los
 particiona por extensión, y encadena:
   [a] yaml-control  sobre los *.y*ml staged
   [b] md-lint-fix --dry-run sobre los *.md staged
+  [c] python-lint-guard --parity-only sobre los *.py staged
 
 Aborta al primer error (fail-fast). Reporta resumen unificado.
 
-A diferencia de pre-push-guard, NO corre pytest — pre-commit debe ser
-rápido (< 2s en el caso típico). Los tests pesados quedan para
-pre-push-guard.
+A diferencia de pre-push-guard, NO corre pytest ni invoca ruff — pre-commit
+debe ser rápido (< 2s en el caso típico). Por eso python-lint-guard corre
+aquí en modo --parity-only: comprueba que el gate de lint declarado exista
+de verdad, sin analizar violaciones. Lo pesado queda para pre-push-guard.
 
 Soporta --install-hook / --uninstall-hook (opt-in, nunca automático).
 
@@ -38,6 +40,7 @@ for _stream in (sys.stdout, sys.stderr):
 HOME_SKILLS = Path.home() / ".claude" / "skills"
 YAML_CONTROL = HOME_SKILLS / "yaml-control" / "yaml_control.py"
 MD_LINT_FIX = HOME_SKILLS / "md-lint-fix" / "fix-md-lint.py"
+PY_LINT_GUARD = HOME_SKILLS / "python-lint-guard" / "python_lint_guard.py"
 
 
 @dataclass
@@ -87,13 +90,15 @@ def collect_staged(path: Path, all_files: bool = False) -> list[str]:
 
 
 def partition(files: list[str]) -> dict[str, list[str]]:
-    buckets: dict[str, list[str]] = {"yaml": [], "md": []}
+    buckets: dict[str, list[str]] = {"yaml": [], "md": [], "py": []}
     for f in files:
         low = f.lower()
         if low.endswith((".yml", ".yaml")):
             buckets["yaml"].append(f)
         elif low.endswith(".md"):
             buckets["md"].append(f)
+        elif low.endswith(".py"):
+            buckets["py"].append(f)
     return buckets
 
 
@@ -109,6 +114,26 @@ def step_yaml(yaml_files: list[str], cwd: Path) -> StepResult:
         return res
     t0 = time.time()
     code, out = run([sys.executable, str(YAML_CONTROL)], cwd=cwd)
+    res.duration_s = time.time() - t0
+    res.ok = code == 0
+    res.output = out
+    return res
+
+
+def step_python(py_files: list[str], cwd: Path) -> StepResult:
+    """Modo --parity-only: comprueba que el gate de lint declarado exista de
+    verdad (config, CI y hook local). No invoca ruff, para no pasar de 2 s."""
+    res = StepResult(name="python-lint-guard --parity-only", files=py_files)
+    if not py_files:
+        res.skipped = True
+        res.skip_reason = "sin archivos Python staged"
+        return res
+    if not PY_LINT_GUARD.is_file():
+        res.skipped = True
+        res.skip_reason = f"python-lint-guard no instalado ({PY_LINT_GUARD})"
+        return res
+    t0 = time.time()
+    code, out = run([sys.executable, str(PY_LINT_GUARD), "--parity-only"], cwd=cwd)
     res.duration_s = time.time() - t0
     res.ok = code == 0
     res.output = out
@@ -217,7 +242,7 @@ def uninstall_hook(cwd: Path) -> int:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="pre-commit-guard",
-        description="Validación pre-commit del toolkit (yaml-control + md-lint-fix sobre staged).",
+        description="Validación pre-commit del toolkit (yaml-control + md-lint-fix + python-lint-guard sobre staged).",
     )
     parser.add_argument("--all", action="store_true", help="Valida todos los archivos rastreados, no solo staged.")
     parser.add_argument("--json", action="store_true", help="Output JSON.")
@@ -242,6 +267,7 @@ def main(argv: list[str] | None = None) -> int:
     steps: list[StepResult] = [
         step_yaml(buckets["yaml"], cwd),
         step_md(buckets["md"], cwd),
+        step_python(buckets["py"], cwd),
     ]
 
     total = len(steps)

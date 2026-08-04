@@ -32,15 +32,20 @@ claude-skills-toolkit/
 │   ├── 📝 md-lint-fix/            ← wrapper inteligente de markdownlint-cli2
 │   ├── 🐳 docker-cleanup/         ← wipe completo de Docker (bash)
 │   ├── 🩺 docker-compose-doctor/  ← análisis estático de compose.yml
-│   ├── 🪝 pre-commit-guard/       ← orquestador pre-commit (yaml + md sobre staged, sin pytest)
-│   ├── 🛡️ pre-push-guard/         ← orquestador pre-push (yaml + md + pytest)
+│   ├── 🪝 pre-commit-guard/       ← orquestador pre-commit (yaml + md + paridad py, sin pytest)
+│   ├── 🛡️ pre-push-guard/         ← orquestador pre-push (yaml + md + python-lint + pytest)
 │   ├── 📸 web-snap/               ← screenshots de URLs en Windows (Chrome/Edge + Pillow)
 │   ├── 🐍 python-version-control/ ← audita drift de versión Python (12+ fuentes)
-│   └── 🧭 repo-coherence-audit/   ← reconcilia docs↔repo (versión/tests/workflows/pins)
+│   ├── 🧭 repo-coherence-audit/   ← reconcilia docs↔repo (versión/tests/workflows/pins)
+│   ├── 🐍 python-lint-guard/      ← paridad toolchain local↔CI + mecánico vs criterio
+│   ├── 📌 python-deps-pinning/    ← cobertura real del scan de dependencias
+│   ├── 🏷️ version-bump/           ← bump coherente · ACTUAL vs HISTÓRICO determinista
+│   └── 📄 md-to-doc/              ← Markdown → HTML autocontenido/PDF por capas opt-in
 │
 ├── 🧪 tests/                 ← unittest, sin dependencias extras
 │   ├── test_skills_structure.py        ← estructura: frontmatter + README + scripts
-│   └── test_security_audit_coverage.py ← funcionales: compute_coverage happy paths
+│   ├── test_security_audit_coverage.py ← funcionales: compute_coverage happy paths
+│   └── test_new_skills.py              ← funcionales: paridad, pinning, probe, render
 │
 ├── 📚 docs/
 │   ├── architecture.md            ← este archivo
@@ -138,7 +143,7 @@ Los skills nunca asumen una ruta absoluta del autor. Todo lo relativo se calcula
 
 ### 3️⃣ Cero dependencias por defecto
 
-Los 10 skills funcionan con Python stdlib + herramientas estándar del SO (git, docker) — las excepciones (`pyyaml`, `pillow`, `markdownlint-cli2`) están documentadas por skill en [INSTALL.md](../INSTALL.md). Las capas avanzadas (Bandit, trivy, gitleaks, etc.) son **opt-in** y degradan silenciosamente si no están instaladas. El reporte deja constancia de qué capa se saltó y por qué.
+Los 14 skills funcionan con Python stdlib + herramientas estándar del SO (git, docker) — las excepciones (`pyyaml`, `pillow`, `markdownlint-cli2`) están documentadas por skill en [INSTALL.md](../INSTALL.md). Las capas avanzadas (Bandit, trivy, gitleaks, etc.) son **opt-in** y degradan silenciosamente si no están instaladas. El reporte deja constancia de qué capa se saltó y por qué.
 
 ### 4️⃣ Honestidad sobre limitaciones
 

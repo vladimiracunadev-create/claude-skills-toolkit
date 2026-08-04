@@ -4,16 +4,16 @@
 
 ### ⚡ Skills agentic listos para producción para [Claude Code](https://claude.com/claude-code) y runtimes compatibles
 
-Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de seguridad multi-fuente, 📋 lint de YAML, 📝 lint de Markdown, 🐳 limpieza de Docker, 🩺 diagnóstico de `compose.yml`, 🪝 guardián pre-commit, 🛡️ guardián pre-push, 📸 screenshots web, 🐍 coherencia de versión de Python y 🧭 auditoría de coherencia docs↔repo.
+Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de seguridad multi-fuente, 📋 lint de YAML, 📝 lint de Markdown, 🐍 lint de Python con paridad local↔CI, 📌 cobertura real de pinning de dependencias, 🐳 limpieza de Docker, 🩺 diagnóstico de `compose.yml`, 🪝 guardián pre-commit, 🛡️ guardián pre-push, 📸 screenshots web, 🐍 coherencia de versión de Python, 🧭 auditoría de coherencia docs↔repo, 🏷️ control de versión de release y 📄 renderizado de Markdown a documento.
 **Sin dependencias innecesarias** — la mayoría usa solo Python stdlib.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/vladimiracunadev-create/claude-skills-toolkit?logo=github&color=8957e5)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/releases)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Skills](https://img.shields.io/badge/skills-10-1f6feb)](#-catálogo)
+[![Skills](https://img.shields.io/badge/skills-14-1f6feb)](#-catálogo)
 [![Platforms](https://img.shields.io/badge/platforms-linux%20%7C%20macOS%20%7C%20windows-555?logo=linux&logoColor=white)](#-instalación)
 [![CI](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-17%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
+[![Tests](https://img.shields.io/badge/tests-48%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
 [![Supply chain hardened](https://img.shields.io/badge/supply%20chain-hardened-2da44e?logo=shieldsdotio&logoColor=white)](docs/supply-chain-security.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?logo=github)](CONTRIBUTING.md)
 [![Made with ❤ in Chile](https://img.shields.io/badge/made_in-Chile-d52b1e)](https://github.com/vladimiracunadev-create)
@@ -205,12 +205,12 @@ Análisis estático de `compose.yml`: puertos host duplicados, healthchecks falt
 
 ### 🪝 [pre-commit-guard](skills/pre-commit-guard/README.md)
 
-<sub>286 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+<sub>312 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
 
 </td>
 <td>
 
-Gemelo rápido de `pre-push-guard` pero sobre lo **staged**: corre `yaml-control` + `md-lint-fix --dry-run` sobre `git diff --cached` antes de cada commit. Bloquea que un YAML roto o un Markdown malformado entre al historial local. No corre pytest — mantiene el commit < 2s.
+Gemelo rápido de `pre-push-guard` pero sobre lo **staged**: corre `yaml-control` + `md-lint-fix --dry-run` + `python-lint-guard --parity-only` sobre `git diff --cached` antes de cada commit. Bloquea que un YAML roto, un Markdown malformado o un gate de lint inexistente entren al historial local. No corre pytest ni ruff — mantiene el commit < 2s.
 
 </td>
 <td>
@@ -231,12 +231,12 @@ stdlib
 
 ### 🛡️ [pre-push-guard](skills/pre-push-guard/README.md)
 
-<sub>322 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+<sub>345 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
 
 </td>
 <td>
 
-Orquestador pre-push: corre `yaml-control` + `md-lint-fix --dry-run` + `pytest` sobre el diff vs `origin/<branch>`. Fail-fast con reporte unificado. Opt-in como git hook con `--install-hook`.
+Orquestador pre-push: corre `yaml-control` + `md-lint-fix --dry-run` + `python-lint-guard` + `pytest` sobre el diff vs `origin/<branch>`. Fail-fast con reporte unificado. Opt-in como git hook con `--install-hook`.
 
 </td>
 <td>
@@ -331,6 +331,113 @@ Reconcilia lo que los **docs afirman** contra las **fuentes de verdad** del repo
 
 stdlib<br>
 <sub>(opt-in: pytest para el conteo)</sub>
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 🐍 [python-lint-guard](skills/python-lint-guard/README.md)
+
+<sub>483 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+El gate de lint Python que faltaba antes de commit/push — y **no es un wrapper de ruff**. Cruza lo que el repo **declara** (`pyproject`, `ruff.toml`, `setup.cfg`, `.flake8`, `tox.ini`, `.pre-commit-config.yaml`) contra lo que el CI **ejecuta**, y detecta el caso que más commits de arreglo produce: el gate declarado **cuyo hook local nunca se instaló**. Con `ruff` disponible separa las violaciones mecánicas (`--fix`) de las que exigen criterio (`F841`, `E402`, `S110` — nunca se auto-corrigen).
+
+</td>
+<td>
+
+🐍 `arregla el lint de Python`<br>
+🔧 `corrige ruff`<br>
+❓ `por qué falla el lint en CI`
+
+</td>
+<td>
+
+stdlib<br>
+<sub>(opt-in: ruff)</sub>
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 📌 [python-deps-pinning](skills/python-deps-pinning/README.md)
+
+<sub>374 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Mide qué parte del árbol de dependencias es **realmente auditable** por un scanner de CVEs y **nombra las que quedan fuera**. Una dep declarada como `requests>=2.0` sin lockfile no resuelve a una versión, así que ningún scanner puede pronunciarse: un "0 vulnerabilidades" sobre esa superficie es un falso tranquilizante. Amplía la cobertura de `security-audit` en vez de competir con él.
+
+</td>
+<td>
+
+📌 `pinea las dependencias`<br>
+🔒 `genera el lockfile`<br>
+❓ `por qué el scan no ve nada`
+
+</td>
+<td>
+
+stdlib
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 🏷️ [version-bump](skills/version-bump/README.md)
+
+<sub>397 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Cambio de versión coherente en **todo** el repo, para cualquier stack (Cargo, npm, Python, Go, .NET, Java o sin gestor). `version_probe.py` vuelve determinista la regla crítica: clasifica cada aparición en **ACTUAL** (se bumpea), **HISTÓRICO** (se conserva) o **AMBIGUO** (revisión humana — no adivina). `--verify` es la prueba de fuego: exit 1 si algún badge quedó anclado a la versión vieja.
+
+</td>
+<td>
+
+🏷️ `sube la versión`<br>
+🚀 `prepara el release`<br>
+🔀 `incoherencias de versión`
+
+</td>
+<td>
+
+stdlib<br>
+<sub>(opt-in: gh para release)</sub>
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 📄 [md-to-doc](skills/md-to-doc/README.md)
+
+<sub>582 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Renderiza cualquier árbol de Markdown (`docs/`, ADRs, runbooks) a **un** HTML autocontenido —imágenes embebidas como data URI— y opcionalmente a PDF. Núcleo 100% stdlib; capas opt-in que degradan con aviso: `images` (Pillow), `highlight` (pygments), `diagrams` (mmdc: los mermaid que GitHub renderiza pero un PDF no, cacheados por hash), `exec` (captura la salida **real** del código), `pdf`.
+
+</td>
+<td>
+
+📄 `genera un PDF de la doc`<br>
+🖼️ `los diagramas no salen`<br>
+📦 `documentación offline`
+
+</td>
+<td>
+
+stdlib<br>
+<sub>(opt-in: pillow, pygments, mmdc, xhtml2pdf)</sub>
 
 </td>
 </tr>
@@ -501,11 +608,15 @@ Resumen — versión completa en [ROADMAP.md](ROADMAP.md).
 
 - [x] 🪝 `pre-commit-guard` — gemelo rápido de `pre-push-guard` sobre lo staged *(primer hito v0.3.0)*
 - [x] 🧭 `repo-coherence-audit` — reconcilia afirmaciones de los docs (versión, conteos, workflows, pins) contra la verdad del repo
+- [x] 🐍 `python-lint-guard` — paridad de toolchain local↔CI + separación mecánico/criterio; cierra el hueco de Python en ambos guards
+- [x] 📌 `python-deps-pinning` — cobertura real del scan de dependencias; amplía lo que `security-audit` puede auditar
+- [x] 🏷️ `version-bump` — control de versión general con `version_probe.py` (ACTUAL vs HISTÓRICO determinista)
+- [x] 📄 `md-to-doc` — Markdown → HTML autocontenido/PDF por capas opt-in
 - [ ] 🧹 `dependency-cleanup` — detecta dependencias sin uso en `requirements.txt` / `package.json`
 - [ ] ✍️ `commit-message-improve` — reescribe commits siguiendo conventional commits
 - [ ] 🗃️ `sql-migration-safety` — analiza migraciones DB (lock holding, FK cascades)
 - [ ] ⚛️ `react-component-scaffold` — genera componente React + tests + stories
-- [ ] 🧪 Tests por skill (happy path por cada uno)
+- [ ] 🧪 Tests por skill (happy path por cada uno) *(progreso: 5/14)*
 - [ ] 🔌 Integración explícita con [Cursor](https://www.cursor.com/) y [Windsurf](https://codeium.com/windsurf)
 
 ¿Sugerencias? 💬 Abre un [issue](https://github.com/vladimiracunadev-create/claude-skills-toolkit/issues).
@@ -531,7 +642,7 @@ PRs bienvenidos. Antes de abrir uno, revisa [CONTRIBUTING.md](CONTRIBUTING.md). 
 
 ### ✅ Lo que este repo sí es
 
-- 🧰 una colección de **skills** universales de tooling de desarrollo (seguridad, YAML, Markdown, Docker, versiones, coherencia docs↔repo);
+- 🧰 una colección de **skills** universales de tooling de desarrollo (seguridad, YAML, Markdown, Python, dependencias, Docker, versiones, coherencia docs↔repo, documentación);
 - 🐍 lógica **ejecutable y probada** — la mayoría en Python stdlib, con tests en `tests/`;
 - 🌐 skills **agnósticos del repo**: corren sobre `Path.cwd()`, funcionan en cualquier proyecto;
 - 📜 un contrato claro por skill (`SKILL.md` + `README.md`), instalable vía symlink en `~/.claude/skills/`;
@@ -543,7 +654,7 @@ PRs bienvenidos. Antes de abrir uno, revisa [CONTRIBUTING.md](CONTRIBUTING.md). 
 ### ❌ Lo que este repo no es
 
 - 🚫 un repo de **agentes / subagentes**: un skill no es una instancia de Claude que actúe sola (ver el aviso [Skill ≠ agente](#-qué-es-un-skill) arriba);
-- 🚫 una colección de skills **de dominio** (scraping de cursos, generación de PDFs, automatización de un proyecto puntual): esos viven fuera del toolkit;
+- 🚫 una colección de skills **de dominio** (scraping de un sitio concreto, automatización de un proyecto puntual, flujos atados a un cliente): esos viven fuera del toolkit. El criterio no es el *formato de salida* sino la *universalidad*: `md-to-doc` renderiza el Markdown de cualquier repo y por eso entra; un generador de PDFs atado a la estructura de un curso concreto, no;
 - 🚫 un plugin de distribución con `agents/` empaquetados — aquí solo hay `skills/`;
 - 🚫 un framework ni un runtime: no reemplaza a Claude Code, lo **extiende**;
 - 🚫 un cajón de scripts sueltos: cada skill tiene contrato, docs humanas y límites explícitos.

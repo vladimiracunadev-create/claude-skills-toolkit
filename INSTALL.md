@@ -12,7 +12,7 @@
 
 | Componente | Versión | Notas |
 |---|---|---|
-| **Python** | 3.11+ | Necesario para 9 de los 10 skills (todos menos `docker-cleanup`, que es bash) |
+| **Python** | 3.11+ | Necesario para 13 de los 14 skills (todos menos `docker-cleanup`, que es bash) |
 | **Git** | cualquiera reciente | Para clonar y para `git status` en los skills |
 | **Claude Code** | opcional | Runtime agentic que carga los skills automáticamente — también funciona con cualquier runtime que lea `~/.claude/skills/` |
 
@@ -46,7 +46,7 @@ git clone https://github.com/vladimiracunadev-create/claude-skills-toolkit.git $
   .\scripts\install.ps1
 ```
 
-Esto deja los 10 skills disponibles en `~/.claude/skills/` y el repo clonable/actualizable con un simple `git pull`.
+Esto deja los 14 skills disponibles en `~/.claude/skills/` y el repo clonable/actualizable con un simple `git pull`.
 
 > **Tip para equipos.** El repo en sí no contiene secretos ni configuración por-usuario, así que se puede instalar tal cual en cualquier máquina. Si tu organización mantiene un fork con skills internos adicionales, basta con cambiar la URL del `git clone`.
 
@@ -123,7 +123,7 @@ Para asegurarte de que dos máquinas tienen exactamente los mismos skills:
 cd ~/claude-skills-toolkit
 git pull
 git rev-parse --short HEAD     # debe coincidir entre máquinas
-ls ~/.claude/skills/           # debe listar los mismos 10 skills
+ls ~/.claude/skills/           # debe listar los mismos 14 skills
 ```
 
 Si trabajas en equipo y quieres pinear todos a un commit concreto:
@@ -165,10 +165,10 @@ Para cada carpeta dentro de `skills/` (excepto `_template`):
 ### Linux · macOS · Git Bash
 
 ```bash
-ls -la ~/.claude/skills/ | grep -E "security-audit|yaml-control|md-lint-fix|docker-cleanup|docker-compose-doctor|pre-commit-guard|pre-push-guard|python-version-control|repo-coherence-audit|web-snap"
+ls -la ~/.claude/skills/ | grep -E "security-audit|yaml-control|md-lint-fix|md-to-doc|docker-cleanup|docker-compose-doctor|pre-commit-guard|pre-push-guard|python-version-control|python-lint-guard|python-deps-pinning|repo-coherence-audit|version-bump|web-snap"
 ```
 
-Deberías ver **10 entradas** con flecha `->` apuntando a `claude-skills-toolkit/skills/...` (o carpetas si la instalación cayó a modo copia).
+Deberías ver **14 entradas** con flecha `->` apuntando a `claude-skills-toolkit/skills/...` (o carpetas si la instalación cayó a modo copia).
 
 ### PowerShell
 
@@ -193,6 +193,10 @@ Get-ChildItem $env:USERPROFILE\.claude\skills | Where-Object { $_.LinkType -eq "
 | **pre-push-guard** | Python stdlib | `pip install pytest` (solo si el repo tiene tests) |
 | **python-version-control** | Python stdlib | `pip install tomli` (solo Python < 3.11) |
 | **repo-coherence-audit** | Python stdlib | `pip install pytest` (solo para el conteo de tests) |
+| **python-lint-guard** | Python stdlib | `pip install ruff` (capa de violaciones) |
+| **python-deps-pinning** | Python stdlib | — |
+| **version-bump** | Python stdlib | [`gh`](https://cli.github.com/) (solo para publicar el release) |
+| **md-to-doc** | Python stdlib | `pip install pillow pygments xhtml2pdf` · `pnpm add -g @mermaid-js/mermaid-cli` |
 | **web-snap** | `pip install pillow` + Chrome/Edge | — (solo Windows) |
 
 Las dependencias opcionales **no son requeridas**: el skill detecta su ausencia, salta esa capa y deja constancia en el reporte.
@@ -219,7 +223,8 @@ Las dependencias opcionales **no son requeridas**: el skill detecta su ausencia,
 
 ```bash
 for s in security-audit yaml-control md-lint-fix docker-cleanup docker-compose-doctor \
-         pre-commit-guard pre-push-guard python-version-control repo-coherence-audit web-snap; do
+         pre-commit-guard pre-push-guard python-version-control python-lint-guard \
+         python-deps-pinning repo-coherence-audit version-bump md-to-doc web-snap; do
   rm -rf ~/.claude/skills/$s
 done
 ```

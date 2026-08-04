@@ -29,6 +29,10 @@ PRODUCTION_SKILLS = {
     "python-version-control",
     "pre-commit-guard",
     "repo-coherence-audit",
+    "python-lint-guard",
+    "python-deps-pinning",
+    "version-bump",
+    "md-to-doc",
 }
 
 

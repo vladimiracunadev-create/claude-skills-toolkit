@@ -6,7 +6,8 @@ Detecta el diff vs origin/<branch> + working tree, lo particiona por
 extensión, y encadena:
   [a] yaml-control  sobre los *.y*ml modificados
   [b] md-lint-fix --dry-run sobre los *.md modificados
-  [c] pytest si hay *.py en el diff y existe tests/
+  [c] python-lint-guard sobre los *.py modificados
+  [d] pytest si hay *.py en el diff y existe tests/
 
 Aborta al primer error (fail-fast). Reporta resumen unificado.
 
@@ -35,6 +36,7 @@ for _stream in (sys.stdout, sys.stderr):
 HOME_SKILLS = Path.home() / ".claude" / "skills"
 YAML_CONTROL = HOME_SKILLS / "yaml-control" / "yaml_control.py"
 MD_LINT_FIX = HOME_SKILLS / "md-lint-fix" / "fix-md-lint.py"
+PY_LINT_GUARD = HOME_SKILLS / "python-lint-guard" / "python_lint_guard.py"
 
 
 @dataclass
@@ -138,6 +140,26 @@ def step_md(md_files: list[str], cwd: Path) -> StepResult:
         return res
     t0 = time.time()
     code, out = run([sys.executable, str(MD_LINT_FIX), "--dry-run"], cwd=cwd)
+    res.duration_s = time.time() - t0
+    res.ok = code == 0
+    res.output = out
+    return res
+
+
+def step_python_lint(py_files: list[str], cwd: Path) -> StepResult:
+    """Análisis completo: paridad de toolchain + violaciones vía ruff si está.
+    Corre antes que pytest — un fallo de lint es más barato de diagnosticar."""
+    res = StepResult(name="python-lint-guard", files=py_files)
+    if not py_files:
+        res.skipped = True
+        res.skip_reason = "sin archivos Python en el diff"
+        return res
+    if not PY_LINT_GUARD.is_file():
+        res.skipped = True
+        res.skip_reason = f"python-lint-guard no instalado ({PY_LINT_GUARD})"
+        return res
+    t0 = time.time()
+    code, out = run([sys.executable, str(PY_LINT_GUARD)], cwd=cwd)
     res.duration_s = time.time() - t0
     res.ok = code == 0
     res.output = out
@@ -276,6 +298,7 @@ def main(argv: list[str] | None = None) -> int:
     if not args.no_lint:
         steps.append(step_yaml(buckets["yaml"], cwd))
         steps.append(step_md(buckets["md"], cwd))
+        steps.append(step_python_lint(buckets["py"], cwd))
     if not args.no_tests:
         steps.append(step_pytest(buckets["py"], cwd))
 
