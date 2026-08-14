@@ -671,9 +671,17 @@ PRs bienvenidos. Antes de abrir uno, revisa [CONTRIBUTING.md](CONTRIBUTING.md). 
 
 ## 📄 Licencia
 
-[MIT](LICENSE) © 2026 [Vladimir Acuña](https://github.com/vladimiracunadev-create)
+Código y documentación original bajo [MIT](LICENSE) © 2026 [Vladimir Acuña](https://github.com/vladimiracunadev-create).
+
+Los **binarios externos** que los skills invocan de forma opt-in (`ruff`, `bandit`, `trivy`, `grype`, `gitleaks`, `zizmor`, `hadolint`, `actionlint`, `markdownlint-cli2`, `mmdc`, `pytest`, `docker`), las **librerías Python** de las capas opcionales (`pyyaml`, `pillow`, `pygments`, `xhtml2pdf`) y las **fuentes de datos de vulnerabilidades** que se consultan en línea (OSV.dev, NVD, GHSA, PyPA, RustSec, CISA KEV, EPSS) conservan sus propias licencias y términos de uso. Este repo no los redistribuye: los detecta si están presentes y degrada limpiamente si no.
+
+<sub>Hecho para quien quiere que el agente **ejecute** el checklist, no que lo recite.</sub>
 
 <div align="center">
+
+[⬆️ Empezar por la instalación](#-instalación) · [🗂️ Catálogo](#-catálogo) · [🧬 Anatomía de un skill](#-anatomía-de-un-skill) · [📚 Documentación](#-documentación) · [📋 Changelog](CHANGELOG.md) · [🗺️ Roadmap](ROADMAP.md)
+
+---
 
 ### 🌟 Otros proyectos del autor
 
@@ -685,6 +693,12 @@ PRs bienvenidos. Antes de abrir uno, revisa [CONTRIBUTING.md](CONTRIBUTING.md). 
 
 ---
 
-<sub>Hecho con ☕ y demasiados PRs revisados a la 1 a.m.</sub>
+¿Te ahorró un commit de arreglo? ⭐ Dale una estrella al repo.
+
+[![GitHub stars](https://img.shields.io/github/stars/vladimiracunadev-create/claude-skills-toolkit?style=social)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/vladimiracunadev-create/claude-skills-toolkit?style=social)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/network/members)
+[![Follow](https://img.shields.io/github/followers/vladimiracunadev-create?style=social&label=Follow)](https://github.com/vladimiracunadev-create)
+
+<sub>Hecho con 🧰 y ☕ por <a href="https://github.com/vladimiracunadev-create">Vladimir Acuña</a> — y demasiados PRs revisados a la 1 a.m.</sub>
 
 </div>
