@@ -40,12 +40,14 @@ claude-skills-toolkit/
 │   ├── 🐍 python-lint-guard/      ← paridad toolchain local↔CI + mecánico vs criterio
 │   ├── 📌 python-deps-pinning/    ← cobertura real del scan de dependencias
 │   ├── 🏷️ version-bump/           ← bump coherente · ACTUAL vs HISTÓRICO determinista
-│   └── 📄 md-to-doc/              ← Markdown → HTML autocontenido/PDF por capas opt-in
+│   ├── 📄 md-to-doc/              ← Markdown → HTML autocontenido/PDF por capas opt-in
+│   └── ₿ bitcoin-custody-audit/  ← custodia Bitcoin en 14 etapas · cobertura declarada
 │
 ├── 🧪 tests/                 ← unittest, sin dependencias extras
 │   ├── test_skills_structure.py        ← estructura: frontmatter + README + scripts
 │   ├── test_security_audit_coverage.py ← funcionales: compute_coverage happy paths
-│   └── test_new_skills.py              ← funcionales: paridad, pinning, probe, render
+│   ├── test_new_skills.py              ← funcionales: paridad, pinning, probe, render
+│   └── test_bitcoin_custody_audit.py   ← funcionales: cruce de avisos, quorum, cobertura
 │
 ├── 📚 docs/
 │   ├── architecture.md            ← este archivo
@@ -143,7 +145,7 @@ Los skills nunca asumen una ruta absoluta del autor. Todo lo relativo se calcula
 
 ### 3️⃣ Cero dependencias por defecto
 
-Los 14 skills funcionan con Python stdlib + herramientas estándar del SO (git, docker) — las excepciones (`pyyaml`, `pillow`, `markdownlint-cli2`) están documentadas por skill en [INSTALL.md](../INSTALL.md). Las capas avanzadas (Bandit, trivy, gitleaks, etc.) son **opt-in** y degradan silenciosamente si no están instaladas. El reporte deja constancia de qué capa se saltó y por qué.
+Los 15 skills funcionan con Python stdlib + herramientas estándar del SO (git, docker) — las excepciones (`pyyaml`, `pillow`, `markdownlint-cli2`) están documentadas por skill en [INSTALL.md](../INSTALL.md). Las capas avanzadas (Bandit, trivy, gitleaks, etc.) son **opt-in** y degradan silenciosamente si no están instaladas. El reporte deja constancia de qué capa se saltó y por qué.
 
 ### 4️⃣ Honestidad sobre limitaciones
 

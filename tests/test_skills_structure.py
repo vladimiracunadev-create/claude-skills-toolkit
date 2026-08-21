@@ -33,6 +33,7 @@ PRODUCTION_SKILLS = {
     "python-deps-pinning",
     "version-bump",
     "md-to-doc",
+    "bitcoin-custody-audit",
 }
 
 

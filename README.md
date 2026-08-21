@@ -4,16 +4,16 @@
 
 ### ⚡ Skills agentic listos para producción para [Claude Code](https://claude.com/claude-code) y runtimes compatibles
 
-Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de seguridad multi-fuente, 📋 lint de YAML, 📝 lint de Markdown, 🐍 lint de Python con paridad local↔CI, 📌 cobertura real de pinning de dependencias, 🐳 limpieza de Docker, 🩺 diagnóstico de `compose.yml`, 🪝 guardián pre-commit, 🛡️ guardián pre-push, 📸 screenshots web, 🐍 coherencia de versión de Python, 🧭 auditoría de coherencia docs↔repo, 🏷️ control de versión de release y 📄 renderizado de Markdown a documento.
+Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de seguridad multi-fuente, 📋 lint de YAML, 📝 lint de Markdown, 🐍 lint de Python con paridad local↔CI, 📌 cobertura real de pinning de dependencias, 🐳 limpieza de Docker, 🩺 diagnóstico de `compose.yml`, 🪝 guardián pre-commit, 🛡️ guardián pre-push, 📸 screenshots web, 🐍 coherencia de versión de Python, 🧭 auditoría de coherencia docs↔repo, 🏷️ control de versión de release, 📄 renderizado de Markdown a documento y ₿ auditoría de custodia Bitcoin.
 **Sin dependencias innecesarias** — la mayoría usa solo Python stdlib.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/vladimiracunadev-create/claude-skills-toolkit?logo=github&color=8957e5)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/releases)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Skills](https://img.shields.io/badge/skills-14-1f6feb)](#-catálogo)
+[![Skills](https://img.shields.io/badge/skills-15-1f6feb)](#-catálogo)
 [![Platforms](https://img.shields.io/badge/platforms-linux%20%7C%20macOS%20%7C%20windows-555?logo=linux&logoColor=white)](#-instalación)
 [![CI](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-48%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
+[![Tests](https://img.shields.io/badge/tests-83%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
 [![Supply chain hardened](https://img.shields.io/badge/supply%20chain-hardened-2da44e?logo=shieldsdotio&logoColor=white)](docs/supply-chain-security.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?logo=github)](CONTRIBUTING.md)
 [![Made with ❤ in Chile](https://img.shields.io/badge/made_in-Chile-d52b1e)](https://github.com/vladimiracunadev-create)
@@ -441,6 +441,34 @@ stdlib<br>
 
 </td>
 </tr>
+<tr>
+<td>
+
+### ₿ [bitcoin-custody-audit](skills/bitcoin-custody-audit/README.md)
+
+<sub>1487 LOC · Python · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Auditoría de **custodia Bitcoin en 14 etapas**: procedencia de cada semilla (fabricante · modelo · firmware) cruzada contra la matriz de avisos · frescura de esa matriz · arquitectura del quorum (single-sig, N-de-N, monocultivo de fabricante) · rechazo de material secreto · histórico de git · runtime empaquetado · dependencias · integridad del repo · postura del despliegue · aislamiento del nodo · clave de datos · workflows pinneados · artefacto verificable · runbook y roles.
+**Una etapa que no pudo ejecutarse sale OMITIDA, nunca aprobada** — y el informe cierra enumerando lo que *no* dice. Un cruce que no se puede decidir se reporta como indecidible, jamás como «no afectado». **Nunca pide, lee ni acepta semillas ni claves privadas.**
+
+</td>
+<td>
+
+₿ `audita mi custodia bitcoin`<br>
+🔑 `revisa la seguridad de mis wallets`<br>
+📣 `¿me afecta el aviso de COLDCARD?`
+
+</td>
+<td>
+
+stdlib<br>
+<sub>(opt-in: pyyaml para inventario YAML)</sub>
+
+</td>
+</tr>
 </tbody>
 </table>
 
@@ -519,6 +547,9 @@ Una vez instalados, los skills se invocan **conversacionalmente** desde Claude C
 
 > limpia docker
   → 🐳 invoca docker-cleanup · libera espacio
+
+> audita mi custodia bitcoin
+  → ₿ invoca bitcoin-custody-audit · 14 etapas + cobertura declarada
 ```
 
 También como scripts directos:
@@ -527,6 +558,7 @@ También como scripts directos:
 python ~/.claude/skills/security-audit/security_audit.py --layers all --min-severity high
 python ~/.claude/skills/yaml-control/yaml_control.py --workflows
 bash   ~/.claude/skills/docker-cleanup/scripts/wipe.sh
+python ~/.claude/skills/bitcoin-custody-audit/bitcoin_custody_audit.py --report
 ```
 
 ---
@@ -612,11 +644,12 @@ Resumen — versión completa en [ROADMAP.md](ROADMAP.md).
 - [x] 📌 `python-deps-pinning` — cobertura real del scan de dependencias; amplía lo que `security-audit` puede auditar
 - [x] 🏷️ `version-bump` — control de versión general con `version_probe.py` (ACTUAL vs HISTÓRICO determinista)
 - [x] 📄 `md-to-doc` — Markdown → HTML autocontenido/PDF por capas opt-in
+- [x] ₿ `bitcoin-custody-audit` — auditoría de custodia Bitcoin en 14 etapas; hermano de dominio de `security-audit` (aquel audita el repo, este la custodia)
 - [ ] 🧹 `dependency-cleanup` — detecta dependencias sin uso en `requirements.txt` / `package.json`
 - [ ] ✍️ `commit-message-improve` — reescribe commits siguiendo conventional commits
 - [ ] 🗃️ `sql-migration-safety` — analiza migraciones DB (lock holding, FK cascades)
 - [ ] ⚛️ `react-component-scaffold` — genera componente React + tests + stories
-- [ ] 🧪 Tests por skill (happy path por cada uno) *(progreso: 5/14)*
+- [ ] 🧪 Tests por skill (happy path por cada uno) *(progreso: 6/15)*
 - [ ] 🔌 Integración explícita con [Cursor](https://www.cursor.com/) y [Windsurf](https://codeium.com/windsurf)
 
 ¿Sugerencias? 💬 Abre un [issue](https://github.com/vladimiracunadev-create/claude-skills-toolkit/issues).
@@ -642,7 +675,7 @@ PRs bienvenidos. Antes de abrir uno, revisa [CONTRIBUTING.md](CONTRIBUTING.md). 
 
 ### ✅ Lo que este repo sí es
 
-- 🧰 una colección de **skills** universales de tooling de desarrollo (seguridad, YAML, Markdown, Python, dependencias, Docker, versiones, coherencia docs↔repo, documentación);
+- 🧰 una colección de **skills** universales de tooling de desarrollo (seguridad, YAML, Markdown, Python, dependencias, Docker, versiones, coherencia docs↔repo, documentación, custodia Bitcoin);
 - 🐍 lógica **ejecutable y probada** — la mayoría en Python stdlib, con tests en `tests/`;
 - 🌐 skills **agnósticos del repo**: corren sobre `Path.cwd()`, funcionan en cualquier proyecto;
 - 📜 un contrato claro por skill (`SKILL.md` + `README.md`), instalable vía symlink en `~/.claude/skills/`;
@@ -654,7 +687,7 @@ PRs bienvenidos. Antes de abrir uno, revisa [CONTRIBUTING.md](CONTRIBUTING.md). 
 ### ❌ Lo que este repo no es
 
 - 🚫 un repo de **agentes / subagentes**: un skill no es una instancia de Claude que actúe sola (ver el aviso [Skill ≠ agente](#-qué-es-un-skill) arriba);
-- 🚫 una colección de skills **de dominio** (scraping de un sitio concreto, automatización de un proyecto puntual, flujos atados a un cliente): esos viven fuera del toolkit. El criterio no es el *formato de salida* sino la *universalidad*: `md-to-doc` renderiza el Markdown de cualquier repo y por eso entra; un generador de PDFs atado a la estructura de un curso concreto, no;
+- 🚫 una colección de skills **de dominio** (scraping de un sitio concreto, automatización de un proyecto puntual, flujos atados a un cliente): esos viven fuera del toolkit. El criterio no es el *formato de salida* ni lo vertical del tema, sino la *universalidad*: `md-to-doc` renderiza el Markdown de cualquier repo y por eso entra; `bitcoin-custody-audit` audita la custodia de cualquiera que autocustodie y por eso también entra; un generador de PDFs atado a la estructura de un curso concreto, o un auditor acoplado al inventario de un producto propio, no;
 - 🚫 un plugin de distribución con `agents/` empaquetados — aquí solo hay `skills/`;
 - 🚫 un framework ni un runtime: no reemplaza a Claude Code, lo **extiende**;
 - 🚫 un cajón de scripts sueltos: cada skill tiene contrato, docs humanas y límites explícitos.

@@ -12,13 +12,23 @@ Un skill se promueve **sólo si es universal** — útil para cualquier develope
 
 | ✅ Universal · promover | ❌ Específico · NO promover |
 |---|---|
-| Lint / format genérico (yaml, md, py, ts) | Atado a un proyecto interno (ferremarket, rootcause, portal-*) |
+| Lint / format genérico (yaml, md, py, ts) | Atado a un proyecto interno (ferremarket, portal-*) |
 | Security audit / SAST / scan | Usa credenciales hardcoded o paths absolutos a tus repos |
+| Auditoría de un dominio público (custodia Bitcoin, licencias, accesibilidad) | Auditoría acoplada al inventario o a los scripts de **un** producto |
 | Refactoring genérico | Lógica de negocio de un cliente |
 | DevOps / CI helpers (docker, k8s) | Scrapers de plataformas con tu sesión personal |
 | Scaffolding (React, FastAPI, etc.) | Workflows internos no publicables |
 
 Ante la duda, **pregunta al autor** antes de promover.
+
+> [!NOTE]
+> **Vertical ≠ específico.** Un skill puede tratar un dominio estrecho y aun así ser
+> universal: lo que decide no es el tema sino el **acoplamiento**. `bitcoin-custody-audit`
+> nació dentro de `rootcause-bitcoin-defense` invocando los scripts Node de aquel repo —
+> en esa forma **no** era promovible. Se promovió sólo después de reescribirlo para que
+> operara sobre `Path.cwd()` con la stdlib, leyendo un inventario que cualquiera puede
+> escribir. La prueba: **¿funciona en el repo de otra persona sin tocar una línea?** Si
+> la respuesta es no, no está listo para el toolkit.
 
 ---
 

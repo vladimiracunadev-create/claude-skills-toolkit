@@ -11,11 +11,11 @@
 
 ## 🎯 TL;DR
 
-`claude-skills-toolkit` es un toolkit de automatización para [Claude Code](https://claude.com/claude-code) — el agente de coding de Anthropic — que empaqueta 14 skills de producción para tareas que cualquier developer hace todos los días: auditar seguridad multi-fuente, lint de YAML y Markdown, diagnóstico y limpieza de Docker, guardianes pre-commit/pre-push, screenshots web, coherencia de versión de Python y coherencia docs↔repo.
+`claude-skills-toolkit` es un toolkit de automatización para [Claude Code](https://claude.com/claude-code) — el agente de coding de Anthropic — que empaqueta 15 skills de producción para tareas que cualquier developer hace todos los días: auditar seguridad multi-fuente, lint de YAML y Markdown, diagnóstico y limpieza de Docker, guardianes pre-commit/pre-push, screenshots web, coherencia de versión de Python, coherencia docs↔repo y auditoría de custodia Bitcoin.
 
-**Lenguajes**: Python (4100+ LOC), Bash, PowerShell.
+**Lenguajes**: Python (5600+ LOC), Bash, PowerShell.
 **Stack**: Python stdlib · PyYAML · PowerShell · Bash · GitHub Actions · unittest.
-**Sin dependencias innecesarias** — los 14 skills funcionan zero-deps (o casi) por defecto.
+**Sin dependencias innecesarias** — los 15 skills funcionan zero-deps (o casi) por defecto.
 **Releases automatizados** — cada tag `v*` publica un zip por skill + bundle completo vía GitHub Actions.
 
 ---
@@ -33,7 +33,7 @@
 - **Cross-platform real** — Linux, macOS, Windows (PowerShell + Git Bash). No "funciona en mi máquina".
 - **CI cross-matrix** — `.github/workflows/ci.yml` corre tests en ubuntu/windows/macOS × Python 3.11/3.12.
 - **Eat your own dog food** — el repo valida sus propios YAML y Markdown con sus propios skills en CI, y `security-audit` auditó su propio código (Bandit SAST sobre el toolkit encontró y clasificó 54 hallazgos).
-- **Tests reales** detectan bugs reales — el primer run de `tests/test_skills_structure.py` encontró 2 bugs de frontmatter en producción; la suite (17 tests, estructura + funcionales) corre en matriz de 3 OS × 2 versiones de Python.
+- **Tests reales** detectan bugs reales — el primer run de `tests/test_skills_structure.py` encontró 2 bugs de frontmatter en producción; la suite (83 tests, estructura + funcionales) corre en matriz de 3 OS × 2 versiones de Python.
 - **Honestidad sobre cobertura** — `security-audit` reporta explícitamente qué dependencias quedaron FUERA del scan (sin pin exacto o sin lockfile) en vez de presentar "0 vulnerabilidades" como cobertura total.
 
 ### 3️⃣ Diseño de API / DX
