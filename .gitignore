@@ -12,7 +12,11 @@ Thumbs.db
 .idea/
 .vscode/
 *.tmp
+# Informes de security-audit generados al vuelo en la raíz del repo que se
+# audita. Los que se publican como evidencia viven en docs/security/ y sí
+# se versionan.
 SECURITY_AUDIT_*.md
+!docs/security/SECURITY_AUDIT_*.md
 
 # Claude Code session state
 .claude/
