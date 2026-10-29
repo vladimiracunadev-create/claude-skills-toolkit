@@ -1,7 +1,9 @@
 """
-Tests de los skills de metodología — los que entregan criterio en prosa en vez
-de un script ejecutable: preliminary-product-tester, functional-user-flow-tester,
-software-resilience-state-tester y release-evidence-auditor.
+Tests de los skills de criterio — los que entregan método en prosa en vez de un
+script ejecutable. Dos grupos hoy: la suite de testing de producto
+(preliminary-product-tester, functional-user-flow-tester,
+software-resilience-state-tester, release-evidence-auditor) y los runbooks de git
+(git-push, clone-repo, sync-fork).
 
 Un skill sin script no tiene salida que aserción pueda comparar, así que lo que
 se protege es lo que sí puede romperse en silencio: que no se cuele un script
@@ -25,6 +27,9 @@ METHODOLOGY_SKILLS = {
     "functional-user-flow-tester",
     "software-resilience-state-tester",
     "release-evidence-auditor",
+    "git-push",
+    "clone-repo",
+    "sync-fork",
 }
 
 LINK_RE = re.compile(r"\[[^\]]*\]\(([^)\s]+)")

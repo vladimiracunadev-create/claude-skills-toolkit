@@ -11,11 +11,11 @@
 
 ## 🎯 TL;DR
 
-`claude-skills-toolkit` es un toolkit de automatización para [Claude Code](https://claude.com/claude-code) — el agente de coding de Anthropic — que empaqueta 19 skills de producción para tareas que cualquier developer hace todos los días: auditar seguridad multi-fuente, lint de YAML y Markdown, diagnóstico y limpieza de Docker, guardianes pre-commit/pre-push, screenshots web, coherencia de versión de Python, coherencia docs↔repo, auditoría de custodia Bitcoin y una suite de testing de producto (preflight, flujos black-box, resiliencia de estado y evidencia de release).
+`claude-skills-toolkit` es un toolkit de automatización para [Claude Code](https://claude.com/claude-code) — el agente de coding de Anthropic — que empaqueta 22 skills de producción para tareas que cualquier developer hace todos los días: auditar seguridad multi-fuente, lint de YAML y Markdown, diagnóstico y limpieza de Docker, guardianes pre-commit/pre-push, screenshots web, coherencia de versión de Python, coherencia docs↔repo, auditoría de custodia Bitcoin, una suite de testing de producto (preflight, flujos black-box, resiliencia de estado y evidencia de release) y runbooks de git (subida por escenario, clonado en el directorio actual, sincronización de forks).
 
 **Lenguajes**: Python (5600+ LOC), Bash, PowerShell.
 **Stack**: Python stdlib · PyYAML · PowerShell · Bash · GitHub Actions · unittest.
-**Sin dependencias innecesarias** — los 19 skills funcionan zero-deps (o casi) por defecto.
+**Sin dependencias innecesarias** — los 22 skills funcionan zero-deps (o casi) por defecto.
 **Releases automatizados** — cada tag `v*` publica un zip por skill + bundle completo vía GitHub Actions.
 
 ---

@@ -4,13 +4,13 @@
 
 ### ⚡ Skills agentic listos para producción para [Claude Code](https://claude.com/claude-code) y runtimes compatibles
 
-Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de seguridad multi-fuente, 📋 lint de YAML, 📝 lint de Markdown, 🐍 lint de Python con paridad local↔CI, 📌 cobertura real de pinning de dependencias, 🐳 limpieza de Docker, 🩺 diagnóstico de `compose.yml`, 🪝 guardián pre-commit, 🛡️ guardián pre-push, 📸 screenshots web, 🐍 coherencia de versión de Python, 🧭 auditoría de coherencia docs↔repo, 🏷️ control de versión de release, 📄 renderizado de Markdown a documento, ₿ auditoría de custodia Bitcoin, 🩺 preflight de producto, 🧪 pruebas funcionales black-box, 🧯 resiliencia de estado y 📦 evidencia de release.
+Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de seguridad multi-fuente, 📋 lint de YAML, 📝 lint de Markdown, 🐍 lint de Python con paridad local↔CI, 📌 cobertura real de pinning de dependencias, 🐳 limpieza de Docker, 🩺 diagnóstico de `compose.yml`, 🪝 guardián pre-commit, 🛡️ guardián pre-push, 📸 screenshots web, 🐍 coherencia de versión de Python, 🧭 auditoría de coherencia docs↔repo, 🏷️ control de versión de release, 📄 renderizado de Markdown a documento, ₿ auditoría de custodia Bitcoin, 🩺 preflight de producto, 🧪 pruebas funcionales black-box, 🧯 resiliencia de estado, 📦 evidencia de release, 🚀 subida a GitHub por escenario, 📥 clonado en el directorio actual y 🔄 sincronización de forks.
 **Sin dependencias innecesarias** — la mayoría usa solo Python stdlib.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/vladimiracunadev-create/claude-skills-toolkit?logo=github&color=8957e5)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/releases)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Skills](https://img.shields.io/badge/skills-19-1f6feb)](#-catálogo)
+[![Skills](https://img.shields.io/badge/skills-22-1f6feb)](#-catálogo)
 [![Platforms](https://img.shields.io/badge/platforms-linux%20%7C%20macOS%20%7C%20windows-555?logo=linux&logoColor=white)](#-instalación)
 [![CI](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-87%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
@@ -578,6 +578,87 @@ sin deps<br>
 
 </td>
 </tr>
+<tr>
+<td>
+
+### 🚀 [git-push](skills/git-push/README.md)
+
+<sub>8 escenarios · prosa · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Enruta la subida a GitHub **después de leer el estado real** del repo (`status`, `remote`, rama, `rev-list --left-right`): repo nuevo, rama sin upstream, rama detrás, árbol sucio, solo push, amend, tag/release y apertura de PR — encadenables. Tres decisiones lo separan de hacerlo a mano: **encadena** `pre-commit-guard`/`pre-push-guard` antes de escribir en el histórico, **indexa por rutas explícitas** (nunca `git add .`, que es donde entran `.env` y claves), y usa **`--force-with-lease`** jamás `--force`. El tag/release lo delega en `version-bump`; `--no-verify` no existe aquí.
+
+</td>
+<td>
+
+🚀 `sube esto`<br>
+🔀 `crear PR`<br>
+♻️ `corregir el último commit`
+
+</td>
+<td>
+
+git<br>
+<sub>(opt-in: `gh` para repo/PR/release)</sub>
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 📥 [clone-repo](skills/clone-repo/README.md)
+
+<sub>PowerShell + Bash · prosa · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Clona un repo **dentro del directorio actual** en vez de en un subdirectorio, moviendo también los ocultos que un `mv repo/* .` se deja atrás — `.git` (histórico), `.github` (CI), `.gitignore`, `.githooks` — vía `Get-ChildItem -Force` / `shopt -s dotglob`. Clona a un temporal y **mueve**, así no duplica el `.git` de un repo grande. **Inventaria las colisiones antes del primer movimiento**: o entra todo o no entra nada, y si el destino ya es un repo git se detiene, porque dos `.git` no se fusionan.
+
+</td>
+<td>
+
+📥 `clona el repo aquí`<br>
+📂 `clonar en esta carpeta`<br>
+🔗 *(pegar una URL de GitHub)*
+
+</td>
+<td>
+
+git<br>
+<sub>(sin deps · PowerShell o Bash)</sub>
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 🔄 [sync-fork](skills/sync-fork/README.md)
+
+<sub>7 pasos · prosa · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Pone un fork al día con su upstream **sin adivinar**: el parent se lee de GitHub (`gh repo view --json parent`) porque un fork puede venir de otra organización, y la rama por defecto se consulta con `git remote show` en vez de asumir `main`. Integra con **merge, no rebase** —un fork es público y el rebase reescribiría commits que otros ya clonaron— y ante conflicto, árbol sucio o divergencia de `origin` **se detiene y lo explica**: nunca force-push, nunca reset.
+
+</td>
+<td>
+
+🔄 `sincroniza el fork`<br>
+⬇️ `mi fork está atrasado`<br>
+🆙 `update my fork`
+
+</td>
+<td>
+
+git<br>
+<sub>(opt-in: `gh` para autodetectar el parent)</sub>
+
+</td>
+</tr>
 </tbody>
 </table>
 
@@ -665,6 +746,12 @@ Una vez instalados, los skills se invocan **conversacionalmente** desde Claude C
 
 > qué pasa si la app se cierra justo al guardar
   → 🧯 invoca software-resilience-state-tester · oráculo + punto de interrupción
+
+> sube esto
+  → 🚀 invoca git-push · lee el estado y elige el escenario (+ guardias antes del histórico)
+
+> sincroniza este fork con el original
+  → 🔄 invoca sync-fork · parent desde GitHub · merge, nunca force-push
 ```
 
 También como scripts directos:
@@ -701,7 +788,7 @@ skills/<nombre>/
 └── references/       ← opcional · playbooks o plantillas que el SKILL.md manda leer
 ```
 
-**Dos familias de skill.** La mayoría son **ejecutables**: el `SKILL.md` dice cuándo invocarlos y un script hace el trabajo sobre `Path.cwd()`. Cuatro son **de criterio** (`preliminary-product-tester`, `functional-user-flow-tester`, `software-resilience-state-tester`, `release-evidence-auditor`): no hay nada que automatizar porque el valor está en el método —qué probar, en qué orden, qué cuenta como evidencia y qué no se puede afirmar—, así que entregan prosa y, cuando hace falta, `references/` con playbooks y plantillas. Un skill de criterio que gane un script deja de serlo y pasa a documentarse como ejecutable; el test `tests/test_methodology_skills.py` lo vigila.
+**Dos familias de skill.** Quince son **ejecutables**: el `SKILL.md` dice cuándo invocarlos y un script hace el trabajo sobre `Path.cwd()`. Siete son **de criterio** —la suite de testing (`preliminary-product-tester`, `functional-user-flow-tester`, `software-resilience-state-tester`, `release-evidence-auditor`) y los runbooks de git (`git-push`, `clone-repo`, `sync-fork`)—: no hay nada que automatizar porque el valor está en el método —qué probar, en qué orden, qué cuenta como evidencia y qué no se puede afirmar—, así que entregan prosa y, cuando hace falta, `references/` con playbooks y plantillas. Un skill de criterio que gane un script deja de serlo y pasa a documentarse como ejecutable; el test `tests/test_methodology_skills.py` lo vigila.
 
 **Dos archivos, dos audiencias.** `SKILL.md` es el contrato que el agente lee para decidir cuándo invocar el skill — descripción densa optimizada para matching semántico. `README.md` es la documentación para humanos que llegan al skill vía GitHub, con diagramas Mermaid, casos de uso reales y referencias externas. Cada skill del toolkit tiene ambos.
 
@@ -768,7 +855,8 @@ Resumen — versión completa en [ROADMAP.md](ROADMAP.md).
 - [ ] 🗃️ `sql-migration-safety` — analiza migraciones DB (lock holding, FK cascades)
 - [ ] ⚛️ `react-component-scaffold` — genera componente React + tests + stories
 - [x] 🧪 Suite genérica de testing — 🩺 `preliminary-product-tester`, 🧪 `functional-user-flow-tester`, 🧯 `software-resilience-state-tester` y 📦 `release-evidence-auditor`: los cuatro skills de criterio que cubren QA temprano, flujos, estado y evidencia de release
-- [ ] 🧪 Tests por skill (happy path por cada uno) *(progreso: 10/19)*
+- [x] 🚀 Runbooks de git — `git-push` (8 escenarios según el estado real del repo), `clone-repo` (clonar en el directorio actual sin perder los ocultos) y `sync-fork` (merge con el upstream sin reescribir histórico)
+- [ ] 🧪 Tests por skill (happy path por cada uno) *(progreso: 13/22)*
 - [ ] 🔌 Integración explícita con [Cursor](https://www.cursor.com/) y [Windsurf](https://codeium.com/windsurf)
 
 ¿Sugerencias? 💬 Abre un [issue](https://github.com/vladimiracunadev-create/claude-skills-toolkit/issues).

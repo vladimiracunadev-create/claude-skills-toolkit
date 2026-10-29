@@ -45,7 +45,10 @@ claude-skills-toolkit/
 │   ├── 🩺 preliminary-product-tester/        ← preflight · 5 niveles de evidencia + 2 playbooks
 │   ├── 🧪 functional-user-flow-tester/       ← black-box · cardinalidad + oráculo de transición
 │   ├── 🧯 software-resilience-state-tester/  ← estado y recuperación · races, cancelación, offline
-│   └── 📦 release-evidence-auditor/          ← evidencia de release + plantilla de informe
+│   ├── 📦 release-evidence-auditor/          ← evidencia de release + plantilla de informe
+│   ├── 🚀 git-push/                          ← subida a GitHub · 8 escenarios + guardias
+│   ├── 📥 clone-repo/                        ← clonar en el cwd sin perder los ocultos
+│   └── 🔄 sync-fork/                         ← merge con el upstream · sin force-push
 │
 ├── 🧪 tests/                 ← unittest, sin dependencias extras
 │   ├── test_skills_structure.py        ← estructura: frontmatter + README + scripts
@@ -69,7 +72,7 @@ claude-skills-toolkit/
 
 ## 🧠 Modelo mental
 
-Un **skill** = un contrato + docs humanas, y normalmente un ejecutable. El contrato vive en `SKILL.md` (frontmatter YAML con `name` + `description` + triggers — lo lee el agente); el ejecutable es Python o Bash; el `README.md` documenta para humanos (diagramas, casos de uso, limitaciones). Los **skills de criterio** (los cuatro de testing) no tienen ejecutable: su aporte es el método, así que el `SKILL.md` es el producto y `references/` guarda los playbooks y plantillas que ese contrato manda leer.
+Un **skill** = un contrato + docs humanas, y normalmente un ejecutable. El contrato vive en `SKILL.md` (frontmatter YAML con `name` + `description` + triggers — lo lee el agente); el ejecutable es Python o Bash; el `README.md` documenta para humanos (diagramas, casos de uso, limitaciones). Los **skills de criterio** (la suite de testing y los runbooks de git) no tienen ejecutable: su aporte es el método, así que el `SKILL.md` es el producto y `references/` guarda los playbooks y plantillas que ese contrato manda leer.
 
 El runtime (Claude Code) carga todos los directorios bajo `~/.claude/skills/`. Cuando el usuario habla, el modelo compara la intención con cada `description` y decide invocar el skill apropiado.
 

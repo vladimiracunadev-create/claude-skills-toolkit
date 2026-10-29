@@ -12,7 +12,7 @@
 
 | Componente | Versión | Notas |
 |---|---|---|
-| **Python** | 3.11+ | Necesario para 14 de los 19 skills (los 4 skills de criterio no traen script y `docker-cleanup` es bash) |
+| **Python** | 3.11+ | Necesario para 14 de los 22 skills (los 7 skills de criterio no traen script y `docker-cleanup` es bash) |
 | **Git** | cualquiera reciente | Para clonar y para `git status` en los skills |
 | **Claude Code** | opcional | Runtime agentic que carga los skills automáticamente — también funciona con cualquier runtime que lea `~/.claude/skills/` |
 
@@ -46,7 +46,7 @@ git clone https://github.com/vladimiracunadev-create/claude-skills-toolkit.git $
   .\scripts\install.ps1
 ```
 
-Esto deja los 19 skills disponibles en `~/.claude/skills/` y el repo clonable/actualizable con un simple `git pull`.
+Esto deja los 22 skills disponibles en `~/.claude/skills/` y el repo clonable/actualizable con un simple `git pull`.
 
 > **Tip para equipos.** El repo en sí no contiene secretos ni configuración por-usuario, así que se puede instalar tal cual en cualquier máquina. Si tu organización mantiene un fork con skills internos adicionales, basta con cambiar la URL del `git clone`.
 
@@ -123,7 +123,7 @@ Para asegurarte de que dos máquinas tienen exactamente los mismos skills:
 cd ~/claude-skills-toolkit
 git pull
 git rev-parse --short HEAD     # debe coincidir entre máquinas
-ls ~/.claude/skills/           # debe listar los mismos 19 skills
+ls ~/.claude/skills/           # debe listar los mismos 22 skills
 ```
 
 Si trabajas en equipo y quieres pinear todos a un commit concreto:
@@ -203,6 +203,9 @@ Get-ChildItem $env:USERPROFILE\.claude\skills | Where-Object { $_.LinkType -eq "
 | **functional-user-flow-tester** | — *(skill de criterio, sin script)* | navegador, emulador, dispositivo o cliente HTTP según la superficie |
 | **software-resilience-state-tester** | — *(skill de criterio, sin script)* | los mecanismos de inyección de fallos que el proyecto ya soporte |
 | **release-evidence-auditor** | — *(skill de criterio, sin script)* | el gestor del proyecto · [`gh`](https://cli.github.com/) (solo para consultar CI real) |
+| **git-push** | `git` *(skill de criterio, sin script)* | [`gh`](https://cli.github.com/) (crear repo, PR y release) |
+| **clone-repo** | `git` *(skill de criterio, sin script)* | — (PowerShell o Bash del sistema) |
+| **sync-fork** | `git` *(skill de criterio, sin script)* | [`gh`](https://cli.github.com/) (autodetectar el upstream) |
 
 Las dependencias opcionales **no son requeridas**: el skill detecta su ausencia, salta esa capa y deja constancia en el reporte.
 

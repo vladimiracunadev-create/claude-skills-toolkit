@@ -38,6 +38,9 @@ PRODUCTION_SKILLS = {
     "functional-user-flow-tester",
     "software-resilience-state-tester",
     "release-evidence-auditor",
+    "git-push",
+    "clone-repo",
+    "sync-fork",
 }
 
 
