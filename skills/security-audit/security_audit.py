@@ -611,6 +611,14 @@ def run_bandit(repo: Path, verbose: bool = False) -> list[dict]:
     for r in data.get("results", []):
         sev = r.get("issue_severity", "LOW").lower()
         conf = r.get("issue_confidence", "LOW").lower()
+        # Bandit devuelve rutas absolutas. Si se guardan tal cual, el informe
+        # queda con la ruta del disco de quien lo generó — inútil para quien lo
+        # lee y, si el informe se versiona, publicada en el repo.
+        raw_file = r.get("filename") or ""
+        try:
+            rel_file = Path(raw_file).resolve().relative_to(repo).as_posix()
+        except (ValueError, OSError):
+            rel_file = raw_file.replace("\\", "/")
         findings.append({
             "layer": "sast",
             "severity": sev,
@@ -618,7 +626,7 @@ def run_bandit(repo: Path, verbose: bool = False) -> list[dict]:
             "test_id": r.get("test_id"),
             "title": r.get("test_name"),
             "summary": r.get("issue_text", "")[:300],
-            "file": r.get("filename"),
+            "file": rel_file,
             "line": r.get("line_number"),
             "code": (r.get("code") or "")[:200],
             "ref": r.get("more_info"),

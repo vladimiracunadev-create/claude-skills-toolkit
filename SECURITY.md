@@ -74,8 +74,8 @@ El toolkit se audita con su propio `security-audit`. Lo que ese análisis **sí*
 |---|---|---|
 | Dependencias (OSV · CISA KEV · EPSS) | **sin superficie** | El repo no declara dependencias: no hay manifests ni lockfiles. Un «0 CVE» aquí significa *no hay terceros*, no *se revisaron y están limpios*. |
 | SAST (Bandit) | **corre** | Hallazgos aceptados congelados en [`.bandit-baseline.json`](.bandit-baseline.json): `B404`/`B603`/`B607` (invocar `git`/`gh` sin `shell=True` es la práctica correcta para un CLI), `B110`/`B112` y `B101` en tests. Un hallazgo **nuevo** sí se reporta y sale con exit 1. |
-| Secretos en el histórico (gitleaks) | **corre con binario local** | Requiere `gitleaks` instalado; sin él, la capa se omite y el informe lo dice. |
-| Workflows (zizmor) | **corre con binario local** | Las auditorías `impostor-commit`, `ref-confusion` y `known-vulnerable-actions` necesitan además `GH_TOKEN`. |
+| Secretos en el histórico (gitleaks) | **corre en CI** | Job `Security scan`, sobre el histórico completo (`fetch-depth: 0`). En local requiere `gitleaks` instalado; sin él la capa se omite y el informe lo dice. |
+| Workflows (zizmor) | **corre en CI** | Job `Security scan`, persona `auditor` y `GH_TOKEN` para las auditorías que consultan la API (`impostor-commit`, `ref-confusion`, `known-vulnerable-actions`). |
 | Dockerfile (hadolint) | **N/A** | El repo no tiene Dockerfile. |
 | Container (trivy/grype) | **N/A** | No se publica imagen. |
 | GitHub Actions como dependencia | **Dependabot** | Alerts + security updates activados; actualizaciones semanales vía [`.github/dependabot.yml`](.github/dependabot.yml). Los pins a SHA no se actualizan solos. |
@@ -86,7 +86,11 @@ Regenerar el baseline tras un cambio legítimo de código:
 python -m bandit -q -r skills tests -f json -o .bandit-baseline.json
 ```
 
-El baseline se ancla a fichero y línea, así que un refactor amplio puede invalidarlo: si aparecen hallazgos ya aceptados como «nuevos», regenéralo y **revisa el diff** antes de commitearlo.
+El baseline se ancla a fichero y línea, así que un refactor amplio puede invalidarlo. Por eso en CI **el gate duro es `--severity-level medium`** —la clase que importa, inmune a que el código se mueva— y la comparación contra el baseline corre como paso informativo: un `LOW` nuevo se ve en el log sin romper el build por un número de línea. Si aparecen hallazgos ya aceptados como «nuevos», regenera el baseline y **revisa el diff** antes de commitearlo.
+
+Los scanners del job van con **versión fija** (`bandit==1.9.4`, `zizmor==1.5.2`, `gitleaks 8.30.1` con su `sha256` comprobado) para que un hallazgo nuevo venga de un cambio del repo y no de un scanner que cambió de criterio.
+
+El último informe generado queda en [`docs/security/`](docs/security/) como evidencia fechada.
 
 ---
 
