@@ -25,7 +25,7 @@ claude-skills-toolkit/
 │   ├── uninstall.sh       ← solo remueve symlinks que apunten al repo
 │   └── uninstall.ps1      ← idem, versión PowerShell
 │
-├── 🗂️ skills/                     (cada skill: SKILL.md + README.md + script)
+├── 🗂️ skills/                     (SKILL.md + README.md; script salvo en los skills de criterio)
 │   ├── _template/         ← copia para crear skills nuevos
 │   ├── 🔒 security-audit/         ← 12 capas · OSV/KEV/EPSS/SAST/... + cobertura real del scan
 │   ├── 📋 yaml-control/           ← yaml + actionlint + convenciones repo
@@ -41,13 +41,18 @@ claude-skills-toolkit/
 │   ├── 📌 python-deps-pinning/    ← cobertura real del scan de dependencias
 │   ├── 🏷️ version-bump/           ← bump coherente · ACTUAL vs HISTÓRICO determinista
 │   ├── 📄 md-to-doc/              ← Markdown → HTML autocontenido/PDF por capas opt-in
-│   └── ₿ bitcoin-custody-audit/  ← custodia Bitcoin en 14 etapas · cobertura declarada
+│   ├── ₿ bitcoin-custody-audit/  ← custodia Bitcoin en 14 etapas · cobertura declarada
+│   ├── 🩺 preliminary-product-tester/        ← preflight · 5 niveles de evidencia + 2 playbooks
+│   ├── 🧪 functional-user-flow-tester/       ← black-box · cardinalidad + oráculo de transición
+│   ├── 🧯 software-resilience-state-tester/  ← estado y recuperación · races, cancelación, offline
+│   └── 📦 release-evidence-auditor/          ← evidencia de release + plantilla de informe
 │
 ├── 🧪 tests/                 ← unittest, sin dependencias extras
 │   ├── test_skills_structure.py        ← estructura: frontmatter + README + scripts
 │   ├── test_security_audit_coverage.py ← funcionales: compute_coverage happy paths
 │   ├── test_new_skills.py              ← funcionales: paridad, pinning, probe, render
-│   └── test_bitcoin_custody_audit.py   ← funcionales: cruce de avisos, quorum, cobertura
+│   ├── test_bitcoin_custody_audit.py   ← funcionales: cruce de avisos, quorum, cobertura
+│   └── test_methodology_skills.py      ← skills de criterio: sin script, enlaces y límites
 │
 ├── 📚 docs/
 │   ├── architecture.md            ← este archivo
@@ -64,7 +69,7 @@ claude-skills-toolkit/
 
 ## 🧠 Modelo mental
 
-Un **skill** = un contrato + un ejecutable + docs humanas. El contrato vive en `SKILL.md` (frontmatter YAML con `name` + `description` + triggers — lo lee el agente); el ejecutable es Python o Bash; el `README.md` documenta para humanos (diagramas, casos de uso, limitaciones).
+Un **skill** = un contrato + docs humanas, y normalmente un ejecutable. El contrato vive en `SKILL.md` (frontmatter YAML con `name` + `description` + triggers — lo lee el agente); el ejecutable es Python o Bash; el `README.md` documenta para humanos (diagramas, casos de uso, limitaciones). Los **skills de criterio** (los cuatro de testing) no tienen ejecutable: su aporte es el método, así que el `SKILL.md` es el producto y `references/` guarda los playbooks y plantillas que ese contrato manda leer.
 
 El runtime (Claude Code) carga todos los directorios bajo `~/.claude/skills/`. Cuando el usuario habla, el modelo compara la intención con cada `description` y decide invocar el skill apropiado.
 
@@ -145,7 +150,7 @@ Los skills nunca asumen una ruta absoluta del autor. Todo lo relativo se calcula
 
 ### 3️⃣ Cero dependencias por defecto
 
-Los 15 skills funcionan con Python stdlib + herramientas estándar del SO (git, docker) — las excepciones (`pyyaml`, `pillow`, `markdownlint-cli2`) están documentadas por skill en [INSTALL.md](../INSTALL.md). Las capas avanzadas (Bandit, trivy, gitleaks, etc.) son **opt-in** y degradan silenciosamente si no están instaladas. El reporte deja constancia de qué capa se saltó y por qué.
+Los 15 skills ejecutables funcionan con Python stdlib + herramientas estándar del SO (git, docker) — las excepciones (`pyyaml`, `pillow`, `markdownlint-cli2`) están documentadas por skill en [INSTALL.md](../INSTALL.md). Las capas avanzadas (Bandit, trivy, gitleaks, etc.) son **opt-in** y degradan silenciosamente si no están instaladas. El reporte deja constancia de qué capa se saltó y por qué.
 
 ### 4️⃣ Honestidad sobre limitaciones
 

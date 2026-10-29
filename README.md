@@ -4,16 +4,16 @@
 
 ### ⚡ Skills agentic listos para producción para [Claude Code](https://claude.com/claude-code) y runtimes compatibles
 
-Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de seguridad multi-fuente, 📋 lint de YAML, 📝 lint de Markdown, 🐍 lint de Python con paridad local↔CI, 📌 cobertura real de pinning de dependencias, 🐳 limpieza de Docker, 🩺 diagnóstico de `compose.yml`, 🪝 guardián pre-commit, 🛡️ guardián pre-push, 📸 screenshots web, 🐍 coherencia de versión de Python, 🧭 auditoría de coherencia docs↔repo, 🏷️ control de versión de release, 📄 renderizado de Markdown a documento y ₿ auditoría de custodia Bitcoin.
+Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de seguridad multi-fuente, 📋 lint de YAML, 📝 lint de Markdown, 🐍 lint de Python con paridad local↔CI, 📌 cobertura real de pinning de dependencias, 🐳 limpieza de Docker, 🩺 diagnóstico de `compose.yml`, 🪝 guardián pre-commit, 🛡️ guardián pre-push, 📸 screenshots web, 🐍 coherencia de versión de Python, 🧭 auditoría de coherencia docs↔repo, 🏷️ control de versión de release, 📄 renderizado de Markdown a documento, ₿ auditoría de custodia Bitcoin, 🩺 preflight de producto, 🧪 pruebas funcionales black-box, 🧯 resiliencia de estado y 📦 evidencia de release.
 **Sin dependencias innecesarias** — la mayoría usa solo Python stdlib.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/vladimiracunadev-create/claude-skills-toolkit?logo=github&color=8957e5)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/releases)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Skills](https://img.shields.io/badge/skills-15-1f6feb)](#-catálogo)
+[![Skills](https://img.shields.io/badge/skills-19-1f6feb)](#-catálogo)
 [![Platforms](https://img.shields.io/badge/platforms-linux%20%7C%20macOS%20%7C%20windows-555?logo=linux&logoColor=white)](#-instalación)
 [![CI](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-83%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
+[![Tests](https://img.shields.io/badge/tests-87%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
 [![Supply chain hardened](https://img.shields.io/badge/supply%20chain-hardened-2da44e?logo=shieldsdotio&logoColor=white)](docs/supply-chain-security.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?logo=github)](CONTRIBUTING.md)
 [![Made with ❤ in Chile](https://img.shields.io/badge/made_in-Chile-d52b1e)](https://github.com/vladimiracunadev-create)
@@ -31,8 +31,9 @@ Un **skill** es una carpeta autocontenida que el agente carga al iniciar la sesi
 ```text
 skills/<nombre>/
 ├── SKILL.md          # Contrato · frontmatter YAML + descripción + triggers
-├── <script>.py|.sh   # Lógica ejecutable
-└── README.md         # (opcional) demo extendido
+├── README.md         # Docs para humanos · diagramas + casos de uso
+├── <script>.py|.sh   # Lógica ejecutable (los skills de criterio no llevan)
+└── references/       # (opcional) playbooks y plantillas que el SKILL.md manda leer
 ```
 
 El agente lee el `description` del frontmatter para decidir **cuándo** invocarlo automáticamente. El script vive en `~/.claude/skills/<nombre>/` (instalado vía symlink) y se ejecuta sobre `Path.cwd()` — el repo donde estás trabajando ahora.
@@ -469,6 +470,114 @@ stdlib<br>
 
 </td>
 </tr>
+<tr>
+<td>
+
+### 🩺 [preliminary-product-tester](skills/preliminary-product-tester/README.md)
+
+<sub>91 líneas + 2 playbooks · prosa · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+**Preflight de producto** con evidencia en **5 niveles** (funcional interactiva · automatizada · build/integración · inspección estática · no ejecutada) que **nunca ascienden**: un build verde no se presenta como flujo probado. Corre los gates existentes como línea base, recorre primera apertura, tarea principal, persistencia, errores y límites, y emite veredicto **por superficie** —continuar · corregir antes de ampliar · escalar a especialista · bloqueado por entorno— sin promediar. Trae playbook de validación y enrutamiento a especialista.
+
+</td>
+<td>
+
+🩺 `QA temprano`<br>
+🔍 `qué le falta antes de publicar`<br>
+🧯 `preliminary testing`
+
+</td>
+<td>
+
+sin deps<br>
+<sub>(skill de criterio · sin script)</sub>
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 🧪 [functional-user-flow-tester](skills/functional-user-flow-tester/README.md)
+
+<sub>74 líneas · prosa · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Pruebas **black-box** de flujos de usuario en Web, móvil, escritorio y APIs públicas: ruta feliz, ruta degradada, recuperación y accesibilidad básica. Obliga a la **matriz de cardinalidad** (vacío · un elemento · típica · muy grande) tratando el **tamaño en bytes como eje distinto**, y define el **oráculo de transición** antes de ejecutarla: una acción, una sola transición. Concluye solo desde lo observable por el usuario — los logs y el código orientan, no sustituyen. Lo que no se pudo correr sale `NO EJECUTADO` con el motivo.
+
+</td>
+<td>
+
+🧪 `prueba este flujo`<br>
+👤 `valida la app como un usuario`<br>
+⬛ `black-box testing`
+
+</td>
+<td>
+
+sin deps<br>
+<sub>(skill de criterio · sin script)</sub>
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 🧯 [software-resilience-state-tester](skills/software-resilience-state-tester/README.md)
+
+<sub>66 líneas · prosa · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Resiliencia de **estado y recuperación**: reinicios, escritura parcial, concurrencia y races, acciones repetidas (idempotencia · deduplicación), cancelación **cerca del commit**, lifecycle/background, offline y timeouts, límites de recursos. Dos reglas lo definen: el **oráculo se fija antes** de inducir el fallo (invariantes, efecto exactamente-una-vez, estados terminales) y el **determinismo manda** sobre la repetición probabilística — una sola temporización no declara ausente una race. Exige reemplazo transaccional: si la carga nueva falla, el último estado válido sigue disponible.
+
+</td>
+<td>
+
+🧯 `qué pasa si se cae a medias`<br>
+♻️ `se duplican los registros`<br>
+💾 `crash recovery`
+
+</td>
+<td>
+
+sin deps<br>
+<sub>(skill de criterio · sin script)</sub>
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 📦 [release-evidence-auditor](skills/release-evidence-auditor/README.md)
+
+<sub>68 líneas + plantilla · prosa · ![status](https://img.shields.io/badge/stable-green)</sub>
+
+</td>
+<td>
+
+Audita si lo que el release **afirma** está respaldado por evidencia fresca y trazable: versión, gates, CI, artefacto, firma, publicación y coherencia documental. Cada afirmación entra en **un solo** nivel (ejecución local fresca · remoto comprobado · inspección de artefacto · inspección estática · no comprobada) y sale como matriz `afirmación→fuente→evidencia→resultado`. Tres reglas que evitan un release falso: un workflow **iniciado** no es verde, un build **aprobado** no prueba instalación, y una afirmación histórica fechada **no** se actualiza como estado actual.
+
+</td>
+<td>
+
+📦 `verifica el release`<br>
+🏷️ `cuadra la versión con el changelog`<br>
+✅ `release readiness`
+
+</td>
+<td>
+
+sin deps<br>
+<sub>(skill de criterio · sin script)</sub>
+
+</td>
+</tr>
 </tbody>
 </table>
 
@@ -550,6 +659,12 @@ Una vez instalados, los skills se invocan **conversacionalmente** desde Claude C
 
 > audita mi custodia bitcoin
   → ₿ invoca bitcoin-custody-audit · 14 etapas + cobertura declarada
+
+> haz un preflight de esta app antes de que la vea el cliente
+  → 🩺 invoca preliminary-product-tester · evidencia en 5 niveles + veredicto por superficie
+
+> qué pasa si la app se cierra justo al guardar
+  → 🧯 invoca software-resilience-state-tester · oráculo + punto de interrupción
 ```
 
 También como scripts directos:
@@ -582,8 +697,11 @@ python ~/.claude/skills/bitcoin-custody-audit/bitcoin_custody_audit.py --report
 skills/<nombre>/
 ├── SKILL.md          ← obligatorio · frontmatter + triggers (contrato con el agente)
 ├── README.md         ← obligatorio · docs para humanos con diagramas + casos de uso
-└── <script>.py|.sh   ← lógica ejecutable
+├── <script>.py|.sh   ← lógica ejecutable (ausente en los skills de criterio)
+└── references/       ← opcional · playbooks o plantillas que el SKILL.md manda leer
 ```
+
+**Dos familias de skill.** La mayoría son **ejecutables**: el `SKILL.md` dice cuándo invocarlos y un script hace el trabajo sobre `Path.cwd()`. Cuatro son **de criterio** (`preliminary-product-tester`, `functional-user-flow-tester`, `software-resilience-state-tester`, `release-evidence-auditor`): no hay nada que automatizar porque el valor está en el método —qué probar, en qué orden, qué cuenta como evidencia y qué no se puede afirmar—, así que entregan prosa y, cuando hace falta, `references/` con playbooks y plantillas. Un skill de criterio que gane un script deja de serlo y pasa a documentarse como ejecutable; el test `tests/test_methodology_skills.py` lo vigila.
 
 **Dos archivos, dos audiencias.** `SKILL.md` es el contrato que el agente lee para decidir cuándo invocar el skill — descripción densa optimizada para matching semántico. `README.md` es la documentación para humanos que llegan al skill vía GitHub, con diagramas Mermaid, casos de uso reales y referencias externas. Cada skill del toolkit tiene ambos.
 
@@ -649,7 +767,8 @@ Resumen — versión completa en [ROADMAP.md](ROADMAP.md).
 - [ ] ✍️ `commit-message-improve` — reescribe commits siguiendo conventional commits
 - [ ] 🗃️ `sql-migration-safety` — analiza migraciones DB (lock holding, FK cascades)
 - [ ] ⚛️ `react-component-scaffold` — genera componente React + tests + stories
-- [ ] 🧪 Tests por skill (happy path por cada uno) *(progreso: 6/15)*
+- [x] 🧪 Suite genérica de testing — 🩺 `preliminary-product-tester`, 🧪 `functional-user-flow-tester`, 🧯 `software-resilience-state-tester` y 📦 `release-evidence-auditor`: los cuatro skills de criterio que cubren QA temprano, flujos, estado y evidencia de release
+- [ ] 🧪 Tests por skill (happy path por cada uno) *(progreso: 10/19)*
 - [ ] 🔌 Integración explícita con [Cursor](https://www.cursor.com/) y [Windsurf](https://codeium.com/windsurf)
 
 ¿Sugerencias? 💬 Abre un [issue](https://github.com/vladimiracunadev-create/claude-skills-toolkit/issues).
@@ -675,8 +794,8 @@ PRs bienvenidos. Antes de abrir uno, revisa [CONTRIBUTING.md](CONTRIBUTING.md). 
 
 ### ✅ Lo que este repo sí es
 
-- 🧰 una colección de **skills** universales de tooling de desarrollo (seguridad, YAML, Markdown, Python, dependencias, Docker, versiones, coherencia docs↔repo, documentación, custodia Bitcoin);
-- 🐍 lógica **ejecutable y probada** — la mayoría en Python stdlib, con tests en `tests/`;
+- 🧰 una colección de **skills** universales de tooling de desarrollo (seguridad, YAML, Markdown, Python, dependencias, Docker, versiones, coherencia docs↔repo, documentación, custodia Bitcoin, pruebas de producto);
+- 🐍 lógica **ejecutable y probada** — la mayoría en Python stdlib, con tests en `tests/`; y, donde el valor está en el método y no en un script, **criterio explícito** con sus límites declarados;
 - 🌐 skills **agnósticos del repo**: corren sobre `Path.cwd()`, funcionan en cualquier proyecto;
 - 📜 un contrato claro por skill (`SKILL.md` + `README.md`), instalable vía symlink en `~/.claude/skills/`;
 - 🪶 **cero dependencias por defecto**: los binarios externos son opt-in y degradan gracefully.

@@ -34,6 +34,10 @@ PRODUCTION_SKILLS = {
     "version-bump",
     "md-to-doc",
     "bitcoin-custody-audit",
+    "preliminary-product-tester",
+    "functional-user-flow-tester",
+    "software-resilience-state-tester",
+    "release-evidence-auditor",
 }
 
 
