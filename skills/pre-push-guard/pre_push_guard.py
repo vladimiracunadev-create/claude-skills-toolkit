@@ -241,7 +241,7 @@ def install_hook(cwd: Path) -> int:
         encoding="utf-8",
     )
     try:
-        os.chmod(target, 0o755)
+        os.chmod(target, 0o700)
     except OSError:
         pass
     print(f"✓ Hook instalado en {target}")

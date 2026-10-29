@@ -10,8 +10,9 @@ on:
         description: "Tag existente a re-publicar (ej: v0.2.0). Solo úsalo si el release inicial falló."
         required: true
 
-permissions:
-  contents: write
+# Sin permisos por defecto a nivel de workflow: el `contents: write` que
+# necesita publicar el release vive en el job que lo usa, no en todo el fichero.
+permissions: {}
 
 concurrency:
   group: release-${{ github.ref }}
@@ -21,20 +22,34 @@ jobs:
   release:
     name: Package skills and publish release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           ref: ${{ github.event.inputs.tag || github.ref_name }}
           fetch-depth: 0
+          # El job habla con GitHub por `gh` con GH_TOKEN explícito, así que el
+          # token no tiene por qué quedarse en .git/config.
+          persist-credentials: false
 
+      # El valor llega por `env`, no interpolado en el shell: un tag con
+      # metacaracteres (`$(…)`, backticks, `;`) se trataría como texto y no
+      # como código. Mismo motivo en los pasos siguientes.
       - name: Resolve tag name
         id: tag
+        env:
+          INPUT_TAG: ${{ github.event.inputs.tag }}
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          TAG="${{ github.event.inputs.tag || github.ref_name }}"
+          set -euo pipefail
+          TAG="${INPUT_TAG:-$REF_NAME}"
           echo "name=${TAG}" >> "$GITHUB_OUTPUT"
           echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
 
       - name: Package each skill as a standalone zip
+        env:
+          TAG: ${{ steps.tag.outputs.name }}
         run: |
           set -euo pipefail
           mkdir -p dist
@@ -44,14 +59,16 @@ jobs:
               echo "  ⏭️  Skipping $skill_name"
               continue
             fi
-            (cd "$skill_dir" && zip -qr "../../dist/${skill_name}-${{ steps.tag.outputs.name }}.zip" .)
+            (cd "$skill_dir" && zip -qr "../../dist/${skill_name}-${TAG}.zip" .)
             echo "  ✅ Packaged $skill_name"
           done
 
       - name: Package full toolkit bundle
+        env:
+          TAG: ${{ steps.tag.outputs.name }}
         run: |
           set -euo pipefail
-          zip -qr "dist/claude-skills-toolkit-${{ steps.tag.outputs.name }}.zip" \
+          zip -qr "dist/claude-skills-toolkit-${TAG}.zip" \
             skills/ \
             scripts/ \
             docs/ \
@@ -68,16 +85,18 @@ jobs:
 
       - name: Extract release notes from CHANGELOG
         id: notes
+        env:
+          TAG: ${{ steps.tag.outputs.name }}
+          VERSION: ${{ steps.tag.outputs.version }}
         run: |
           set -euo pipefail
-          VERSION="${{ steps.tag.outputs.version }}"
           awk -v v="[${VERSION}]" '
             $0 ~ ("^## .*" v) { capture = 1; next }
             capture && /^## / { exit }
             capture { print }
           ' CHANGELOG.md > release-notes.md
           if [ ! -s release-notes.md ]; then
-            echo "Release ${{ steps.tag.outputs.name }}" > release-notes.md
+            echo "Release ${TAG}" > release-notes.md
             echo "" >> release-notes.md
             echo "_(Notas específicas no encontradas en CHANGELOG.md para esta versión.)_" >> release-notes.md
           fi
@@ -87,8 +106,8 @@ jobs:
             echo ""
             echo "### 📦 Descarga"
             echo ""
-            echo "- \`claude-skills-toolkit-${{ steps.tag.outputs.name }}.zip\` — toolkit completo (skills + docs + scripts)."
-            echo "- \`<skill>-${{ steps.tag.outputs.name }}.zip\` — un zip por skill individual."
+            echo "- \`claude-skills-toolkit-${TAG}.zip\` — toolkit completo (skills + docs + scripts)."
+            echo "- \`<skill>-${TAG}.zip\` — un zip por skill individual."
           } >> release-notes.md
 
       - name: Create or update GitHub Release

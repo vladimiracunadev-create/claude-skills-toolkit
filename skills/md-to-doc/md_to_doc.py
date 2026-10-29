@@ -329,7 +329,7 @@ def md_to_html(text: str, base: Path, ctx: Ctx) -> tuple[str, list[tuple[int, st
         if h:
             close_lists()
             level, raw = len(h.group(1)), h.group(2).strip()
-            anchor = "h-" + hashlib.sha1(f"{base}:{raw}".encode()).hexdigest()[:10]
+            anchor = "h-" + hashlib.sha1(f"{base}:{raw}".encode(), usedforsecurity=False).hexdigest()[:10]
             headings.append((level, raw, anchor))
             out.append(f'<h{level} id="{anchor}">{inline(raw, base, ctx)}</h{level}>')
             i += 1

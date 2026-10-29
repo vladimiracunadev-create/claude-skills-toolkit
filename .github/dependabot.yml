@@ -1,0 +1,17 @@
+# El toolkit es zero-deps por diseño: no hay requirements.txt, package.json ni
+# lockfiles que vigilar. La única dependencia externa real son las GitHub
+# Actions del CI, pinneadas a SHA — y un pin a SHA no se actualiza solo, así que
+# es justo lo que Dependabot debe traer aquí.
+#
+# Dependabot conserva el comentario `# vX.Y.Z` junto al SHA al abrir el PR, de
+# modo que la política de pinning de docs/supply-chain-security.md se mantiene.
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "build(deps)"

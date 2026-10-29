@@ -28,6 +28,7 @@ import subprocess
 import sys
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -362,18 +363,34 @@ def compute_coverage(repo: Path, deps: list[tuple[str, str, str, Path]]) -> dict
 # Network — OSV.dev + CISA KEV
 # -------------------------------------------------------------------------
 
+def _https_only(url: str) -> str:
+    """Rechaza cualquier esquema que no sea https antes de abrir la URL.
+
+    Hoy todas las URLs de este módulo son constantes a APIs públicas, así que
+    la comprobación no cambia nada en el camino normal. Existe por lo que puede
+    pasar después: en cuanto una URL venga de configuración, de un advisory o
+    de un redirect, `urlopen` acepta `file://` y leería el disco local con la
+    misma llamada. Es lo que señala Bandit B310, y se cierra aquí en vez de
+    silenciarse.
+    """
+    scheme = urllib.parse.urlparse(url).scheme.lower()
+    if scheme != "https":
+        raise ValueError(f"esquema no permitido en la URL ({scheme or 'sin esquema'}): {url}")
+    return url
+
+
 def _post_json(url: str, body: dict, timeout: int = 30) -> dict:
     req = urllib.request.Request(
-        url, data=json.dumps(body).encode("utf-8"),
+        _https_only(url), data=json.dumps(body).encode("utf-8"),
         headers={"Content-Type": "application/json"},
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=timeout) as resp:  # noqa: S310
+    with urllib.request.urlopen(req, timeout=timeout) as resp:  # noqa: S310  # nosec B310
         return json.loads(resp.read())
 
 
 def _get_json(url: str, timeout: int = 60) -> dict:
-    with urllib.request.urlopen(url, timeout=timeout) as resp:  # noqa: S310
+    with urllib.request.urlopen(_https_only(url), timeout=timeout) as resp:  # noqa: S310  # nosec B310
         return json.loads(resp.read())
 
 
@@ -855,7 +872,7 @@ NVD_RECENT_URL = "https://services.nvd.nist.gov/rest/json/cves/2.0"
 def _fetch_rss(url: str, timeout: int = 30) -> list[dict]:
     """Fetch RSS/Atom feed and return list of {title, link, description, pubDate}."""
     try:
-        with urllib.request.urlopen(url, timeout=timeout) as resp:  # noqa: S310
+        with urllib.request.urlopen(_https_only(url), timeout=timeout) as resp:  # noqa: S310  # nosec B310
             raw = resp.read().decode("utf-8", errors="replace")
     except Exception:  # noqa: BLE001
         return []
@@ -1055,10 +1072,10 @@ def run_pypi_malware(deps: list[tuple[str, str, str, Path]],
             headers["Authorization"] = auth_header
         try:
             req = urllib.request.Request(
-                OSS_INDEX_URL, data=json.dumps(body).encode("utf-8"),
+                _https_only(OSS_INDEX_URL), data=json.dumps(body).encode("utf-8"),
                 headers=headers, method="POST",
             )
-            with urllib.request.urlopen(req, timeout=30) as resp:  # noqa: S310
+            with urllib.request.urlopen(req, timeout=30) as resp:  # noqa: S310  # nosec B310
                 data = json.loads(resp.read())
         except urllib.error.HTTPError as exc:
             if exc.code == 401:

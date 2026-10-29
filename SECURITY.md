@@ -66,6 +66,28 @@ Incluye en el reporte:
 | Un `SKILL.md` malicioso podría incluir frontmatter con instrucciones que confundan al agente | El usuario controla qué skills instala (revisión manual antes de `install.sh`) | baja |
 | `docker-cleanup` borra TODOS los contenedores, volúmenes e imágenes sin confirmación | Documentado como **diseño explícito** — invocación = ejecución | aceptado |
 
+### 🔍 Cobertura declarada del análisis automático
+
+El toolkit se audita con su propio `security-audit`. Lo que ese análisis **sí** y **no** cubre, para que un «0 hallazgos» no se lea como más de lo que es:
+
+| Capa | Estado | Nota |
+|---|---|---|
+| Dependencias (OSV · CISA KEV · EPSS) | **sin superficie** | El repo no declara dependencias: no hay manifests ni lockfiles. Un «0 CVE» aquí significa *no hay terceros*, no *se revisaron y están limpios*. |
+| SAST (Bandit) | **corre** | Hallazgos aceptados congelados en [`.bandit-baseline.json`](.bandit-baseline.json): `B404`/`B603`/`B607` (invocar `git`/`gh` sin `shell=True` es la práctica correcta para un CLI), `B110`/`B112` y `B101` en tests. Un hallazgo **nuevo** sí se reporta y sale con exit 1. |
+| Secretos en el histórico (gitleaks) | **corre con binario local** | Requiere `gitleaks` instalado; sin él, la capa se omite y el informe lo dice. |
+| Workflows (zizmor) | **corre con binario local** | Las auditorías `impostor-commit`, `ref-confusion` y `known-vulnerable-actions` necesitan además `GH_TOKEN`. |
+| Dockerfile (hadolint) | **N/A** | El repo no tiene Dockerfile. |
+| Container (trivy/grype) | **N/A** | No se publica imagen. |
+| GitHub Actions como dependencia | **Dependabot** | Alerts + security updates activados; actualizaciones semanales vía [`.github/dependabot.yml`](.github/dependabot.yml). Los pins a SHA no se actualizan solos. |
+
+Regenerar el baseline tras un cambio legítimo de código:
+
+```bash
+python -m bandit -q -r skills tests -f json -o .bandit-baseline.json
+```
+
+El baseline se ancla a fichero y línea, así que un refactor amplio puede invalidarlo: si aparecen hallazgos ya aceptados como «nuevos», regenéralo y **revisa el diff** antes de commitearlo.
+
 ---
 
 ---
