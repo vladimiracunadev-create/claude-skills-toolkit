@@ -1,4 +1,10 @@
-# Triaje de hallazgos de SkillSpector, por regla.
+# Triaje de hallazgos de SkillSpector, por regla. ESTE FICHERO ES DATOS.
+#
+# La explicación para humanos —qué disparó cada regla, el snippet real, cómo se
+# resolvería y a qué coste— está en skillspector-hallazgos.md, caso a caso. Un
+# `reason:` de una línea sirve para que una herramienta decida; no sirve para
+# que una persona entienda. Si cambias un veredicto aquí, actualiza también el
+# caso correspondiente de ese documento.
 #
 # Cada regla que el scanner dispara sobre los skills de este repo tiene aquí un
 # veredicto y su razón. `scripts/skillspector_baseline.py` escribe esa razón en

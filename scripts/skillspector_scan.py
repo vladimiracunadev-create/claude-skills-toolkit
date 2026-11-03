@@ -228,8 +228,10 @@ def render_markdown(results: list[dict], version: str, stamp: str, max_score: in
         "con la cobertura declarada en la tabla.",
         "",
         "Los hallazgos suprimidos viven en `docs/security/skillspector-baselines/` "
-        "con su justificación, uno por skill. Un baseline no borra el hallazgo: lo "
-        "deja fuera del score y documentado.",
+        "con su veredicto, uno por skill, y su análisis **caso a caso** en "
+        "[`skillspector-hallazgos.md`](skillspector-hallazgos.md): qué disparó cada "
+        "regla, cómo se resolvería y por qué el skill cumple igual. Un baseline no "
+        "borra el hallazgo: lo deja fuera del score y documentado.",
         "",
         "## Resumen",
         "",

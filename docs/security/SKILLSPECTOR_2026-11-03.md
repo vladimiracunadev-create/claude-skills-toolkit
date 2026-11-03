@@ -6,7 +6,7 @@ Generado por `scripts/skillspector_scan.py` sobre **SkillSpector v2.12.0** ([for
 
 Afirma que cada skill del toolkit pasó por el scanner y que los hallazgos activos son los que se listan abajo. **No es un certificado de calidad ni de ausencia de bugs**: dice que no aparecen los patrones que el scanner conoce, con la cobertura declarada en la tabla.
 
-Los hallazgos suprimidos viven en `docs/security/skillspector-baselines/` con su justificación, uno por skill. Un baseline no borra el hallazgo: lo deja fuera del score y documentado.
+Los hallazgos suprimidos viven en `docs/security/skillspector-baselines/` con su veredicto, uno por skill, y su análisis **caso a caso** en [`skillspector-hallazgos.md`](skillspector-hallazgos.md): qué disparó cada regla, cómo se resolvería y por qué el skill cumple igual. Un baseline no borra el hallazgo: lo deja fuera del score y documentado.
 
 ## Resumen
 

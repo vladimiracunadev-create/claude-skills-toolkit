@@ -816,13 +816,15 @@ Los 23 skills de este repo (22 de producción + `_template`) pasan por [**SkillS
 |---|---|
 | **Skills escaneados** | 23 de 23 — ninguno omitido |
 | **Hallazgos sin clasificar** | **0** |
-| **Hallazgos triados** | 93, cada uno con veredicto en [`skillspector-triage.yaml`](docs/security/skillspector-triage.yaml) |
+| **Hallazgos triados** | 93 — el análisis **caso a caso** está en [`skillspector-hallazgos.md`](docs/security/skillspector-hallazgos.md): qué disparó cada regla, cómo se resolvería y por qué el skill cumple igual |
 | **Cobertura mínima por skill** | **33,3 %** — el escáner declara qué ficheros no pudo inspeccionar del todo, y el informe lo publica por skill en vez de esconderlo |
 | **Capa LLM** | **desactivada** a propósito: enviaría el contenido de los skills a un proveedor externo. El CI se queda en estático |
 
 **Por qué 93 hallazgos y no cero.** SkillSpector está diseñado para vetar skills de terceros *antes* de instalarlos, así que marca toda capacidad peligrosa. Este toolkit *es* un conjunto de herramientas de desarrollo: su trabajo es invocar `git`, `docker` y `pytest` por `subprocess` (26 hallazgos), consultar OSV.dev por HTTPS, y documentar en su README cosas como «`docker rm` TODOS los contenedores» (22) o el `curl` de instalación hacia `~/.claude/skills/` (23). Marcarlo es correcto por parte del escáner; el trabajo está en decir, por clase de hallazgo, si el riesgo existe o no.
 
-Un hallazgo suprimido **no desaparece**: queda en [`docs/security/skillspector-baselines/`](docs/security/skillspector-baselines/) con su veredicto (`false_positive`, `by_design`, `scanner_limit` o `accepted_risk`) y su explicación. Y la regla del juego es que **una regla nueva no se puede suprimir** sin que alguien escriba antes su razón: si el escáner dispara algo que no figura en el triaje, el generador de baselines falla.
+Un hallazgo suprimido **no desaparece**: queda en [`docs/security/skillspector-baselines/`](docs/security/skillspector-baselines/) con su veredicto (`false_positive`, `by_design`, `scanner_limit` o `accepted_risk`), y su razón desarrollada en [**el análisis caso a caso**](docs/security/skillspector-hallazgos.md) — las once clases de hallazgo, una por una, con el snippet real que las disparó, qué veía el escáner, qué pasa de verdad, **cómo se resolvería** y a qué coste. Ahí se ve, por ejemplo, que la regla de «abuso de parámetros» marcó `git push --force` donde el texto dice `--force-with-lease`, y marcó `git reset --hard` dentro de la sección de `git-push` que literalmente lo **prohíbe**.
+
+Y la regla del juego es que **una regla nueva no se puede suprimir** sin que alguien escriba antes su razón: si el escáner dispara algo que no figura en [`skillspector-triage.yaml`](docs/security/skillspector-triage.yaml), el generador de baselines falla.
 
 **Lo que el escaneo corrigió de verdad** — dos cosas, ninguna de ellas un falso positivo:
 
@@ -864,7 +866,7 @@ Ver [CONTRIBUTING.md](CONTRIBUTING.md) para las reglas completas.
 | 🔐 [SECURITY.md](SECURITY.md) | Política de seguridad y cómo reportar vulnerabilidades |
 | 🛡️ [docs/supply-chain-security.md](docs/supply-chain-security.md) | Política frente a ataques Shai-Hulud · por qué `pnpm` en vez de `npm` |
 | 🔒 [docs/security/](docs/security/) | Informes de auditoría fechados — evidencia de lo que se escaneó y lo que no |
-| 🔬 [docs/security/skillspector-triage.yaml](docs/security/skillspector-triage.yaml) | Veredicto y razón de cada hallazgo de SkillSpector suprimido · [baselines](docs/security/skillspector-baselines/) |
+| 🔬 [docs/security/skillspector-hallazgos.md](docs/security/skillspector-hallazgos.md) | Análisis caso a caso de los hallazgos de SkillSpector · cómo se resolvería cada uno · [triaje](docs/security/skillspector-triage.yaml) + [baselines](docs/security/skillspector-baselines/) |
 | 🆘 [SUPPORT.md](SUPPORT.md) | Canales por tipo de problema · cómo pedir ayuda |
 | 🤗 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Código de conducta de la comunidad |
 | 🏗️ [docs/architecture.md](docs/architecture.md) | Arquitectura interna · decisiones de diseño |
