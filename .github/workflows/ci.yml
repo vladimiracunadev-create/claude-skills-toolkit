@@ -156,10 +156,21 @@ jobs:
         continue-on-error: true
         run: python -m bandit -q -r skills tests -b .bandit-baseline.json
 
-      - name: Workflows · zizmor
+      # Gate duro, y a propósito sin red: las tres auditorías de zizmor que
+      # consultan la API de GitHub (impostor-commit, ref-confusion,
+      # known-vulnerable-actions) fallan con 403 cuando la API rate-limitea, y
+      # un build rojo por el cupo de un servicio externo enseña a ignorar el CI.
+      # Lo que decide aquí son las auditorías deterministas sobre el YAML.
+      - name: Workflows · zizmor (gate offline)
+        run: |
+          zizmor --no-progress --persona auditor --min-severity medium \
+            --no-online-audits .github/workflows/
+
+      # Las auditorías online corren aparte e informan: un hallazgo real se ve
+      # en el log, y un 403 de la API no rompe el build.
+      - name: Workflows · zizmor · auditorías online (informativo)
+        continue-on-error: true
         env:
-          # Habilita las auditorías que consultan la API: impostor-commit,
-          # ref-confusion y known-vulnerable-actions.
           GH_TOKEN: ${{ github.token }}
         run: zizmor --no-progress --persona auditor --min-severity medium .github/workflows/
 
