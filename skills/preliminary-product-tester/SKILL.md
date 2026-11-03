@@ -13,9 +13,26 @@ description: >-
   antes de publicar", "pruébalo antes de entregarlo", "early QA", "preliminary
   testing", "smoke test del producto". No sustituye una certificación formal,
   un pentest ni una auditoría de accesibilidad especializada.
+metadata:
+  capabilities: []
 ---
 
 # preliminary-product-tester — preflight de producto
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | ninguna — es un skill de criterio, sin script ejecutable |
+| **Qué toca** | Ejecuta el preflight del producto sobre lo que el usuario entregue: repositorio, binario o URL. |
+| **Qué nunca toca** | No certifica nada. Un build en verde no es un producto probado, y lo que no se pudo ejecutar sale como **NO EJECUTADO**, nunca como aprobado. |
+| **Herramientas retiradas** | ninguna |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
+
+Conserva las herramientas de red: el producto bajo prueba puede ser una web o una API.
+
+---
 
 ## Objetivo
 

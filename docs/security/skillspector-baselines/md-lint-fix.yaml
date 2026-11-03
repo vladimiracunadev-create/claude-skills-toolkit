@@ -27,14 +27,23 @@ fingerprints:
     git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
     y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
     (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
-- hash: sha256:d12c8e8f5c5642ff140b0c449d9206ecec4c36578047b692e53e85fa04208957
+- hash: sha256:e0e0a0e460db00ff88bf2027fcdbb06cfbf4c9df228caf6606c862b395c4a318
   rule_id: LP3
   file: SKILL.md
-  reason: '[accepted_risk] Real: el frontmatter de los SKILL.md no declara `allowed-tools`,
-    así que el agente carga el skill con toda su caja de herramientas disponible.
-    Asumido por ahora: acotar el scope exige revisar las 22 superficies una a una
-    y verificar que ningún skill pierde una herramienta que necesita. Registrado como
-    riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.'
+  reason: '[by_design] Resuelto en lo que el hallazgo denuncia —la opacidad— y deliberado
+    en lo que queda. Los 23 SKILL.md declaran ahora su alcance: `metadata.capabilities`
+    en el frontmatter (legible por herramientas, sin efecto sobre permisos), una sección
+    "Alcance y permisos" con qué toca y qué nunca toca, y `disallowed-tools` retirando
+    WebFetch/WebSearch en los 14 skills verificablemente locales, que es el único
+    techo real de permisos que ofrece el runtime. Lo que NO se declara, a propósito,
+    es `allowed-tools`: la propia remediación de SkillSpector avisa de que registra
+    herramientas PREAPROBADAS, no un techo, y de no añadir ninguna "para silenciar
+    este hallazgo". Declararlo quitaría la confirmación del usuario sin acotar nada
+    — peor postura con la métrica en verde. Tampoco se añade `permissions`, que es
+    un campo de manifiestos MCP y no existe en el frontmatter de un Agent Skill. Sostenido
+    por tests/test_skill_scope.py: un skill sin declaración, o cuya declaración se
+    quede corta respecto a su propio script, rompe la suite; y declarar `allowed-tools`
+    también la rompe. Ver el caso 3 de skillspector-hallazgos.md.'
 - hash: sha256:36234dcda900eeeb0463dbe444bed427e852c52ed08b7bb859baa185941b9ca3
   rule_id: E1
   file: README.md

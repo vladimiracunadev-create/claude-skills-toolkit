@@ -1,11 +1,31 @@
 ---
 name: nombre-del-skill
 description: Una frase clara que describa qué hace el skill + cuándo invocarlo. Incluir triggers en español y/o inglés. Ejemplo "Audita seguridad del repo cruzando deps contra OSV.dev. Úsalo cuando el usuario diga 'audita seguridad', 'scan CVE' o similar."
+metadata:
+  capabilities: []
+disallowed-tools:
+  - WebFetch
+  - WebSearch
 ---
 
 # nombre-del-skill
 
 Descripción extendida del skill. Qué problema resuelve. Por qué existe.
+
+---
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | ninguna — es un skill de criterio, sin script ejecutable |
+| **Qué toca** | Nada — es la plantilla desde la que se copia un skill nuevo. |
+| **Qué nunca toca** | No se instala ni se invoca; `main.py` es un esqueleto. |
+| **Herramientas retiradas** | `WebFetch`, `WebSearch` |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
+
+Un skill nuevo arranca sin preaprobar nada y con las herramientas de red retiradas: si las necesita, se añaden a conciencia al quitarlas de aquí.
 
 ---
 

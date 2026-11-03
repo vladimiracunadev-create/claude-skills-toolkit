@@ -14,9 +14,32 @@ description: >-
   HISTÓRICA (se conserva). Cubre también el drift de CODIFICACIÓN (mojibake):
   "símbolos especiales", "caracteres raros", "se ven mal los acentos o los emoji",
   "mÃ¡s", "ðŸ", "encoding roto". Trabaja sobre cualquier repositorio y cualquier stack.
+metadata:
+  capabilities:
+    - shell
+    - file_read
+    - file_write
+disallowed-tools:
+  - WebFetch
+  - WebSearch
 ---
 
 # Repo Coherence Audit
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | `shell` · `file_read` · `file_write` |
+| **Qué toca** | Lee manifests, workflows, docs y el histórico de git; en modo fix acotado reescribe los marcadores de estado **actual**. |
+| **Qué nunca toca** | No toca las referencias históricas del changelog: eso es historia, no estado. |
+| **Herramientas retiradas** | `WebFetch`, `WebSearch` |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
+
+El modo fix reescribe docs.
+
+---
 
 ## Qué hace y por qué existe
 

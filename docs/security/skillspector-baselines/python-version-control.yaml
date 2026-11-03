@@ -6,21 +6,30 @@ version: 2
 scanner_version: 2.12.0
 rules: []
 fingerprints:
-- hash: sha256:3f6f1ae30cb56d79288ca64ab151e700d58d897f58d588f81aa9e4cba6bb1a07
+- hash: sha256:0adf9743bd23133425015cc2e6f91d95c4bd0ba6558dbc58d486256738568507
   rule_id: LP3
   file: SKILL.md
-  reason: '[accepted_risk] Real: el frontmatter de los SKILL.md no declara `allowed-tools`,
-    así que el agente carga el skill con toda su caja de herramientas disponible.
-    Asumido por ahora: acotar el scope exige revisar las 22 superficies una a una
-    y verificar que ningún skill pierde una herramienta que necesita. Registrado como
-    riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.'
+  reason: '[by_design] Resuelto en lo que el hallazgo denuncia —la opacidad— y deliberado
+    en lo que queda. Los 23 SKILL.md declaran ahora su alcance: `metadata.capabilities`
+    en el frontmatter (legible por herramientas, sin efecto sobre permisos), una sección
+    "Alcance y permisos" con qué toca y qué nunca toca, y `disallowed-tools` retirando
+    WebFetch/WebSearch en los 14 skills verificablemente locales, que es el único
+    techo real de permisos que ofrece el runtime. Lo que NO se declara, a propósito,
+    es `allowed-tools`: la propia remediación de SkillSpector avisa de que registra
+    herramientas PREAPROBADAS, no un techo, y de no añadir ninguna "para silenciar
+    este hallazgo". Declararlo quitaría la confirmación del usuario sin acotar nada
+    — peor postura con la métrica en verde. Tampoco se añade `permissions`, que es
+    un campo de manifiestos MCP y no existe en el frontmatter de un Agent Skill. Sostenido
+    por tests/test_skill_scope.py: un skill sin declaración, o cuya declaración se
+    quede corta respecto a su propio script, rompe la suite; y declarar `allowed-tools`
+    también la rompe. Ver el caso 3 de skillspector-hallazgos.md.'
 - hash: sha256:eb8202ad674e22c59eb369842c1c1fa47e23f1e1814fe5b4e025d0809cc7a889
   rule_id: E1
   file: README.md
   reason: '[false_positive] Es el `curl -L -o <skill>.zip https://github.com/...`
     de las instrucciones de instalación: descarga DESDE GitHub hacia el disco del
     usuario. No hay transmisión de datos del usuario hacia ningún destino externo.'
-- hash: sha256:d2f95035c9080182d36474ae4700c58ed220cdcd589e8e89ea862fedcf8f72ec
+- hash: sha256:1be8978c76b1cac72ed28a172572f5386a95459c6b5b4baf43aa67ed165a80d9
   rule_id: AE1
   file: SKILL.md
   reason: '[scanner_limit] No es un hallazgo sobre el skill: el scanner declara que

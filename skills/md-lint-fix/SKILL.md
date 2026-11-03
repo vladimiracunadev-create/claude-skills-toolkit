@@ -1,12 +1,35 @@
 ---
 name: md-lint-fix
 description: Detecta y auto-corrige errores de markdownlint-cli2 en archivos .md modificados antes de commit/push. Resuelve MD024 con contexto del heading padre, MD040 infiriendo idioma del bloque, y MD031/32/34/28/27/22/26/29/30/09/12/047 vía --fix. Reporta los que requieren criterio humano (MD025, MD042, MD051). Úsalo cuando el usuario diga "arregla el lint MD", "corrige los markdown", "limpia los .md", "fix markdownlint", o proactivamente después de editar archivos .md. Trabaja sobre Path.cwd() — funciona en cualquier repo.
+metadata:
+  capabilities:
+    - shell
+    - file_read
+    - file_write
+disallowed-tools:
+  - WebFetch
+  - WebSearch
 ---
 
 # md-lint-fix
 
 Detecta, auto-corrige y reporta errores markdownlint en archivos `.md`
 modificados — antes de cualquier `git commit` o `git push`.
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | `shell` · `file_read` · `file_write` |
+| **Qué toca** | Lee y reescribe los `*.md` modificados del repo e invoca `markdownlint-cli2@0.24.0`. |
+| **Qué nunca toca** | No toca ficheros que el diff no incluya, y las reglas que exigen criterio (`MD025`, `MD042`, `MD051`) las reporta sin tocar. |
+| **Herramientas retiradas** | `WebFetch`, `WebSearch` |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
+
+Reescribe ficheros del repo.
+
+---
 
 ## IMPORTANTE — Cómo funciona desde cualquier repositorio
 

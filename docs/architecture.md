@@ -55,7 +55,9 @@ claude-skills-toolkit/
 │   ├── test_security_audit_coverage.py ← funcionales: compute_coverage happy paths
 │   ├── test_new_skills.py              ← funcionales: paridad, pinning, probe, render
 │   ├── test_bitcoin_custody_audit.py   ← funcionales: cruce de avisos, quorum, cobertura
-│   └── test_methodology_skills.py      ← skills de criterio: sin script, enlaces y límites
+│   ├── test_methodology_skills.py      ← skills de criterio: sin script, enlaces y límites
+│   ├── test_skill_scope.py             ← alcance declarado vs capacidades reales del script
+│   └── test_skillspector_report.py     ← badge del README vs resultado real del scan
 │
 ├── 📚 docs/
 │   ├── architecture.md            ← este archivo
@@ -216,7 +218,7 @@ El workflow [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) corre en c
 |---|---|---|
 | 📋 `yaml-lint` | Ejecuta `yaml-control --all` + `actionlint` sobre el propio repo | 🐧 ubuntu-latest |
 | 📝 `markdown-lint` | `markdownlint-cli2` sobre todos los `.md` (report-only) | 🐧 ubuntu-latest |
-| 🧪 `python-tests` | `python -m unittest discover -s tests` (97 tests) | 🐧🍎🪟 ubuntu / macOS / windows · Python 3.11 + 3.12 |
+| 🧪 `python-tests` | `python -m unittest discover -s tests` (104 tests) | 🐧🍎🪟 ubuntu / macOS / windows · Python 3.11 + 3.12 |
 | 🛡️ `security` | `bandit` (gate MEDIUM+) · `zizmor` sobre los workflows · `gitleaks` sobre el histórico completo | 🐧 ubuntu-latest |
 
 Y el workflow [`.github/workflows/skill-scan.yml`](../.github/workflows/skill-scan.yml), en el mismo disparador:

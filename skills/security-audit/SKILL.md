@@ -1,6 +1,13 @@
 ---
 name: security-audit
 description: Audita la seguridad de cualquier repositorio en 12 capas — dependencias (Python, Node, Go, Java, Rust, Ruby, .NET) vs OSV.dev/NVD/GHSA/PyPA/RustSec; CISA KEV (explotación activa); EPSS (probabilidad de exploit); Bandit SAST sobre el código propio; trivy/grype sobre OS layer del contenedor; gitleaks/detect-secrets en histórico; zizmor para GitHub Actions workflows; hadolint para Dockerfile; typosquat heurístico sobre nombres de paquetes. Reporta la cobertura real del scan — dependencias declaradas sin pin exacto o sin lockfile se listan explícitamente como FUERA del scan (nunca infla la cobertura). Genera informe Markdown en el propio repo y opcionalmente aplica correcciones (bump de versiones) con rama git + PR auto-merge. Úsalo cuando el usuario diga "audita seguridad", "busca vulnerabilidades", "scan CVE", "revisa ataques de ciberseguridad", "vulnerability scan", "qué CVEs tiene este repo", "actualiza por seguridad", "SAST", "container scan", "secrets scan" o similar. Trabaja sobre `cwd` por defecto — funciona en cualquier repo. Cada capa es opt-in con `--layers`; las que requieren binarios externos degradan silenciosamente si no están instalados.
+metadata:
+  capabilities:
+    - shell
+    - file_read
+    - file_write
+    - network
+    - env
 ---
 
 # security-audit (v2 multi-layer)
@@ -8,6 +15,21 @@ description: Audita la seguridad de cualquier repositorio en 12 capas — depend
 Audita CUALQUIER repositorio en **12 capas** complementarias. Produce un informe
 Markdown reproducible y, si se indica, aplica correcciones en el mismo repo
 dejando trazabilidad en git.
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | `shell` · `file_read` · `file_write` · `network` · `env` |
+| **Qué toca** | Lee manifests y lockfiles, consulta OSV.dev · CISA KEV · EPSS por HTTPS, invoca los scanners instalados (`bandit`, `trivy`, `gitleaks`, `zizmor`, `hadolint`) y escribe su informe. |
+| **Qué nunca toca** | Las respuestas de red se parsean con `json.loads`, nunca `eval`; `--apply` solo bumpea versiones y siempre con respaldo vía git. |
+| **Herramientas retiradas** | ninguna |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
+
+Conserva las herramientas de red —consultar un aviso es parte del trabajo— y no preaprueba nada, porque `--apply` reescribe manifests.
+
+---
 
 ## Capas
 

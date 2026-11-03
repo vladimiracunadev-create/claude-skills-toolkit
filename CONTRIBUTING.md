@@ -10,11 +10,12 @@
 ## 📜 Reglas para un skill nuevo
 
 1. **Autónomo.** No asume paths absolutos al sistema del autor. Si el script necesita el repo del usuario, usa `Path.cwd()`. Esto aplica también a los **ejemplos de salida** en la documentación — usa `/ruta/a/mi-proyecto`, no rutas reales de tu máquina.
-2. **`SKILL.md` con frontmatter completo.** Campos obligatorios: `name`, `description`. El `description` debe incluir los triggers en español **y** en inglés.
-3. **`README.md` del skill obligatorio.** Documentación para humanos con al menos las secciones **🎯 Qué hace**, **📦 Instalación** y **🚀 Uso** (el test estructural las exige). Diagramas Mermaid y casos de uso con outputs esperados son bienvenidos. Dos archivos, dos audiencias: `SKILL.md` es el contrato que lee el agente; `README.md` es para quien llega por GitHub.
-4. **Cero dependencias por defecto.** Si necesita una herramienta externa: docúmentalo en `SKILL.md` y degrada gracefully cuando no esté.
-5. **Cross-platform** o limitación explícita (ej. *"requiere bash"*).
-6. **Honestidad.** Documenta qué **NO** hace y qué riesgos tiene. Un skill que oculta sus límites es peor que un skill que no existe.
+2. **`SKILL.md` con frontmatter completo.** Campos obligatorios: `name`, `description` y `metadata.capabilities`. El `description` debe incluir los triggers en español **y** en inglés. `metadata.capabilities` declara qué hace el script con el vocabulario `shell` · `file_read` · `file_write` · `network` · `env` (lista vacía si el skill es de criterio y no lleva script), y **tiene que cubrir lo que el código hace**: el test vuelve a detectar las capacidades del script y falla si la declaración se queda corta. Si el skill no necesita red, retírala con `disallowed-tools: [WebFetch, WebSearch]`. **Nunca declares `allowed-tools`**: ese campo *preaprueba* herramientas —quita la confirmación del usuario— en vez de limitarlas, y el test lo rechaza.
+3. **Sección «Alcance y permisos» en el `SKILL.md`.** Capacidades, **qué toca**, **qué nunca toca** y qué herramientas se le retiran. Es lo primero que lee quien decide si instalarlo.
+4. **`README.md` del skill obligatorio.** Documentación para humanos con al menos las secciones **🎯 Qué hace**, **📦 Instalación** y **🚀 Uso** (el test estructural las exige). Diagramas Mermaid y casos de uso con outputs esperados son bienvenidos. Dos archivos, dos audiencias: `SKILL.md` es el contrato que lee el agente; `README.md` es para quien llega por GitHub.
+5. **Cero dependencias por defecto.** Si necesita una herramienta externa: docúmentalo en `SKILL.md` y degrada gracefully cuando no esté.
+6. **Cross-platform** o limitación explícita (ej. *"requiere bash"*).
+7. **Honestidad.** Documenta qué **NO** hace y qué riesgos tiene. Un skill que oculta sus límites es peor que un skill que no existe.
 
 ---
 

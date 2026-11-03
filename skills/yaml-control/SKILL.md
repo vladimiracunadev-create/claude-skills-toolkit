@@ -1,6 +1,13 @@
 ---
 name: yaml-control
 description: Valida archivos YAML (sintaxis + estructura) y workflows de GitHub Actions (actionlint) antes de commit/push. Úsalo cuando el usuario diga "valida los yaml", "revisa los workflows", "lint yaml", "actionlint", "errores de github actions", o "antes de pushear los workflows". También úsalo proactivamente cuando edites archivos en `.github/workflows/`, `compose.yml`, `pyproject` con secciones YAML, o cualquier `*.yml` / `*.yaml` modificado en el repo actual.
+metadata:
+  capabilities:
+    - shell
+    - file_read
+disallowed-tools:
+  - WebFetch
+  - WebSearch
 ---
 
 # yaml-control
@@ -10,6 +17,19 @@ Detecta y reporta errores en archivos YAML antes de pushear. Cubre tres capas:
 1. **Sintaxis YAML** (`python -c "import yaml; yaml.safe_load(...)"`).
 2. **Estructura GitHub Actions** (`actionlint` — sintaxis específica de workflows + shellcheck embebido).
 3. **Convenciones del repo** — versiones de actions pinneadas a SHA (`uses: org/action@<40-char-sha>`), permisos explícitos en cada workflow, `fail-fast: false` en matrices grandes.
+
+---
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | `shell` · `file_read` |
+| **Qué toca** | Lee los `*.y*ml` del repo e invoca `actionlint`. |
+| **Qué nunca toca** | Solo lectura: reporta errores, no reescribe los ficheros. |
+| **Herramientas retiradas** | `WebFetch`, `WebSearch` |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
 
 ---
 

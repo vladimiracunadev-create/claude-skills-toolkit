@@ -97,21 +97,30 @@ fingerprints:
     git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
     y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
     (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
-- hash: sha256:37d8821f321e41d5dd73a44c7842aea49d26ffbf6732973d23c83f5d0ea25290
+- hash: sha256:62340a3c8794a0e47c291b2deab1dacceb8a7825c935245942363d469183cd2b
   rule_id: LP3
   file: SKILL.md
-  reason: '[accepted_risk] Real: el frontmatter de los SKILL.md no declara `allowed-tools`,
-    así que el agente carga el skill con toda su caja de herramientas disponible.
-    Asumido por ahora: acotar el scope exige revisar las 22 superficies una a una
-    y verificar que ningún skill pierde una herramienta que necesita. Registrado como
-    riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.'
+  reason: '[by_design] Resuelto en lo que el hallazgo denuncia —la opacidad— y deliberado
+    en lo que queda. Los 23 SKILL.md declaran ahora su alcance: `metadata.capabilities`
+    en el frontmatter (legible por herramientas, sin efecto sobre permisos), una sección
+    "Alcance y permisos" con qué toca y qué nunca toca, y `disallowed-tools` retirando
+    WebFetch/WebSearch en los 14 skills verificablemente locales, que es el único
+    techo real de permisos que ofrece el runtime. Lo que NO se declara, a propósito,
+    es `allowed-tools`: la propia remediación de SkillSpector avisa de que registra
+    herramientas PREAPROBADAS, no un techo, y de no añadir ninguna "para silenciar
+    este hallazgo". Declararlo quitaría la confirmación del usuario sin acotar nada
+    — peor postura con la métrica en verde. Tampoco se añade `permissions`, que es
+    un campo de manifiestos MCP y no existe en el frontmatter de un Agent Skill. Sostenido
+    por tests/test_skill_scope.py: un skill sin declaración, o cuya declaración se
+    quede corta respecto a su propio script, rompe la suite; y declarar `allowed-tools`
+    también la rompe. Ver el caso 3 de skillspector-hallazgos.md.'
 - hash: sha256:d58636f277dc70b9148f61217610e55c3f9c4aafdd29a72f03ada7cd6b589747
   rule_id: E1
   file: README.md
   reason: '[false_positive] Es el `curl -L -o <skill>.zip https://github.com/...`
     de las instrucciones de instalación: descarga DESDE GitHub hacia el disco del
     usuario. No hay transmisión de datos del usuario hacia ningún destino externo.'
-- hash: sha256:abdbfc5bb70d6f7c099007ed6879ae5495ed676a894bb22a7fc4cf40cec492c3
+- hash: sha256:e722fd894796eb22bdfabc8bfca90381eaa52005c4ad2b62d37b52e39ba70757
   rule_id: E1
   file: SKILL.md
   reason: '[false_positive] Es el `curl -L -o <skill>.zip https://github.com/...`

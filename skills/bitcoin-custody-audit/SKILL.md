@@ -19,6 +19,11 @@ description: >
   claves", "postura de seguridad del despliegue", "bitcoin custody audit", "wallet
   security review", o cuando cambie el inventario, la configuración o la matriz de
   avisos.
+metadata:
+  capabilities:
+    - shell
+    - file_read
+    - file_write
 ---
 
 # bitcoin-custody-audit — auditoría de custodia Bitcoin en 14 etapas
@@ -30,6 +35,21 @@ la instalación que las vigila está bien puesta.
 
 No se solapan: se encadenan. En un repositorio de custodia conviene correr los dos,
 y este declara explícitamente qué hereda de aquel.
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | `shell` · `file_read` · `file_write` |
+| **Qué toca** | Lee el inventario y la configuración de la custodia, invoca `git` para revisar el histórico, y escribe su informe Markdown en el repo. |
+| **Qué nunca toca** | **no pide, lee ni acepta semillas, claves privadas ni passphrases**. Reporta la existencia y la ubicación de un hallazgo, nunca su valor. |
+| **Herramientas retiradas** | ninguna |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
+
+Conserva las herramientas de red: la frescura de la matriz de avisos depende de poder consultar la fuente del fabricante.
+
+---
 
 ## Las tres reglas que gobiernan el skill
 

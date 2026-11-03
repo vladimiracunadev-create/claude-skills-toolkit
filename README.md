@@ -13,7 +13,7 @@ Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de segur
 [![Skills](https://img.shields.io/badge/skills-22-1f6feb)](#-catálogo)
 [![Platforms](https://img.shields.io/badge/platforms-linux%20%7C%20macOS%20%7C%20windows-555?logo=linux&logoColor=white)](#-instalación)
 [![CI](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-97%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
+[![Tests](https://img.shields.io/badge/tests-104%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
 [![Supply chain hardened](https://img.shields.io/badge/supply%20chain-hardened-2da44e?logo=shieldsdotio&logoColor=white)](docs/supply-chain-security.md)
 [![SkillSpector](https://img.shields.io/badge/SkillSpector-23%2F23%20skills%20escaneados-2da44e?logo=securityscorecard&logoColor=white)](#-revisión-de-seguridad-de-los-skills)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?logo=github)](CONTRIBUTING.md)
@@ -800,8 +800,16 @@ El frontmatter mínimo:
 name: nombre-del-skill
 description: Qué hace + cuándo invocarlo (triggers en español e inglés).
              El agente lee este campo para decidir si activarlo.
+metadata:
+  capabilities:          # qué hace el script: shell · file_read · file_write · network · env
+    - file_read          # (lista vacía si es un skill de criterio, sin script)
+disallowed-tools:        # el techo real de permisos — opcional, pero se declara si aplica
+  - WebFetch             # retirar lo que el skill no necesita cierra la ruta de salida
+  - WebSearch
 ---
 ```
+
+**`allowed-tools` no se declara.** Ese campo *preaprueba* herramientas —se salta la confirmación del usuario durante el turno que invoca el skill— en vez de limitarlas; para acotar de verdad está `disallowed-tools`. El test [`test_skill_scope.py`](tests/test_skill_scope.py) lo verifica, junto con que lo declarado cubra lo que el script hace. Ver [la sección de seguridad de los skills](#-revisión-de-seguridad-de-los-skills).
 
 ---
 
@@ -816,7 +824,7 @@ Los 23 skills de este repo (22 de producción + `_template`) pasan por [**SkillS
 |---|---|
 | **Skills escaneados** | 23 de 23 — ninguno omitido |
 | **Hallazgos sin clasificar** | **0** |
-| **Hallazgos triados** | 93 — el análisis **caso a caso** está en [`skillspector-hallazgos.md`](docs/security/skillspector-hallazgos.md): qué disparó cada regla, cómo se resolvería y por qué el skill cumple igual |
+| **Hallazgos triados** | 93 — 40 `by_design`, 52 `false_positive`, 1 límite del escáner. El análisis **caso a caso** está en [`skillspector-hallazgos.md`](docs/security/skillspector-hallazgos.md): qué disparó cada regla, cómo se resolvería y por qué el skill cumple igual |
 | **Cobertura mínima por skill** | **33,3 %** — el escáner declara qué ficheros no pudo inspeccionar del todo, y el informe lo publica por skill en vez de esconderlo |
 | **Capa LLM** | **desactivada** a propósito: enviaría el contenido de los skills a un proveedor externo. El CI se queda en estático |
 
@@ -831,7 +839,12 @@ Y la regla del juego es que **una regla nueva no se puede suprimir** sin que alg
 - Un **U+200B literal** (espacio de ancho cero) incrustado en el fuente de `web-snap`. Era intencional y estaba comentado, pero un carácter invisible no se ve en un diff ni en una revisión de código, y es la vía por la que se cuela texto oculto en un script. Ahora es `chr(0x200B)`, explícito y visible.
 - **`markdownlint-cli2` sin pin de versión** en `md-lint-fix` y en el propio CI. Sin versión fija, una release comprometida del linter entra sola — exactamente el escenario que [`docs/supply-chain-security.md`](docs/supply-chain-security.md) dice que el repo quiere evitar.
 
-**Un riesgo real que queda abierto, declarado:** ningún `SKILL.md` acota su scope con `allowed-tools`, así que el agente carga cada skill con toda su caja de herramientas (`LP3`, ×14). Está asumido a sabiendas en [SECURITY.md](SECURITY.md) y pendiente en el [ROADMAP](ROADMAP.md) — acotarlo exige revisar las 22 superficies una a una.
+**El hallazgo de fondo, resuelto sin falsear la métrica.** `LP3` (×14) pedía que cada skill declarara su scope de herramientas. El campo que el escáner busca, `allowed-tools`, resultó **preaprobar** herramientas —se salta la confirmación del usuario durante el turno— y no restringir nada: declararlo habría puesto el hallazgo en verde empeorando la postura, en un repo donde `docker-cleanup` borra todo sin confirmaciones intermedias. Así que se separó en dos:
+
+- **Declarar la intención** — los 23 `SKILL.md` llevan `metadata.capabilities` en el frontmatter (legible por herramientas, sin efecto sobre permisos) y una sección **«Alcance y permisos»** con qué toca y qué nunca toca, específica de cada skill.
+- **Acotar de verdad** — `disallowed-tools`, el único techo real del runtime, retira `WebFetch` y `WebSearch` en los **14 skills verificablemente locales**. Cierra una ruta de salida concreta: varios de ellos leen contenido ajeno (el repo que auditan, la salida de un scanner), y una inyección desde ahí tiene una herramienta menos.
+
+`LP3` sigue apareciendo en el scan porque el escáner sólo reconoce `permissions` o `allowed-tools`, y ninguno es el campo correcto aquí — así que queda como `by_design`, explicado, en vez de silenciado. Y [`tests/test_skill_scope.py`](tests/test_skill_scope.py) impide que se deshaga: declarar `allowed-tools` rompe la suite, y una declaración que se queda corta respecto a su propio script también.
 
 ```bash
 pip install git+https://github.com/vladimiracunadev-create/SkillSpector.git

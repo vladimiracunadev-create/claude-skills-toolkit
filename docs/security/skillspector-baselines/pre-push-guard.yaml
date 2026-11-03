@@ -13,14 +13,23 @@ fingerprints:
     git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
     y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
     (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
-- hash: sha256:9858bf92771d2b712a7133c0be40e22fa0477c61caa0b22b739e68df59d01541
+- hash: sha256:3c2929964fc44ca3f44a618f6386dc1aba37a03ab2f270ce8fd3937381f37dc6
   rule_id: LP3
   file: SKILL.md
-  reason: '[accepted_risk] Real: el frontmatter de los SKILL.md no declara `allowed-tools`,
-    así que el agente carga el skill con toda su caja de herramientas disponible.
-    Asumido por ahora: acotar el scope exige revisar las 22 superficies una a una
-    y verificar que ningún skill pierde una herramienta que necesita. Registrado como
-    riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.'
+  reason: '[by_design] Resuelto en lo que el hallazgo denuncia —la opacidad— y deliberado
+    en lo que queda. Los 23 SKILL.md declaran ahora su alcance: `metadata.capabilities`
+    en el frontmatter (legible por herramientas, sin efecto sobre permisos), una sección
+    "Alcance y permisos" con qué toca y qué nunca toca, y `disallowed-tools` retirando
+    WebFetch/WebSearch en los 14 skills verificablemente locales, que es el único
+    techo real de permisos que ofrece el runtime. Lo que NO se declara, a propósito,
+    es `allowed-tools`: la propia remediación de SkillSpector avisa de que registra
+    herramientas PREAPROBADAS, no un techo, y de no añadir ninguna "para silenciar
+    este hallazgo". Declararlo quitaría la confirmación del usuario sin acotar nada
+    — peor postura con la métrica en verde. Tampoco se añade `permissions`, que es
+    un campo de manifiestos MCP y no existe en el frontmatter de un Agent Skill. Sostenido
+    por tests/test_skill_scope.py: un skill sin declaración, o cuya declaración se
+    quede corta respecto a su propio script, rompe la suite; y declarar `allowed-tools`
+    también la rompe. Ver el caso 3 de skillspector-hallazgos.md.'
 - hash: sha256:9b0fbadff748285d76cb93170b96711f96afec393b83ab5f320d03603a935f86
   rule_id: E1
   file: README.md
@@ -48,7 +57,7 @@ fingerprints:
     la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
     push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
     instrucción que el agente ejecute.'
-- hash: sha256:8ecb33d9a4f8c101b2adb39d78b6c6272302ce61f948f89ffdedc349e076506b
+- hash: sha256:e240ac6e4db46739a7566d59e887c351fb21dcc02e6d717de621c1d9a7272bc1
   rule_id: TM1
   file: SKILL.md
   reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:

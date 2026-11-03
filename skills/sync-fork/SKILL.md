@@ -12,6 +12,11 @@ description: >-
   upstream", o cuando esté en un repo con relación de fork y quiera ponerse al
   día con el original. Funciona con `gh` para autodetectar, o con la URL del
   upstream a mano.
+metadata:
+  capabilities: []
+disallowed-tools:
+  - WebFetch
+  - WebSearch
 ---
 
 # sync-fork — poner un fork al día con su upstream
@@ -23,6 +28,21 @@ conflictos o con cambios que ya estaban resueltos arriba.
 Lo que hace daño aquí no es el fetch: es resolver mal el **origen de la verdad**
 (adivinar la URL del upstream) y elegir mal la forma de integrar (un rebase que
 reescribe lo que otros ya clonaron).
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | ninguna — es un skill de criterio, sin script ejecutable |
+| **Qué toca** | Lee el parent real del fork con `gh`, consulta la rama por defecto e integra con `merge`. |
+| **Qué nunca toca** | No hace `rebase`: un fork público puede estar clonado por otros, y reescribir su histórico les rompe el suyo. |
+| **Herramientas retiradas** | `WebFetch`, `WebSearch` |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
+
+Escribe en el histórico de la rama.
+
+---
 
 ## 1 · Detectar el upstream
 

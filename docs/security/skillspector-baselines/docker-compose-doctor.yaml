@@ -6,14 +6,23 @@ version: 2
 scanner_version: 2.12.0
 rules: []
 fingerprints:
-- hash: sha256:f5dc6df12f6ec1eb910f4da411df8ee582bb7712a23cece67062c9bda1212ac7
+- hash: sha256:a7bbdeeab528003b277b856fbd70f58bb197ed87889e81b1273b61633f66c7af
   rule_id: LP3
   file: SKILL.md
-  reason: '[accepted_risk] Real: el frontmatter de los SKILL.md no declara `allowed-tools`,
-    así que el agente carga el skill con toda su caja de herramientas disponible.
-    Asumido por ahora: acotar el scope exige revisar las 22 superficies una a una
-    y verificar que ningún skill pierde una herramienta que necesita. Registrado como
-    riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.'
+  reason: '[by_design] Resuelto en lo que el hallazgo denuncia —la opacidad— y deliberado
+    en lo que queda. Los 23 SKILL.md declaran ahora su alcance: `metadata.capabilities`
+    en el frontmatter (legible por herramientas, sin efecto sobre permisos), una sección
+    "Alcance y permisos" con qué toca y qué nunca toca, y `disallowed-tools` retirando
+    WebFetch/WebSearch en los 14 skills verificablemente locales, que es el único
+    techo real de permisos que ofrece el runtime. Lo que NO se declara, a propósito,
+    es `allowed-tools`: la propia remediación de SkillSpector avisa de que registra
+    herramientas PREAPROBADAS, no un techo, y de no añadir ninguna "para silenciar
+    este hallazgo". Declararlo quitaría la confirmación del usuario sin acotar nada
+    — peor postura con la métrica en verde. Tampoco se añade `permissions`, que es
+    un campo de manifiestos MCP y no existe en el frontmatter de un Agent Skill. Sostenido
+    por tests/test_skill_scope.py: un skill sin declaración, o cuya declaración se
+    quede corta respecto a su propio script, rompe la suite; y declarar `allowed-tools`
+    también la rompe. Ver el caso 3 de skillspector-hallazgos.md.'
 - hash: sha256:0233f9d30364b1dacdaaa12cff9b64e9e132b0a9efbacbc03fa8f0455adb4599
   rule_id: E1
   file: README.md

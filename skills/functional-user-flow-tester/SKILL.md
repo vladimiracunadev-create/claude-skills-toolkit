@@ -12,11 +12,28 @@ description: >-
   QA funcional", "test the user flow", "black-box testing", o entregue una URL,
   un binario o una API para recorrer. No hace pentesting, pruebas de carga,
   resiliencia interna avanzada ni certificación formal de accesibilidad.
+metadata:
+  capabilities: []
 ---
 
 # Functional User Flow Tester
 
 Evalúa el producto como lo haría un usuario o consumidor externo. Basa las conclusiones en resultados observables y separa claramente hechos, inferencias y restricciones del entorno.
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | ninguna — es un skill de criterio, sin script ejecutable |
+| **Qué toca** | Recorre el producto como un usuario —Web, móvil, escritorio o API pública— sobre lo que el usuario entregue. |
+| **Qué nunca toca** | No hace pentesting ni pruebas de carga, y no lee el código fuente ni los logs internos: solo evidencia observable por el usuario. |
+| **Herramientas retiradas** | ninguna |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
+
+Conserva las herramientas de red y navegador: son la superficie que prueba.
+
+---
 
 ## Acordar el alcance operativo
 

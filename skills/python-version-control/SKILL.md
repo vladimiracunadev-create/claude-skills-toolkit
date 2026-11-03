@@ -1,6 +1,12 @@
 ---
 name: python-version-control
 description: Audita la coherencia de versión de Python en un repositorio (pyproject.toml requires-python + classifiers + target-version de ruff/mypy/black, Dockerfile FROM, .github/workflows/*.yml setup-python, .python-version, runtime.txt, tox.ini, noxfile.py, pre-commit). Detecta drift entre las fuentes y propone una versión canónica. Úsalo cuando el usuario diga "audita versión python", "coherencia python version", "drift python", "qué versión python usa el repo", "revisa python version", "python version control", o proactivamente al editar pyproject.toml, Dockerfile, o workflows con setup-python. Trabaja sobre Path.cwd() — funciona en cualquier repo. Solo lectura por defecto; aplica fixes solo con --fix y confirmación del usuario.
+metadata:
+  capabilities:
+    - file_read
+disallowed-tools:
+  - WebFetch
+  - WebSearch
 ---
 
 # python-version-control
@@ -10,6 +16,19 @@ Audita y reporta la coherencia de versión de Python declarada en distintos luga
 > "El CI corre 3.10, el Dockerfile usa 3.11, ruff apunta a `py310`, pero la documentación dice 'Python 3.12+'."
 
 Drift así rompe en silencio: la clase enseña features de 3.12, el CI con 3.10 las rechaza, el contenedor de prod corre 3.11 con bugs específicos.
+
+---
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | `file_read` |
+| **Qué toca** | Lee las 12+ fuentes de verdad de la versión de Python del repo (`pyproject.toml`, `Dockerfile`, workflows, `.python-version`, ...). |
+| **Qué nunca toca** | `--fix` es opt-in y pide confirmación antes de reescribir nada. |
+| **Herramientas retiradas** | `WebFetch`, `WebSearch` |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
 
 ---
 

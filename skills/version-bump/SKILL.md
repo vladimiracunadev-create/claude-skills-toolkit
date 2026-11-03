@@ -10,6 +10,12 @@ description: >-
   `version_probe.py` hace esa clasificación de forma determinista en vez de
   dejarla al criterio del agente. Verificar cada paso con comandos reales antes
   de afirmar que está hecho.
+metadata:
+  capabilities:
+    - file_read
+disallowed-tools:
+  - WebFetch
+  - WebSearch
 ---
 
 # version-bump — control de versión general
@@ -17,6 +23,21 @@ description: >-
 Objetivo: cambiar la versión de un producto de forma **coherente en TODO el
 repositorio** y, si aplica, publicar el release verificándolo. Sirve para
 cualquier stack. No asume ninguna herramienta concreta hasta detectarla.
+
+---
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | `file_read` |
+| **Qué toca** | Lee los marcadores de versión de cualquier stack (Cargo, npm, Python, Go, .NET, Java) y clasifica cada aparición en ACTUAL / HISTÓRICO / AMBIGUO. |
+| **Qué nunca toca** | No toca las referencias históricas del changelog, y el tag y el release se confirman antes de publicarse. |
+| **Herramientas retiradas** | `WebFetch`, `WebSearch` |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
+
+Publica tags y releases.
 
 ---
 

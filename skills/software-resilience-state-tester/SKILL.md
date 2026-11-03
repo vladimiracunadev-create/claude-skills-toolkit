@@ -13,11 +13,28 @@ description: >-
   "crash recovery", "idempotency test". No hace pentesting ni pruebas
   destructivas de seguridad, y no presenta una simulación como prueba en
   hardware real.
+metadata:
+  capabilities: []
 ---
 
 # Software Resilience State Tester
 
 Actúa como especialista en resiliencia observable del producto. Determina si el sistema conserva datos válidos, evita duplicados, recupera una operación coherente y comunica el estado correcto cuando el flujo normal se interrumpe.
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | ninguna — es un skill de criterio, sin script ejecutable |
+| **Qué toca** | Provoca estados y fallos sobre el producto bajo prueba y observa cómo recupera. |
+| **Qué nunca toca** | No hace pruebas de carga ni experimentos de caos en producción. |
+| **Herramientas retiradas** | ninguna |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
+
+Conserva las herramientas de red: el producto bajo prueba puede ser una web o una API.
+
+---
 
 ## Delimitar la prueba
 

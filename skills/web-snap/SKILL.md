@@ -1,11 +1,31 @@
 ---
 name: web-snap
 description: Captura screenshots de URLs web en Windows usando Chrome/Edge + Pillow, sin Selenium ni Playwright. Úsalo cuando el usuario pida "captura pantalla", "screenshot de esta URL", "snapshot de la consola AWS/Azure/GCP", "documentar con capturas", "evidencia visual", "generar PNGs de la web", o cuando necesites tú mismo dejar evidencia visual de un despliegue/demo en un proyecto. Genera PNG en directorio configurable, soporta modo single y modo batch desde JSON. Solo Windows con sesión interactiva.
+metadata:
+  capabilities:
+    - shell
+    - file_read
+    - file_write
 ---
 
 # web-snap
 
 Skill para capturar pantallas de URLs web en **Windows** usando Chrome o Edge ya instalados + `Pillow`. Sin dependencias pesadas (Selenium, Playwright, ChromeDriver, etc).
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | `shell` · `file_read` · `file_write` |
+| **Qué toca** | Lanza Chrome o Edge en modo headless y escribe los PNG en el directorio configurado. |
+| **Qué nunca toca** | No usa Selenium ni Playwright, y no navega más allá de las URL que se le pasan. |
+| **Herramientas retiradas** | ninguna |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
+
+Conserva las herramientas de navegador: son su superficie de trabajo.
+
+---
 
 ## Cuándo invocarlo
 

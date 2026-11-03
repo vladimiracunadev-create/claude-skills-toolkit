@@ -64,7 +64,7 @@ Incluye en el reporte:
 |---|---|:-:|
 | `security-audit --apply` sin `--verify` bumpea versiones sin correr tests, puede romper el build | Documentado explícitamente; modo `--verify` revierte si tests fallan | media |
 | Un `SKILL.md` malicioso podría incluir frontmatter con instrucciones que confundan al agente | El usuario controla qué skills instala (revisión manual antes de `install.sh`) + escaneo con SkillSpector en CI | baja |
-| Ningún `SKILL.md` declara `allowed-tools` en el frontmatter: el agente carga cada skill con toda su caja de herramientas disponible | Riesgo **asumido**. Acotar el scope exige revisar las 22 superficies una a una y comprobar que ningún skill pierde una herramienta que necesita. Detectado por SkillSpector (`LP3`, ×14) y anotado en [ROADMAP.md](ROADMAP.md) | media |
+| Un skill podría cargarse con más herramientas de las que su trabajo necesita, y una inyección desde el contenido que lee (el repo auditado, la salida de un scanner) usarlas | **Mitigado.** Los 23 `SKILL.md` declaran su alcance (`metadata.capabilities` + sección «Alcance y permisos»), y los **14 verificablemente locales** retiran `WebFetch`/`WebSearch` con `disallowed-tools`, que es el único techo real de permisos del runtime. Ninguno declara `allowed-tools`, que *preaprueba* en vez de limitar. Sostenido por [`tests/test_skill_scope.py`](tests/test_skill_scope.py) | baja |
 | `docker-cleanup` borra TODOS los contenedores, volúmenes e imágenes sin confirmación | Documentado como **diseño explícito** — invocación = ejecución | aceptado |
 
 ### 🔍 Cobertura declarada del análisis automático

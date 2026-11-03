@@ -12,12 +12,34 @@ description: >-
   lint en CI", "black rompió el CI", "valida los .py antes de pushear", o
   proactivamente después de editar cualquier `.py`. Trabaja sobre `Path.cwd()` —
   funciona en cualquier repo.
+metadata:
+  capabilities:
+    - shell
+    - file_read
+disallowed-tools:
+  - WebFetch
+  - WebSearch
 ---
 
 # python-lint-guard
 
 El gemelo Python de [`md-lint-fix`](../md-lint-fix/SKILL.md): el gate que faltaba
 en la cadena de guardias del toolkit.
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | `shell` · `file_read` |
+| **Qué toca** | Lee la configuración de lint que el repo declara e invoca el linter que corresponda (`ruff`, `flake8`). |
+| **Qué nunca toca** | `--fix` nunca toca `F841`, `E402` ni `S110`: borrar el síntoma puede borrar el bug. |
+| **Herramientas retiradas** | `WebFetch`, `WebSearch` |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
+
+`--fix` reescribe código.
+
+---
 
 ## Por qué existe
 

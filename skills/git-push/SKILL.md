@@ -13,6 +13,11 @@ description: >-
   "crear PR", "corregir el último commit", "push", "commit and push", "create
   pull request", "amend", "push tag", "pull and push". El usuario no tiene que
   decir en qué caso está: el skill lo determina.
+metadata:
+  capabilities: []
+disallowed-tools:
+  - WebFetch
+  - WebSearch
 ---
 
 # git-push — subida a GitHub con el escenario correcto
@@ -21,6 +26,21 @@ Casi todo el daño que se hace al subir código viene de ejecutar el flujo
 equivocado: hacer `git push` cuando la rama no tiene upstream, commitear sobre
 un árbol que está detrás del remoto, o `--force` en `main` para «arreglar» una
 divergencia. El estado del repo decide el flujo, así que primero se lee.
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | ninguna — es un skill de criterio, sin script ejecutable |
+| **Qué toca** | Invoca `git` y `gh` para indexar por rutas explícitas, commitear, pushear y abrir PR. |
+| **Qué nunca toca** | No usa `git add .` a ciegas, no fuerza sobre `main`/`master` sin confirmación explícita, y nunca usa `--force` pelado — solo `--force-with-lease`. |
+| **Herramientas retiradas** | `WebFetch`, `WebSearch` |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
+
+Escribe en el remoto, que es irreversible para los demás, así que cada escritura se confirma.
+
+---
 
 ## Paso 0 — Leer el estado, siempre
 

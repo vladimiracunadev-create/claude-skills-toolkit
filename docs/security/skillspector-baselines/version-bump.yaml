@@ -6,14 +6,23 @@ version: 2
 scanner_version: 2.12.0
 rules: []
 fingerprints:
-- hash: sha256:96ca0103cf2a5806fbbc1be937c79c903960c04dc919e1efa11272f352b4a95d
+- hash: sha256:7f6b1a4f3836fe5ba2e27e7d28bd974011a21c724d5a7a6cf98340983d82a0bc
   rule_id: LP3
   file: SKILL.md
-  reason: '[accepted_risk] Real: el frontmatter de los SKILL.md no declara `allowed-tools`,
-    así que el agente carga el skill con toda su caja de herramientas disponible.
-    Asumido por ahora: acotar el scope exige revisar las 22 superficies una a una
-    y verificar que ningún skill pierde una herramienta que necesita. Registrado como
-    riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.'
+  reason: '[by_design] Resuelto en lo que el hallazgo denuncia —la opacidad— y deliberado
+    en lo que queda. Los 23 SKILL.md declaran ahora su alcance: `metadata.capabilities`
+    en el frontmatter (legible por herramientas, sin efecto sobre permisos), una sección
+    "Alcance y permisos" con qué toca y qué nunca toca, y `disallowed-tools` retirando
+    WebFetch/WebSearch en los 14 skills verificablemente locales, que es el único
+    techo real de permisos que ofrece el runtime. Lo que NO se declara, a propósito,
+    es `allowed-tools`: la propia remediación de SkillSpector avisa de que registra
+    herramientas PREAPROBADAS, no un techo, y de no añadir ninguna "para silenciar
+    este hallazgo". Declararlo quitaría la confirmación del usuario sin acotar nada
+    — peor postura con la métrica en verde. Tampoco se añade `permissions`, que es
+    un campo de manifiestos MCP y no existe en el frontmatter de un Agent Skill. Sostenido
+    por tests/test_skill_scope.py: un skill sin declaración, o cuya declaración se
+    quede corta respecto a su propio script, rompe la suite; y declarar `allowed-tools`
+    también la rompe. Ver el caso 3 de skillspector-hallazgos.md.'
 - hash: sha256:02e7695e8ed10f3d93578054bff6a7a9407b2646f110a5ad549d31f5846367eb
   rule_id: PE3
   file: version_probe.py
@@ -21,7 +30,7 @@ fingerprints:
     listas de sufijos de bitcoin-custody-audit, cuyo trabajo es BUSCAR ficheros con
     secretos en el repo auditado para reportarlos. Nombrar el fichero es la función
     del skill; no lee ni transmite su contenido como credencial.'
-- hash: sha256:c811153c240bc6c231c8869702102df106d2d9db79fe2fdd5b77b1a2deb3b388
+- hash: sha256:0bb088a82eede8a763661dd072cd6899542454049caa76395e829e025082230b
   rule_id: TM1
   file: SKILL.md
   reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:

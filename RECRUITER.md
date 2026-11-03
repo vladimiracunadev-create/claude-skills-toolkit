@@ -33,7 +33,7 @@
 - **Cross-platform real** — Linux, macOS, Windows (PowerShell + Git Bash). No "funciona en mi máquina".
 - **CI cross-matrix** — `.github/workflows/ci.yml` corre tests en ubuntu/windows/macOS × Python 3.11/3.12.
 - **Eat your own dog food** — el repo valida sus propios YAML y Markdown con sus propios skills en CI, y `security-audit` auditó su propio código (Bandit SAST sobre el toolkit encontró y clasificó 54 hallazgos).
-- **Tests reales** detectan bugs reales — el primer run de `tests/test_skills_structure.py` encontró 2 bugs de frontmatter en producción; la suite (97 tests, estructura + funcionales) corre en matriz de 3 OS × 2 versiones de Python.
+- **Tests reales** detectan bugs reales — el primer run de `tests/test_skills_structure.py` encontró 2 bugs de frontmatter en producción; la suite (104 tests, estructura + funcionales) corre en matriz de 3 OS × 2 versiones de Python.
 - **Honestidad sobre cobertura** — `security-audit` reporta explícitamente qué dependencias quedaron FUERA del scan (sin pin exacto o sin lockfile) en vez de presentar "0 vulnerabilidades" como cobertura total.
 
 ### 3️⃣ Diseño de API / DX

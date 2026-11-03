@@ -1,6 +1,12 @@
 ---
 name: docker-compose-doctor
 description: Diagnostica problemas comunes en archivos compose.yml / docker-compose.yml antes de levantar el stack. Detecta puertos host duplicados entre servicios, servicios sin healthcheck, depends_on que no usa condition service_healthy, imágenes sin tag o pinneadas a `:latest`, volúmenes nombrados declarados pero no referenciados, y env_file apuntando a archivos inexistentes. Úsalo cuando el usuario diga "revisa el compose", "valida docker-compose", "qué tiene mal este compose", "docker compose lint", "auditar compose.yml", "chequea el stack", "por qué no levanta este compose", o proactivamente después de editar cualquier archivo `compose*.y*ml` / `docker-compose*.y*ml`. Trabaja sobre `Path.cwd()` — funciona en cualquier repo. Cero deps externas más allá de `pyyaml`.
+metadata:
+  capabilities:
+    - file_read
+disallowed-tools:
+  - WebFetch
+  - WebSearch
 ---
 
 # docker-compose-doctor
@@ -8,6 +14,19 @@ description: Diagnostica problemas comunes en archivos compose.yml / docker-comp
 Diagnostica problemas comunes en archivos `compose.yml` / `docker-compose.yml` **antes** de hacer `docker compose up` — para que el stack levante a la primera y los servicios queden saludables.
 
 No reemplaza a `docker compose config` (que valida sintaxis del schema). Cubre la capa de **convenciones operacionales** que el schema oficial no captura: healthchecks faltantes, dependencias sin esperar a `service_healthy`, etc.
+
+---
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | `file_read` |
+| **Qué toca** | Lee los `compose*.y*ml` del repo y los `env_file` que referencian. |
+| **Qué nunca toca** | No levanta, para ni modifica el stack. Solo lectura. |
+| **Herramientas retiradas** | `WebFetch`, `WebSearch` |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
 
 ---
 

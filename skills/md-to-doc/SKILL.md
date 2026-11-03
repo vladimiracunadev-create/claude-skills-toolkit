@@ -14,12 +14,35 @@ description: >-
   la documentación", "exporta los docs a HTML", "compila el manual", "un solo
   fichero con toda la doc", "los diagramas no salen en el PDF", o "documentación
   offline". Trabaja sobre `Path.cwd()` — funciona en cualquier repo.
+metadata:
+  capabilities:
+    - shell
+    - file_read
+    - file_write
+disallowed-tools:
+  - WebFetch
+  - WebSearch
 ---
 
 # md-to-doc
 
 Convierte una colección de ficheros Markdown en **un documento**: HTML
 autocontenido, o PDF.
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | `shell` · `file_read` · `file_write` |
+| **Qué toca** | Lee el Markdown y sus imágenes locales y escribe el HTML o PDF de salida. |
+| **Qué nunca toca** | La capa `exec` —ejecutar el código de los bloques y embeber su salida— está **desactivada por defecto**. |
+| **Herramientas retiradas** | `WebFetch`, `WebSearch` |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
+
+Escribe los ficheros de salida.
+
+---
 
 ## Por qué existe
 

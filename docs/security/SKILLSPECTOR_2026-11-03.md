@@ -1,4 +1,4 @@
-# Escaneo de skills — SkillSpector — 2026-11-03 03:34 UTC
+# Escaneo de skills — SkillSpector — 2026-11-03 04:18 UTC
 
 Generado por `scripts/skillspector_scan.py` sobre **SkillSpector v2.12.0** ([fork](https://github.com/vladimiracunadev-create/SkillSpector) de [NVIDIA/skillspector](https://github.com/NVIDIA/skillspector)), capa estática (`--no-llm`): patrones de prompt injection, exfiltración, supply chain, escalada de privilegios y abuso de herramientas, más reglas YARA y taint tracking.
 

@@ -20,15 +20,24 @@ fingerprints:
     git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
     y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
     (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
-- hash: sha256:d898bc6373a98b88a6226b0c7e2f2b60b0a244eb6d751791b68f3fb66ecd8006
+- hash: sha256:2af73e5f3a4cc7581666e1dec83b5169e7c2a8b6a3ca1b7d11c80c9f4435976e
   rule_id: LP3
   file: SKILL.md
-  reason: '[accepted_risk] Real: el frontmatter de los SKILL.md no declara `allowed-tools`,
-    así que el agente carga el skill con toda su caja de herramientas disponible.
-    Asumido por ahora: acotar el scope exige revisar las 22 superficies una a una
-    y verificar que ningún skill pierde una herramienta que necesita. Registrado como
-    riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.'
-- hash: sha256:ef914f5739f7777a60ff876dfd092fcc37305eede5a28b914866187989e5e1d2
+  reason: '[by_design] Resuelto en lo que el hallazgo denuncia —la opacidad— y deliberado
+    en lo que queda. Los 23 SKILL.md declaran ahora su alcance: `metadata.capabilities`
+    en el frontmatter (legible por herramientas, sin efecto sobre permisos), una sección
+    "Alcance y permisos" con qué toca y qué nunca toca, y `disallowed-tools` retirando
+    WebFetch/WebSearch en los 14 skills verificablemente locales, que es el único
+    techo real de permisos que ofrece el runtime. Lo que NO se declara, a propósito,
+    es `allowed-tools`: la propia remediación de SkillSpector avisa de que registra
+    herramientas PREAPROBADAS, no un techo, y de no añadir ninguna "para silenciar
+    este hallazgo". Declararlo quitaría la confirmación del usuario sin acotar nada
+    — peor postura con la métrica en verde. Tampoco se añade `permissions`, que es
+    un campo de manifiestos MCP y no existe en el frontmatter de un Agent Skill. Sostenido
+    por tests/test_skill_scope.py: un skill sin declaración, o cuya declaración se
+    quede corta respecto a su propio script, rompe la suite; y declarar `allowed-tools`
+    también la rompe. Ver el caso 3 de skillspector-hallazgos.md.'
+- hash: sha256:34540e0a6cb3ab669fbc5a645941d3a875159d64aa4f65dc8f43bd5a942ec632
   rule_id: AR2
   file: SKILL.md
   reason: '[false_positive] La coincidencia es "no warnings" dentro de la frase "Si

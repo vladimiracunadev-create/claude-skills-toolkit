@@ -20,21 +20,21 @@ fingerprints:
     la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
     push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
     instrucción que el agente ejecute.'
-- hash: sha256:07a1382c6d82729c24d60e81acedf50ac5746ba31a11ac80de54d10015f0e2ec
+- hash: sha256:a78d302769e446c39bcf03d1bb8dc1137961cd813ef4ffe44fc21e9be604f1bc
   rule_id: TM1
   file: SKILL.md
   reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
     la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
     push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
     instrucción que el agente ejecute.'
-- hash: sha256:daedb6814ee181c5488298e9be36eb49e84d53510cf2eebc4d56d0db57d3530a
+- hash: sha256:9d759260328cb8840d7a60d474b1c32dd07a735f6aee66ad19374d4399944ea2
   rule_id: TM1
   file: SKILL.md
   reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
     la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
     push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
     instrucción que el agente ejecute.'
-- hash: sha256:df4f84effcc82e57a6cdae527e44b601b3865778c568cfd60a643459af677c92
+- hash: sha256:61565f79a7a88d1aac667f532289a04f72a0806ef628c99f59210be98355443a
   rule_id: TM1
   file: SKILL.md
   reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:

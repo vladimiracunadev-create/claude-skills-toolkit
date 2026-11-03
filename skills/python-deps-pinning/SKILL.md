@@ -14,6 +14,12 @@ description: >-
   scan no ve nada", "genera el lockfile", "las deps no están fijadas", "auditá
   las versiones de las dependencias", o antes/después de correr security-audit.
   Trabaja sobre `Path.cwd()` — funciona en cualquier repo Python.
+metadata:
+  capabilities:
+    - file_read
+disallowed-tools:
+  - WebFetch
+  - WebSearch
 ---
 
 # python-deps-pinning
@@ -21,6 +27,19 @@ description: >-
 Complemento directo de [`security-audit`](../security-audit/SKILL.md): ese skill
 **declara** que las dependencias sin pin exacto quedan fuera del scan; este las
 **cuantifica y las nombra**.
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | `file_read` |
+| **Qué toca** | Lee manifests y lockfiles de Python para medir qué parte del árbol de dependencias es auditable por un scanner de CVE. |
+| **Qué nunca toca** | Solo lectura: da la receta del lockfile, no la ejecuta ni instala nada. |
+| **Herramientas retiradas** | `WebFetch`, `WebSearch` |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
+
+---
 
 ## Por qué existe
 

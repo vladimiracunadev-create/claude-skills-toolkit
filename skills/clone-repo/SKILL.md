@@ -12,6 +12,11 @@ description: >-
   una subcarpeta", "clone a repo here", "pull repo contents into the current
   directory", o pegue una URL de GitHub/GitLab/Bitbucket dejando claro que
   quiere el contenido donde está. Cubre PowerShell y Bash.
+metadata:
+  capabilities: []
+disallowed-tools:
+  - WebFetch
+  - WebSearch
 ---
 
 # clone-repo — clonar dentro del directorio actual
@@ -23,6 +28,21 @@ creada, un repo que alguien clonó mal y hay que rehacer— hace falta otro fluj
 El error clásico al resolverlo a mano es perder los ficheros ocultos: un
 `mv repo/* .` deja fuera `.git` (adiós histórico), `.github` (adiós CI),
 `.gitignore` y `.githooks`. Este skill los mueve todos.
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | ninguna — es un skill de criterio, sin script ejecutable |
+| **Qué toca** | Invoca `git clone` y mueve ficheros dentro del directorio actual, incluidos los ocultos (`.git`, `.github`, `.githooks`). |
+| **Qué nunca toca** | No borra nada sin inventariar antes las colisiones. |
+| **Herramientas retiradas** | `WebFetch`, `WebSearch` |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
+
+Mueve ficheros del directorio de trabajo, así que cada paso se confirma.
+
+---
 
 ## Cuándo usar
 

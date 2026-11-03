@@ -9,10 +9,12 @@ Datos de este análisis: **SkillSpector v2.12.0** (capa estática, `--no-llm`) s
 
 | | |
 |---|---|
-| Hallazgos de la primera pasada | **95** |
-| Corregidos de verdad | **2** (`YR4`, `RP1`) |
-| Riesgo real asumido y declarado | **1 clase** (`LP3`, ×14) |
-| Falsos positivos y límites del escáner | **9 clases**, 91 hallazgos |
+| Hallazgos de la primera pasada | **95**, en 11 clases |
+| Corregidos en el código | **2** — `YR4` y `RP1`, casos 1 y 2 |
+| `by_design` · la capacidad es el propósito, o el techo está puesto donde el runtime lo permite | **40** — `AST4` (×26) y `LP3` (×14) |
+| `false_positive` · el patrón coincide, el riesgo no existe | **52** — `TM1`, `E1`, `RA2`, `PE3`, `TM3`, `AR2` |
+| `scanner_limit` · cobertura del escáner, no hallazgo del skill | **1** — `AE1` |
+| **Sin clasificar** | **0** |
 
 **Por qué hay tantos.** SkillSpector está diseñado para contestar una pregunta concreta: *¿instalo este skill que me encontré en internet?* Con esa pregunta, toda capacidad peligrosa es sospechosa por defecto, y hace bien. Este repo es el caso que rompe ese supuesto: es una caja de herramientas de desarrollo cuyo trabajo **es** invocar `git`, `docker` y `pytest`, escribir en ficheros del repo y consultar bases de CVE por HTTPS. El escáner no se equivoca al marcarlo; el trabajo está en decidir, caso por caso, si el riesgo existe.
 
@@ -58,7 +60,7 @@ El byte que llega al runtime es idéntico (verificado: `'- Microsoft​Edge'`), 
 
 ---
 
-## 3 · `LP3` — ningún skill declara su scope de herramientas · **ABIERTO, asumido**
+## 3 · `LP3` — scope de herramientas no declarado · **RESUELTO, y el resto es deliberado**
 
 **Severidad:** MEDIUM · **×14** · `bitcoin-custody-audit`, `docker-compose-doctor`, `md-lint-fix`, `md-to-doc`, `pre-commit-guard`, `pre-push-guard`, `python-deps-pinning`, `python-lint-guard`, `python-version-control`, `repo-coherence-audit`, `security-audit`, `version-bump`, `web-snap`, `yaml-control`
 
@@ -73,9 +75,43 @@ Eso cambia el cálculo por completo:
 - **Añadir `allowed-tools` a los 22 skills no es un control de seguridad.** No impide que el skill use otra herramienta; preaprueba las que liste, es decir, **quita confirmaciones al usuario**. Hecho a la ligera, el resultado neto sería *menos* fricción ante una acción destructiva, no más — y el hallazgo se marcaría como resuelto. Es el peor desenlace posible: la métrica en verde y la postura peor.
 - **Lo que sí resuelve el problema de fondo** es lo que el hallazgo nombra: la opacidad. Que cada `SKILL.md` diga qué toca y con qué alcance, de forma que quien lo instala lo sepa antes de ejecutarlo.
 
-**Cómo se resolverá.** Declarar el scope skill por skill, revisando las 22 superficies una a una y comprobando dos cosas en cada una: que la lista no deja fuera una herramienta que el skill necesita (lo rompería), y que no preaprueba ninguna que el usuario querría confirmar a mano (`docker-cleanup` borra todo sin preguntar por diseño; `security-audit --apply` reescribe manifests). No es un cambio mecánico de 22 líneas de frontmatter: es una decisión por skill.
+**Cómo se resolvió.** Revisando las 23 superficies una a una, y separando las tres cosas que el hallazgo mezcla:
 
-**Por qué el skill cumple igual, mientras.** Ninguno de los 22 oculta lo que hace: cada `SKILL.md` documenta qué hace, qué **no** hace y sus riesgos —es una de las reglas del repo—, cada uno trae un `README.md` para humanos, y los casos destructivos están marcados como tales en [`SECURITY.md`](../../SECURITY.md). La opacidad que el escáner penaliza es la del **campo del frontmatter**, no la del skill: la información existe, no está donde una herramienta pueda leerla. Queda [declarado como riesgo asumido](../../SECURITY.md) y [pendiente en el ROADMAP](../../ROADMAP.md), con severidad media, no como falso positivo.
+**1 · Declarar la intención, de forma legible por una herramienta.** Cada `SKILL.md` lleva ahora en su frontmatter las capacidades reales de su script, con el vocabulario `shell` · `file_read` · `file_write` · `network` · `env`:
+
+```yaml
+metadata:
+  capabilities:
+    - shell
+    - file_read
+```
+
+`metadata` es un mapa libre que el runtime ignora —está pensado para «tu propio tooling»— y lo aceptan también las subidas a claude.ai y la Skills API, así que declara sin tocar permisos.
+
+**2 · Declararla para quien la instala.** Cada `SKILL.md` abre con una sección **«Alcance y permisos»**: capacidades, **qué toca**, **qué nunca toca** y qué herramientas se le retiran. Específica por skill, no una plantilla: `bitcoin-custody-audit` dice que no pide ni acepta semillas y que reporta la ubicación de un hallazgo y nunca su valor; `md-lint-fix` dice que no toca ficheros fuera del diff y que `MD025`/`MD042`/`MD051` los reporta sin tocar; `docker-cleanup` dice que borra todo por diseño y sin confirmaciones intermedias.
+
+**3 · Acotar de verdad donde se puede.** El techo real de permisos **no es `allowed-tools`**: es `disallowed-tools`, que —según la propia documentación— retira herramientas del pool mientras el skill está activo. Está aplicado a los **14 skills verificablemente locales**, retirando `WebFetch` y `WebSearch`:
+
+```yaml
+disallowed-tools:
+  - WebFetch
+  - WebSearch
+```
+
+El criterio para incluir un skill fue que su `SKILL.md` no instruyera ninguna consulta web y que su propósito no dependiera de una fuente externa. Esto cierra una ruta de salida concreta y no hipotética: varios de estos skills **leen contenido ajeno** —el repo que auditan, la salida de un scanner, el Markdown de otro proyecto— y una inyección desde ese contenido tendría una herramienta menos con la que sacar algo. Los que conservan la red son los que la necesitan: `security-audit` (consulta avisos), `bitcoin-custody-audit` (frescura de la matriz), `web-snap` y los tres skills de pruebas (el producto bajo prueba puede ser una web), `release-evidence-auditor` (la evidencia vive en la página del release).
+
+**Lo que deliberadamente NO se hizo: declarar `allowed-tools`.** Ningún skill lo declara, y es la decisión central de este caso. La remediación del propio escáner lo pide así —*añade una herramienta sólo cuando esté aprobada como necesaria, no para silenciar este hallazgo*— y la documentación de Claude Code es explícita: `allowed-tools` concede permiso para que el agente use esas herramientas **sin preguntar** durante el turno que invoca el skill, y *«no restringe qué herramientas están disponibles»*. En un toolkit donde `docker-cleanup` borra todo sin confirmación intermedia, `security-audit --apply` reescribe manifests y `git-push` escribe en el remoto, preaprobar sería quitar el último freno —la confirmación del usuario— y, de paso, marcar el hallazgo como resuelto. Métrica en verde, postura peor. Tampoco se añade `permissions`: es un campo de manifiestos MCP y no existe en el frontmatter de un Agent Skill, así que ponerlo sería decorar.
+
+**Por eso `LP3` sigue apareciendo en el scan, y está bien que aparezca.** El escáner reconoce exactamente dos campos (`permissions` o `allowed-tools`) y ninguno de los dos es el correcto aquí. La opacidad que denunciaba está resuelta —la intención está declarada, es legible por herramientas y verificable—, y el techo está puesto donde el runtime permite ponerlo. El hallazgo pasa de `accepted_risk` a `by_design`.
+
+**Qué impide que esto se deshaga.** [`tests/test_skill_scope.py`](../../tests/test_skill_scope.py), 7 tests:
+
+- un skill sin `metadata.capabilities` rompe la suite;
+- una declaración que **se queda corta respecto a su propio script** rompe la suite — el test vuelve a detectar las capacidades del código y las compara contra lo declarado, así que añadir un `subprocess` sin declararlo falla;
+- una capacidad fuera del vocabulario rompe la suite;
+- un skill sin sección de alcance rompe la suite;
+- **declarar `allowed-tools` rompe la suite**, con el mensaje que explica por qué y qué usar en su lugar;
+- retirar una herramienta en el frontmatter sin mencionarla en la sección de alcance rompe la suite.
 
 ---
 
@@ -249,4 +285,4 @@ Un baseline que suprime 93 hallazgos vale lo que valga el mecanismo que impide q
 5. **El gate es por skill** (score > 50 rompe el build), no un máximo global que un skill limpio pueda diluir.
 6. **La cobertura se publica, no se promedia.** 33,3 % mínima, declarada en el informe y en el README.
 
-Y el resultado honesto del escaneo no es el cero final: son los dos defectos reales que encontró —un carácter invisible en el fuente y una dependencia sin pin, ambos en sitios donde el repo creía tener la política cubierta— y el riesgo que dejó nombrado y abierto.
+Y el resultado honesto del escaneo no es el cero final. Son tres cosas: los dos defectos reales que encontró —un carácter invisible en el fuente y una dependencia sin pin, ambos en sitios donde el repo creía tener la política cubierta—, la declaración de alcance que ahora llevan los 23 skills con tests que impiden deshacerla, y la decisión razonada de **no** declarar el campo que habría puesto el hallazgo en verde a cambio de quitarle la confirmación al usuario.

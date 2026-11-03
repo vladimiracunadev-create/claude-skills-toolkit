@@ -1,6 +1,13 @@
 ---
 name: pre-commit-guard
 description: Orquestador que corre yaml-control y md-lint-fix --dry-run sobre los archivos staged (`git diff --cached`) antes de un `git commit`. Complementa pre-push-guard con una capa más rápida y temprana — bloquea commits con YAML inválido o Markdown roto antes de que entren al historial local. No corre pytest (para mantenerlo < 2s en el caso típico). Aborta el commit (exit 1) si algún paso falla, con reporte unificado en stdout. Úsalo cuando el usuario diga "valida antes de commitear", "chequea antes del commit", "pre-commit", "guard antes de commit", "lint antes de commit", "instala pre-commit hook", o proactivamente justo antes de invocar `git commit`. Soporta `--install-hook` para registrarlo como git pre-commit hook (opt-in, nunca automático). Trabaja sobre `Path.cwd()`.
+metadata:
+  capabilities:
+    - shell
+    - file_write
+disallowed-tools:
+  - WebFetch
+  - WebSearch
 ---
 
 # pre-commit-guard
@@ -8,6 +15,21 @@ description: Orquestador que corre yaml-control y md-lint-fix --dry-run sobre lo
 Un **único comando** que valida los archivos **staged** contra las reglas del toolkit antes de que entren al historial. Es el gemelo rápido de `pre-push-guard`.
 
 Es un **orquestador**: no duplica lógica de [[yaml-control]] ni de [[md-lint-fix]]. Los invoca sobre el diff staged (`git diff --cached --name-only`) y agrega los resultados.
+
+---
+
+## Alcance y permisos
+
+| | |
+|---|---|
+| **Capacidades del script** | `shell` · `file_write` |
+| **Qué toca** | Lee los ficheros staged (`git diff --cached`), invoca los scripts de `yaml-control` y `md-lint-fix`, y con `--install-hook` escribe `.git/hooks/pre-commit`. |
+| **Qué nunca toca** | No instala el hook por su cuenta: `--install-hook` es opt-in, y respalda el hook previo antes de sobreescribirlo. |
+| **Herramientas retiradas** | `WebFetch`, `WebSearch` |
+
+**No declara `allowed-tools`**, y es deliberado: ese campo *preaprueba* herramientas —se salta la confirmación durante el turno que invoca el skill— en vez de limitarlas. Declararlo aquí no acotaría nada: quitaría la confirmación del usuario. `disallowed-tools` sí retira herramientas del pool mientras el skill está activo, y ahí es donde se acota de verdad.
+
+Escribe en `.git/hooks/`.
 
 ---
 
