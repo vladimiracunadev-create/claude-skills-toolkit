@@ -63,7 +63,8 @@ Incluye en el reporte:
 | Riesgo | Mitigación | Severidad |
 |---|---|:-:|
 | `security-audit --apply` sin `--verify` bumpea versiones sin correr tests, puede romper el build | Documentado explícitamente; modo `--verify` revierte si tests fallan | media |
-| Un `SKILL.md` malicioso podría incluir frontmatter con instrucciones que confundan al agente | El usuario controla qué skills instala (revisión manual antes de `install.sh`) | baja |
+| Un `SKILL.md` malicioso podría incluir frontmatter con instrucciones que confundan al agente | El usuario controla qué skills instala (revisión manual antes de `install.sh`) + escaneo con SkillSpector en CI | baja |
+| Ningún `SKILL.md` declara `allowed-tools` en el frontmatter: el agente carga cada skill con toda su caja de herramientas disponible | Riesgo **asumido**. Acotar el scope exige revisar las 22 superficies una a una y comprobar que ningún skill pierde una herramienta que necesita. Detectado por SkillSpector (`LP3`, ×14) y anotado en [ROADMAP.md](ROADMAP.md) | media |
 | `docker-cleanup` borra TODOS los contenedores, volúmenes e imágenes sin confirmación | Documentado como **diseño explícito** — invocación = ejecución | aceptado |
 
 ### 🔍 Cobertura declarada del análisis automático
@@ -78,6 +79,7 @@ El toolkit se audita con su propio `security-audit`. Lo que ese análisis **sí*
 | Workflows (zizmor) | **corre en CI** | Job `Security scan`, persona `auditor` y `GH_TOKEN` para las auditorías que consultan la API (`impostor-commit`, `ref-confusion`, `known-vulnerable-actions`). |
 | Dockerfile (hadolint) | **N/A** | El repo no tiene Dockerfile. |
 | Container (trivy/grype) | **N/A** | No se publica imagen. |
+| Skills como superficie de ataque (SkillSpector) | **corre en CI** | Job `Skill scan`: cada skill se escanea con [SkillSpector](https://github.com/vladimiracunadev-create/SkillSpector) (fork de NVIDIA) buscando prompt injection, exfiltración, persistencia, escalada de privilegios y abuso de herramientas. Capa estática (`--no-llm`): la capa LLM enviaría el contenido de los skills a un proveedor externo y queda fuera del CI a propósito. Los hallazgos triados viven en [`docs/security/skillspector-baselines/`](docs/security/skillspector-baselines/) con el veredicto de [`skillspector-triage.yaml`](docs/security/skillspector-triage.yaml); una regla **nueva** no se puede suprimir sin escribir antes su veredicto. |
 | GitHub Actions como dependencia | **Dependabot** | Alerts + security updates activados; actualizaciones semanales vía [`.github/dependabot.yml`](.github/dependabot.yml). Los pins a SHA no se actualizan solos. |
 
 Regenerar el baseline tras un cambio legítimo de código:

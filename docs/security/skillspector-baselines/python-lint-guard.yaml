@@ -1,0 +1,23 @@
+# Baseline de SkillSpector para el skill `python-lint-guard`.
+# Generado por scripts/skillspector_baseline.py con SkillSpector v2.12.0.
+# Las razones vienen de docs/security/skillspector-triage.yaml;
+# no editar a mano: edita el triaje y regenera.
+version: 2
+scanner_version: 2.12.0
+rules: []
+fingerprints:
+- hash: sha256:47bb174acc2897d7c07e83f3b4f9b8e5e1fc4213f993c8449f30437255364100
+  rule_id: AST4
+  file: python_lint_guard.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:707bb8ae210479a9753c94153a24938f9c319ed2585cf60ed662e913f1411dad
+  rule_id: LP3
+  file: SKILL.md
+  reason: '[accepted_risk] Real: el frontmatter de los SKILL.md no declara `allowed-tools`,
+    así que el agente carga el skill con toda su caja de herramientas disponible.
+    Asumido por ahora: acotar el scope exige revisar las 22 superficies una a una
+    y verificar que ningún skill pierde una herramienta que necesita. Registrado como
+    riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.'

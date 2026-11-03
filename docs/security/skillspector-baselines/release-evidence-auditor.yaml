@@ -1,0 +1,15 @@
+# Baseline de SkillSpector para el skill `release-evidence-auditor`.
+# Generado por scripts/skillspector_baseline.py con SkillSpector v2.12.0.
+# Las razones vienen de docs/security/skillspector-triage.yaml;
+# no editar a mano: edita el triaje y regenera.
+version: 2
+scanner_version: 2.12.0
+rules: []
+fingerprints:
+- hash: sha256:a31f0ae63ca9ee4967658333db085a049e56d847a031e848a3375e3de4b4a5c7
+  rule_id: RA2
+  file: README.md
+  reason: '[false_positive] Es el procedimiento de instalación documentado del propio
+    toolkit (`mkdir -p ~/.claude`, `curl -L -o ~/.claude/skills/<skill>/SKILL.md`).
+    Instalar un skill en ~/.claude/skills/ es su destino legítimo y lo pide el usuario
+    explícitamente; no es persistencia encubierta entre sesiones.'

@@ -1,0 +1,103 @@
+# Triaje de hallazgos de SkillSpector, por regla.
+#
+# Cada regla que el scanner dispara sobre los skills de este repo tiene aquí un
+# veredicto y su razón. `scripts/skillspector_baseline.py` escribe esa razón en
+# el baseline de cada skill, de modo que un hallazgo suprimido siempre dice por
+# qué lo está.
+#
+# La regla del juego: si el scanner dispara una regla que NO figura en este
+# fichero, el generador de baselines falla. Un hallazgo nuevo no se puede
+# suprimir sin que alguien escriba aquí su veredicto. Es la misma lógica del
+# baseline de Bandit (ver SECURITY.md), con la justificación explícita.
+#
+# Veredictos:
+#   false_positive  — el patrón coincide, el riesgo no existe
+#   by_design       — el comportamiento es el propósito del skill, documentado
+#   scanner_limit   — no es un hallazgo sobre el skill, es cobertura del scanner
+#   accepted_risk   — real, asumido a sabiendas, con su entrada en SECURITY.md
+
+version: 1
+
+rules:
+  AST4:
+    name: Dangerous Code Execution · subprocess module call
+    verdict: by_design
+    reason: >-
+      Por diseño: el toolkit automatiza tareas de desarrollo invocando git, gh,
+      docker, pytest y linters por subprocess, siempre con lista de argumentos y
+      sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en
+      .bandit-baseline.json (B404/B603/B607) y declarado en el modelo de amenaza
+      de SECURITY.md.
+
+  TM1:
+    name: Tool Misuse · Tool Parameter Abuse
+    verdict: false_positive
+    reason: >-
+      Las coincidencias están en README.md, no en código ejecutable: la
+      documentación describe lo que el skill hace ("rm TODOS los contenedores",
+      "git push --force-with-lease"). Es prosa explicativa para quien lo instala,
+      no una instrucción que el agente ejecute.
+
+  E1:
+    name: Data Exfiltration · External Transmission
+    verdict: false_positive
+    reason: >-
+      Es el `curl -L -o <skill>.zip https://github.com/...` de las instrucciones
+      de instalación: descarga DESDE GitHub hacia el disco del usuario. No hay
+      transmisión de datos del usuario hacia ningún destino externo.
+
+  RA2:
+    name: Rogue Agent · Session Persistence
+    verdict: false_positive
+    reason: >-
+      Es el procedimiento de instalación documentado del propio toolkit
+      (`mkdir -p ~/.claude`, `curl -L -o ~/.claude/skills/<skill>/SKILL.md`).
+      Instalar un skill en ~/.claude/skills/ es su destino legítimo y lo pide el
+      usuario explícitamente; no es persistencia encubierta entre sesiones.
+
+  PE3:
+    name: Privilege Escalation · Credential Access
+    verdict: false_positive
+    reason: >-
+      Son las cadenas literales ".env" y ".env.local" en las listas de sufijos de
+      bitcoin-custody-audit, cuyo trabajo es BUSCAR ficheros con secretos en el
+      repo auditado para reportarlos. Nombrar el fichero es la función del skill;
+      no lee ni transmite su contenido como credencial.
+
+  LP3:
+    name: MCP Least Privilege · skill sin scope de herramientas declarado
+    verdict: accepted_risk
+    reason: >-
+      Real: el frontmatter de los SKILL.md no declara `allowed-tools`, así que el
+      agente carga el skill con toda su caja de herramientas disponible. Asumido
+      por ahora: acotar el scope exige revisar las 22 superficies una a una y
+      verificar que ningún skill pierde una herramienta que necesita. Registrado
+      como riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.
+
+  AE1:
+    name: analysis-evasion · Incomplete referenced artifact analysis
+    verdict: scanner_limit
+    reason: >-
+      No es un hallazgo sobre el skill: el scanner declara que no pudo inspeccionar
+      por completo un artefacto referenciado desde el SKILL.md. Es su propia
+      cobertura, que el informe publica por skill en la columna "Cobertura" en vez
+      de esconderla.
+
+  TM3:
+    name: Tool Misuse · Unsafe Defaults
+    verdict: false_positive
+    reason: >-
+      El `verify=False` de security_audit.py es el valor por defecto de un
+      parámetro propio de apply_fixes() que significa "no correr tests tras el
+      bump", no la desactivación de la verificación TLS. Comprobado en todo el
+      repo: no hay `verify=False` de requests, ni ssl._create_unverified_context,
+      ni CERT_NONE.
+
+  AR2:
+    name: Anti-Refusal · Anti-Refusal Statement
+    verdict: false_positive
+    reason: >-
+      La coincidencia es "no warnings" dentro de la frase "Si hay errores (no
+      warnings), exit 1" de yaml-control/SKILL.md, que distingue errores de
+      warnings para decidir el gate. No instruye al agente a omitir advertencias
+      ni descargos.

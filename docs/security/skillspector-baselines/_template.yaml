@@ -1,0 +1,14 @@
+# Baseline de SkillSpector para el skill `_template`.
+# Generado por scripts/skillspector_baseline.py con SkillSpector v2.12.0.
+# Las razones vienen de docs/security/skillspector-triage.yaml;
+# no editar a mano: edita el triaje y regenera.
+version: 2
+scanner_version: 2.12.0
+rules: []
+fingerprints:
+- hash: sha256:22bc8de0ff8c9b7d969d3dbcd8b111afcdf26070d15d19ae9367e79ebf9fbe23
+  rule_id: E1
+  file: README.md
+  reason: '[false_positive] Es el `curl -L -o <skill>.zip https://github.com/...`
+    de las instrucciones de instalación: descarga DESDE GitHub hacia el disco del
+    usuario. No hay transmisión de datos del usuario hacia ningún destino externo.'

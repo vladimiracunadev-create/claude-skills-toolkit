@@ -1,0 +1,43 @@
+# Baseline de SkillSpector para el skill `yaml-control`.
+# Generado por scripts/skillspector_baseline.py con SkillSpector v2.12.0.
+# Las razones vienen de docs/security/skillspector-triage.yaml;
+# no editar a mano: edita el triaje y regenera.
+version: 2
+scanner_version: 2.12.0
+rules: []
+fingerprints:
+- hash: sha256:73f88cba05ef288e27e7cbaaf4f237238658889e18269d8cefb2625bb8d81277
+  rule_id: AST4
+  file: yaml_control.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:00953426c2d74838788585b2b929bb7d412225ec896b8a6723ddb4c660c281fa
+  rule_id: AST4
+  file: yaml_control.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:d898bc6373a98b88a6226b0c7e2f2b60b0a244eb6d751791b68f3fb66ecd8006
+  rule_id: LP3
+  file: SKILL.md
+  reason: '[accepted_risk] Real: el frontmatter de los SKILL.md no declara `allowed-tools`,
+    así que el agente carga el skill con toda su caja de herramientas disponible.
+    Asumido por ahora: acotar el scope exige revisar las 22 superficies una a una
+    y verificar que ningún skill pierde una herramienta que necesita. Registrado como
+    riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.'
+- hash: sha256:ef914f5739f7777a60ff876dfd092fcc37305eede5a28b914866187989e5e1d2
+  rule_id: AR2
+  file: SKILL.md
+  reason: '[false_positive] La coincidencia es "no warnings" dentro de la frase "Si
+    hay errores (no warnings), exit 1" de yaml-control/SKILL.md, que distingue errores
+    de warnings para decidir el gate. No instruye al agente a omitir advertencias
+    ni descargos.'
+- hash: sha256:01e8e7b72c518a99283a2833e519a1c1d5eb0f1a8846ae4a36bdcaeadf4bd0d4
+  rule_id: E1
+  file: README.md
+  reason: '[false_positive] Es el `curl -L -o <skill>.zip https://github.com/...`
+    de las instrucciones de instalación: descarga DESDE GitHub hacia el disco del
+    usuario. No hay transmisión de datos del usuario hacia ningún destino externo.'

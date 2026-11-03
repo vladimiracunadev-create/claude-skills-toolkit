@@ -1,0 +1,29 @@
+# Baseline de SkillSpector para el skill `python-version-control`.
+# Generado por scripts/skillspector_baseline.py con SkillSpector v2.12.0.
+# Las razones vienen de docs/security/skillspector-triage.yaml;
+# no editar a mano: edita el triaje y regenera.
+version: 2
+scanner_version: 2.12.0
+rules: []
+fingerprints:
+- hash: sha256:3f6f1ae30cb56d79288ca64ab151e700d58d897f58d588f81aa9e4cba6bb1a07
+  rule_id: LP3
+  file: SKILL.md
+  reason: '[accepted_risk] Real: el frontmatter de los SKILL.md no declara `allowed-tools`,
+    así que el agente carga el skill con toda su caja de herramientas disponible.
+    Asumido por ahora: acotar el scope exige revisar las 22 superficies una a una
+    y verificar que ningún skill pierde una herramienta que necesita. Registrado como
+    riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.'
+- hash: sha256:eb8202ad674e22c59eb369842c1c1fa47e23f1e1814fe5b4e025d0809cc7a889
+  rule_id: E1
+  file: README.md
+  reason: '[false_positive] Es el `curl -L -o <skill>.zip https://github.com/...`
+    de las instrucciones de instalación: descarga DESDE GitHub hacia el disco del
+    usuario. No hay transmisión de datos del usuario hacia ningún destino externo.'
+- hash: sha256:d2f95035c9080182d36474ae4700c58ed220cdcd589e8e89ea862fedcf8f72ec
+  rule_id: AE1
+  file: SKILL.md
+  reason: '[scanner_limit] No es un hallazgo sobre el skill: el scanner declara que
+    no pudo inspeccionar por completo un artefacto referenciado desde el SKILL.md.
+    Es su propia cobertura, que el informe publica por skill en la columna "Cobertura"
+    en vez de esconderla.'

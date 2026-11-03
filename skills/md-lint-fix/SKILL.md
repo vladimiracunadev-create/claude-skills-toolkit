@@ -76,19 +76,21 @@ qué carpeta se llame el script.
 El repo donde se ejecute debe tener `markdownlint-cli2` disponible.
 **Recomendado:** `pnpm` (postinstall bloqueado por defecto + cuarentena de 24 h sobre versiones nuevas — ver [docs/supply-chain-security.md](../../docs/supply-chain-security.md)).
 
+La versión va **fijada**, no flotante: `pnpm add -D markdownlint-cli2` sin versión instala lo último publicado, así que una release comprometida entra sola y además el conteo de errores cambia bajo tus pies cuando el linter cambia de criterio.
+
 ```bash
 # Verificar si está instalado
-pnpm exec markdownlint-cli2 --version   # o: npx markdownlint-cli2 --version
+pnpm exec markdownlint-cli2 --version   # o: npx markdownlint-cli2@0.24.0 --version
 
 # Instalar en el repo (recomendado)
-pnpm add -D markdownlint-cli2
+pnpm add -D markdownlint-cli2@0.24.0
 
 # Alternativas — válidas pero con menos defensas por defecto contra ataques tipo Shai-Hulud:
-#   yarn add -D markdownlint-cli2
-#   npm  install --save-dev --ignore-scripts markdownlint-cli2
+#   yarn add -D markdownlint-cli2@0.24.0
+#   npm  install --save-dev --ignore-scripts markdownlint-cli2@0.24.0
 ```
 
-Si el repo no tiene `markdownlint-cli2`, `pnpm dlx markdownlint-cli2` (o `npx`) lo descargará automáticamente.
+Si el repo no tiene `markdownlint-cli2`, `pnpm dlx markdownlint-cli2@0.24.0` (o `npx markdownlint-cli2@0.24.0`) lo descargará automáticamente.
 
 ---
 

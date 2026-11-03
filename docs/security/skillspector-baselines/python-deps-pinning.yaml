@@ -1,0 +1,16 @@
+# Baseline de SkillSpector para el skill `python-deps-pinning`.
+# Generado por scripts/skillspector_baseline.py con SkillSpector v2.12.0.
+# Las razones vienen de docs/security/skillspector-triage.yaml;
+# no editar a mano: edita el triaje y regenera.
+version: 2
+scanner_version: 2.12.0
+rules: []
+fingerprints:
+- hash: sha256:d2878a80b817fb1b2ab924932c1c179bd1c428b17eb52742fe3f1ae7bc713de7
+  rule_id: LP3
+  file: SKILL.md
+  reason: '[accepted_risk] Real: el frontmatter de los SKILL.md no declara `allowed-tools`,
+    así que el agente carga el skill con toda su caja de herramientas disponible.
+    Asumido por ahora: acotar el scope exige revisar las 22 superficies una a una
+    y verificar que ningún skill pierde una herramienta que necesita. Registrado como
+    riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.'

@@ -1,0 +1,43 @@
+# Baseline de SkillSpector para el skill `md-lint-fix`.
+# Generado por scripts/skillspector_baseline.py con SkillSpector v2.12.0.
+# Las razones vienen de docs/security/skillspector-triage.yaml;
+# no editar a mano: edita el triaje y regenera.
+version: 2
+scanner_version: 2.12.0
+rules: []
+fingerprints:
+- hash: sha256:22b4fa0e09427d45425d000333e3afe05a2077d3b9ffe9a20df0d45a7d56a7c0
+  rule_id: AST4
+  file: fix-md-lint.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:b4c925c7691e88e9516e9bfba1e509798db341409d0dd40c0ee76a5f7b33995f
+  rule_id: AST4
+  file: fix-md-lint.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:a07e7451dc284d4da79ed52b590d5f54221704c391105a38a3180baa8fe78e41
+  rule_id: AST4
+  file: fix-md-lint.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:d12c8e8f5c5642ff140b0c449d9206ecec4c36578047b692e53e85fa04208957
+  rule_id: LP3
+  file: SKILL.md
+  reason: '[accepted_risk] Real: el frontmatter de los SKILL.md no declara `allowed-tools`,
+    así que el agente carga el skill con toda su caja de herramientas disponible.
+    Asumido por ahora: acotar el scope exige revisar las 22 superficies una a una
+    y verificar que ningún skill pierde una herramienta que necesita. Registrado como
+    riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.'
+- hash: sha256:36234dcda900eeeb0463dbe444bed427e852c52ed08b7bb859baa185941b9ca3
+  rule_id: E1
+  file: README.md
+  reason: '[false_positive] Es el `curl -L -o <skill>.zip https://github.com/...`
+    de las instrucciones de instalación: descarga DESDE GitHub hacia el disco del
+    usuario. No hay transmisión de datos del usuario hacia ningún destino externo.'

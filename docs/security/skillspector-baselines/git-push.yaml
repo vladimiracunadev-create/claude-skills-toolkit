@@ -1,0 +1,43 @@
+# Baseline de SkillSpector para el skill `git-push`.
+# Generado por scripts/skillspector_baseline.py con SkillSpector v2.12.0.
+# Las razones vienen de docs/security/skillspector-triage.yaml;
+# no editar a mano: edita el triaje y regenera.
+version: 2
+scanner_version: 2.12.0
+rules: []
+fingerprints:
+- hash: sha256:e4d39590925702896909ddb6cf7966e5606a28faca84ba8b0139b2eb0d0dbf2d
+  rule_id: RA2
+  file: README.md
+  reason: '[false_positive] Es el procedimiento de instalación documentado del propio
+    toolkit (`mkdir -p ~/.claude`, `curl -L -o ~/.claude/skills/<skill>/SKILL.md`).
+    Instalar un skill en ~/.claude/skills/ es su destino legítimo y lo pide el usuario
+    explícitamente; no es persistencia encubierta entre sesiones.'
+- hash: sha256:2aa6e69d93062f5be45cb700ecfcf4c22ae507610e8ab9344a5c66654c8bb2b7
+  rule_id: TM1
+  file: README.md
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'
+- hash: sha256:07a1382c6d82729c24d60e81acedf50ac5746ba31a11ac80de54d10015f0e2ec
+  rule_id: TM1
+  file: SKILL.md
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'
+- hash: sha256:daedb6814ee181c5488298e9be36eb49e84d53510cf2eebc4d56d0db57d3530a
+  rule_id: TM1
+  file: SKILL.md
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'
+- hash: sha256:df4f84effcc82e57a6cdae527e44b601b3865778c568cfd60a643459af677c92
+  rule_id: TM1
+  file: SKILL.md
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'

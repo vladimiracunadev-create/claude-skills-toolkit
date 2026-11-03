@@ -1,0 +1,29 @@
+# Baseline de SkillSpector para el skill `web-snap`.
+# Generado por scripts/skillspector_baseline.py con SkillSpector v2.12.0.
+# Las razones vienen de docs/security/skillspector-triage.yaml;
+# no editar a mano: edita el triaje y regenera.
+version: 2
+scanner_version: 2.12.0
+rules: []
+fingerprints:
+- hash: sha256:857ad34240cc2f23bb0bbc25af0ded40fe58096c27ab8e3616604697a660a33c
+  rule_id: AST4
+  file: web_snap.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:36af0e5afec758cd8d1c2f19454babb63930e02da9a10381b9079804b6b44c17
+  rule_id: LP3
+  file: SKILL.md
+  reason: '[accepted_risk] Real: el frontmatter de los SKILL.md no declara `allowed-tools`,
+    así que el agente carga el skill con toda su caja de herramientas disponible.
+    Asumido por ahora: acotar el scope exige revisar las 22 superficies una a una
+    y verificar que ningún skill pierde una herramienta que necesita. Registrado como
+    riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.'
+- hash: sha256:ef1c575fb0373f428bfa4d2e87e7e3a5e04fecaeaed68d0eff413effdbcd2762
+  rule_id: E1
+  file: README.md
+  reason: '[false_positive] Es el `curl -L -o <skill>.zip https://github.com/...`
+    de las instrucciones de instalación: descarga DESDE GitHub hacia el disco del
+    usuario. No hay transmisión de datos del usuario hacia ningún destino externo.'

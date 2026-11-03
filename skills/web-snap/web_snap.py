@@ -58,7 +58,11 @@ _EDGE_CANDIDATES = [
 
 _BROWSER_TITLE_SUFFIX = {
     "chrome": "Google Chrome",
-    "edge": "- Microsoft​Edge",  # Edge usa a veces un caracter invisible
+    # El título de Edge trae un U+200B (espacio de ancho cero) entre "Microsoft"
+    # y "Edge". Va escapado y no literal: un carácter invisible en el fuente no
+    # se ve en un diff ni en una revisión, y es la forma en que se cuela texto
+    # oculto en un script. SkillSpector lo marcaba como YR4 (YARA).
+    "edge": "- Microsoft" + chr(0x200B) + "Edge",
 }
 
 

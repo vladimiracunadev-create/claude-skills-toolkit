@@ -1,0 +1,85 @@
+# Baseline de SkillSpector para el skill `pre-commit-guard`.
+# Generado por scripts/skillspector_baseline.py con SkillSpector v2.12.0.
+# Las razones vienen de docs/security/skillspector-triage.yaml;
+# no editar a mano: edita el triaje y regenera.
+version: 2
+scanner_version: 2.12.0
+rules: []
+fingerprints:
+- hash: sha256:0b772a2d08ffab3eb70452f877fc000e995923d2bd48be4f6d86a7ec79bc5dc7
+  rule_id: AST4
+  file: pre_commit_guard.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:2a0964c919750794a40f50911ee298bc607c078f4c62bc45feaa380e3661b116
+  rule_id: LP3
+  file: SKILL.md
+  reason: '[accepted_risk] Real: el frontmatter de los SKILL.md no declara `allowed-tools`,
+    así que el agente carga el skill con toda su caja de herramientas disponible.
+    Asumido por ahora: acotar el scope exige revisar las 22 superficies una a una
+    y verificar que ningún skill pierde una herramienta que necesita. Registrado como
+    riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.'
+- hash: sha256:472ac5407a24cac480bb511e8ac0feb3d33adad243d14729b668671f5860425b
+  rule_id: E1
+  file: README.md
+  reason: '[false_positive] Es el `curl -L -o <skill>.zip https://github.com/...`
+    de las instrucciones de instalación: descarga DESDE GitHub hacia el disco del
+    usuario. No hay transmisión de datos del usuario hacia ningún destino externo.'
+- hash: sha256:05152a174d33b0d991a2185feea7bf05f800d09123db3d278c5680be4c477247
+  rule_id: TM1
+  file: README.md
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'
+- hash: sha256:c2bbdcdd971465852effdce0924b65c80fa4a25f42ba8732284ff4adfdd91d81
+  rule_id: TM1
+  file: README.md
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'
+- hash: sha256:8a549fb229929adaa3a040057059f72eaf0abe40c606725bb313acedfbf412d4
+  rule_id: TM1
+  file: README.md
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'
+- hash: sha256:c83583013514e80fb5d502ba26b40eeb75a87082a76c76793c47e661a62f80cd
+  rule_id: TM1
+  file: SKILL.md
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'
+- hash: sha256:1306f62d7f899b80193283758af6da93daf9db872f6189081c0886d4e17da619
+  rule_id: TM1
+  file: SKILL.md
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'
+- hash: sha256:2f90e27382ba5bd036bd3f2ef8592abb2faeedc0ecd040f89a9237b641edb824
+  rule_id: TM1
+  file: pre_commit_guard.py
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'
+- hash: sha256:0280aaa1fe074687efd659db386a6e65d6678baa585db0edf55cb4fe9b94c36a
+  rule_id: TM1
+  file: pre_commit_guard.py
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'
+- hash: sha256:99a550544d450b6a51549992da997d370265c73938c615b6dc8f650d459813af
+  rule_id: TM1
+  file: pre_commit_guard.py
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'

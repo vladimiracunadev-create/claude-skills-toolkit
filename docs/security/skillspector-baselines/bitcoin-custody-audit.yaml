@@ -1,0 +1,51 @@
+# Baseline de SkillSpector para el skill `bitcoin-custody-audit`.
+# Generado por scripts/skillspector_baseline.py con SkillSpector v2.12.0.
+# Las razones vienen de docs/security/skillspector-triage.yaml;
+# no editar a mano: edita el triaje y regenera.
+version: 2
+scanner_version: 2.12.0
+rules: []
+fingerprints:
+- hash: sha256:d693380176630e2d85356850bbf8059567dbdd778834ffc5b8bdbc739bc23985
+  rule_id: AST4
+  file: bitcoin_custody_audit.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:87402fb81a4200c3359e7f44674e9d2c8f4bee1b66f43936e30b577ef781b283
+  rule_id: LP3
+  file: SKILL.md
+  reason: '[accepted_risk] Real: el frontmatter de los SKILL.md no declara `allowed-tools`,
+    así que el agente carga el skill con toda su caja de herramientas disponible.
+    Asumido por ahora: acotar el scope exige revisar las 22 superficies una a una
+    y verificar que ningún skill pierde una herramienta que necesita. Registrado como
+    riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.'
+- hash: sha256:d1f081daa1ecd9d58266652474aeb3e93934fe738bf6596ff0cd53a149384bd8
+  rule_id: PE3
+  file: bitcoin_custody_audit.py
+  reason: '[false_positive] Son las cadenas literales ".env" y ".env.local" en las
+    listas de sufijos de bitcoin-custody-audit, cuyo trabajo es BUSCAR ficheros con
+    secretos en el repo auditado para reportarlos. Nombrar el fichero es la función
+    del skill; no lee ni transmite su contenido como credencial.'
+- hash: sha256:5d96b35e252963a6da53d3378282cdc08216ed1c2f456e3479d509fcd01d3bf3
+  rule_id: PE3
+  file: bitcoin_custody_audit.py
+  reason: '[false_positive] Son las cadenas literales ".env" y ".env.local" en las
+    listas de sufijos de bitcoin-custody-audit, cuyo trabajo es BUSCAR ficheros con
+    secretos en el repo auditado para reportarlos. Nombrar el fichero es la función
+    del skill; no lee ni transmite su contenido como credencial.'
+- hash: sha256:e445c9ffae367d1377ec360eab0ed3b6d23149652d8e375b06800b54ba5e764a
+  rule_id: PE3
+  file: bitcoin_custody_audit.py
+  reason: '[false_positive] Son las cadenas literales ".env" y ".env.local" en las
+    listas de sufijos de bitcoin-custody-audit, cuyo trabajo es BUSCAR ficheros con
+    secretos en el repo auditado para reportarlos. Nombrar el fichero es la función
+    del skill; no lee ni transmite su contenido como credencial.'
+- hash: sha256:c4ba14c5fc91244e4d35269ef0d5b513f7d4b0bc1d9ab7a60a0d0e5e27106dc7
+  rule_id: PE3
+  file: bitcoin_custody_audit.py
+  reason: '[false_positive] Son las cadenas literales ".env" y ".env.local" en las
+    listas de sufijos de bitcoin-custody-audit, cuyo trabajo es BUSCAR ficheros con
+    secretos en el repo auditado para reportarlos. Nombrar el fichero es la función
+    del skill; no lee ni transmite su contenido como credencial.'

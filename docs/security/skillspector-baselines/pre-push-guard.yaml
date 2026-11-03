@@ -1,0 +1,71 @@
+# Baseline de SkillSpector para el skill `pre-push-guard`.
+# Generado por scripts/skillspector_baseline.py con SkillSpector v2.12.0.
+# Las razones vienen de docs/security/skillspector-triage.yaml;
+# no editar a mano: edita el triaje y regenera.
+version: 2
+scanner_version: 2.12.0
+rules: []
+fingerprints:
+- hash: sha256:849f9a86011865254d06a0785d5bc76c23d2d661d25b671182292c7258e32e2a
+  rule_id: AST4
+  file: pre_push_guard.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:9858bf92771d2b712a7133c0be40e22fa0477c61caa0b22b739e68df59d01541
+  rule_id: LP3
+  file: SKILL.md
+  reason: '[accepted_risk] Real: el frontmatter de los SKILL.md no declara `allowed-tools`,
+    así que el agente carga el skill con toda su caja de herramientas disponible.
+    Asumido por ahora: acotar el scope exige revisar las 22 superficies una a una
+    y verificar que ningún skill pierde una herramienta que necesita. Registrado como
+    riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.'
+- hash: sha256:9b0fbadff748285d76cb93170b96711f96afec393b83ab5f320d03603a935f86
+  rule_id: E1
+  file: README.md
+  reason: '[false_positive] Es el `curl -L -o <skill>.zip https://github.com/...`
+    de las instrucciones de instalación: descarga DESDE GitHub hacia el disco del
+    usuario. No hay transmisión de datos del usuario hacia ningún destino externo.'
+- hash: sha256:81d71f50443cd4ebb00cba4c6322365c90f05c914f96efd623c3a6dea5fda8c4
+  rule_id: TM1
+  file: README.md
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'
+- hash: sha256:2444f449fec0efee59b08d292cf77ca6542cdb6d1ee4d43be0dcfc806e22ebbb
+  rule_id: TM1
+  file: README.md
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'
+- hash: sha256:9828e9df2fa66d073aab3d3f7272b2748ae0ede39b5c7cd20210be7f803937c2
+  rule_id: TM1
+  file: README.md
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'
+- hash: sha256:8ecb33d9a4f8c101b2adb39d78b6c6272302ce61f948f89ffdedc349e076506b
+  rule_id: TM1
+  file: SKILL.md
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'
+- hash: sha256:472faff4b259a333acb29159f276c2998292326d3824a27a2dfaa278887f3f47
+  rule_id: TM1
+  file: pre_push_guard.py
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'
+- hash: sha256:1fbbf9ccdda6664007d4ecebfc8116fd758ad54a438be1c287c14272a98c0796
+  rule_id: TM1
+  file: pre_push_guard.py
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'

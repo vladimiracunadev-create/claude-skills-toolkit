@@ -1,0 +1,35 @@
+# Baseline de SkillSpector para el skill `docker-cleanup`.
+# Generado por scripts/skillspector_baseline.py con SkillSpector v2.12.0.
+# Las razones vienen de docs/security/skillspector-triage.yaml;
+# no editar a mano: edita el triaje y regenera.
+version: 2
+scanner_version: 2.12.0
+rules: []
+fingerprints:
+- hash: sha256:d68b6836e3b797f571659f36555770f7308497119576ec4ee42bbca9d0cb3c23
+  rule_id: E1
+  file: README.md
+  reason: '[false_positive] Es el `curl -L -o <skill>.zip https://github.com/...`
+    de las instrucciones de instalación: descarga DESDE GitHub hacia el disco del
+    usuario. No hay transmisión de datos del usuario hacia ningún destino externo.'
+- hash: sha256:88a12c3d2ff5dfbb9c3f71e321df2841e556d089729e9d8b2c4f8afec3801458
+  rule_id: TM1
+  file: README.md
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'
+- hash: sha256:bbc5834ebe394ab993333dd11ee232ecb494f93d319a5e0019a1f948bff9fc15
+  rule_id: TM1
+  file: README.md
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'
+- hash: sha256:94ccfb05c430cc0e4bf3b4a61c9374e45a9505950752c19fc057ed69cd5f7173
+  rule_id: TM1
+  file: README.md
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'

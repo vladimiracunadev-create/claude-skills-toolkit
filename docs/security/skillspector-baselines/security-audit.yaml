@@ -1,0 +1,151 @@
+# Baseline de SkillSpector para el skill `security-audit`.
+# Generado por scripts/skillspector_baseline.py con SkillSpector v2.12.0.
+# Las razones vienen de docs/security/skillspector-triage.yaml;
+# no editar a mano: edita el triaje y regenera.
+version: 2
+scanner_version: 2.12.0
+rules: []
+fingerprints:
+- hash: sha256:4aaff72db452bc96ac831315f82015563b54880660db5ef9c0f01fe010e25c34
+  rule_id: AST4
+  file: security_audit.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:e272c71578dc9b2d8b4fdd287830025ac0a2cb089ab0c80b3d40dd48cb7391ae
+  rule_id: AST4
+  file: security_audit.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:a5798435d1ed3d1b5db9ae7dfeba5c44b23fb642f8b812036c7ec4bbc175c95c
+  rule_id: AST4
+  file: security_audit.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:4d28cc0450939f37c6084251226535e6aa6b48f31f6b16beaedce99c8b68b99c
+  rule_id: AST4
+  file: security_audit.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:11f6d9227706e5ee1a08f55e4e99754f7b09d55480eaa282330b1cb9adb7f347
+  rule_id: AST4
+  file: security_audit.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:21ba7afc69932b60fbe6e4f29c9af3ac2b7f4fe7d004afa18887db90a1e0458b
+  rule_id: AST4
+  file: security_audit.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:b521a5b01cdef8d5660b3c7400a45b2144847a766091edb178a64866587b683c
+  rule_id: AST4
+  file: security_audit.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:e41937a692ca191d9c22bf3aba8f11d1e02076015a7b98b630285d5b711f32d5
+  rule_id: AST4
+  file: security_audit.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:4f0086f2eb7c11c3893810fb8d7a082ce0a5e41608ac40fa867c1dd267f0141b
+  rule_id: AST4
+  file: security_audit.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:27ba8e16099cc6721bd35a05f9583267f3831f2c34d3b02e577a4bb02911696a
+  rule_id: AST4
+  file: security_audit.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:7b8f35069e209bc66a969fa7914f1972f2a60b8c5af0538c6268c8efca5d4862
+  rule_id: AST4
+  file: security_audit.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:fce93ee291540eb5683389107e19a23672a6e373589395c860286db16318fc84
+  rule_id: AST4
+  file: security_audit.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:8f35bc1050e50e5167069ca0deda35d3645c6540af249b02b1191aefc99516c4
+  rule_id: AST4
+  file: security_audit.py
+  reason: '[by_design] Por diseño: el toolkit automatiza tareas de desarrollo invocando
+    git, gh, docker, pytest y linters por subprocess, siempre con lista de argumentos
+    y sin shell=True, que es la práctica correcta para un CLI. Ya aceptado en .bandit-baseline.json
+    (B404/B603/B607) y declarado en el modelo de amenaza de SECURITY.md.'
+- hash: sha256:37d8821f321e41d5dd73a44c7842aea49d26ffbf6732973d23c83f5d0ea25290
+  rule_id: LP3
+  file: SKILL.md
+  reason: '[accepted_risk] Real: el frontmatter de los SKILL.md no declara `allowed-tools`,
+    así que el agente carga el skill con toda su caja de herramientas disponible.
+    Asumido por ahora: acotar el scope exige revisar las 22 superficies una a una
+    y verificar que ningún skill pierde una herramienta que necesita. Registrado como
+    riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.'
+- hash: sha256:d58636f277dc70b9148f61217610e55c3f9c4aafdd29a72f03ada7cd6b589747
+  rule_id: E1
+  file: README.md
+  reason: '[false_positive] Es el `curl -L -o <skill>.zip https://github.com/...`
+    de las instrucciones de instalación: descarga DESDE GitHub hacia el disco del
+    usuario. No hay transmisión de datos del usuario hacia ningún destino externo.'
+- hash: sha256:abdbfc5bb70d6f7c099007ed6879ae5495ed676a894bb22a7fc4cf40cec492c3
+  rule_id: E1
+  file: SKILL.md
+  reason: '[false_positive] Es el `curl -L -o <skill>.zip https://github.com/...`
+    de las instrucciones de instalación: descarga DESDE GitHub hacia el disco del
+    usuario. No hay transmisión de datos del usuario hacia ningún destino externo.'
+- hash: sha256:b0810b109328e8784df70c5c399fefd38a77146d8e3e166207843bef858fff8f
+  rule_id: E1
+  file: security_audit.py
+  reason: '[false_positive] Es el `curl -L -o <skill>.zip https://github.com/...`
+    de las instrucciones de instalación: descarga DESDE GitHub hacia el disco del
+    usuario. No hay transmisión de datos del usuario hacia ningún destino externo.'
+- hash: sha256:ab57ee31c2881eeac08c639dd6582ec6ba789f36366557f7ee857fdfbc3b10ae
+  rule_id: E1
+  file: security_audit.py
+  reason: '[false_positive] Es el `curl -L -o <skill>.zip https://github.com/...`
+    de las instrucciones de instalación: descarga DESDE GitHub hacia el disco del
+    usuario. No hay transmisión de datos del usuario hacia ningún destino externo.'
+- hash: sha256:488dcc8f7355c49c1d233fa89f7f954bb7117881dabf7dbf3a6cc3d7a25a55e8
+  rule_id: E1
+  file: security_audit.py
+  reason: '[false_positive] Es el `curl -L -o <skill>.zip https://github.com/...`
+    de las instrucciones de instalación: descarga DESDE GitHub hacia el disco del
+    usuario. No hay transmisión de datos del usuario hacia ningún destino externo.'
+- hash: sha256:edda45c42d1f7889398d0e657a963b8668b3b8101686b26fc2e9a0a5344961f8
+  rule_id: E1
+  file: security_audit.py
+  reason: '[false_positive] Es el `curl -L -o <skill>.zip https://github.com/...`
+    de las instrucciones de instalación: descarga DESDE GitHub hacia el disco del
+    usuario. No hay transmisión de datos del usuario hacia ningún destino externo.'
+- hash: sha256:6b28d5e28a61005f185daaac8cd10cec55dae30068cae30bbada7c11290d72d5
+  rule_id: TM3
+  file: security_audit.py
+  reason: '[false_positive] El `verify=False` de security_audit.py es el valor por
+    defecto de un parámetro propio de apply_fixes() que significa "no correr tests
+    tras el bump", no la desactivación de la verificación TLS. Comprobado en todo
+    el repo: no hay `verify=False` de requests, ni ssl._create_unverified_context,
+    ni CERT_NONE.'

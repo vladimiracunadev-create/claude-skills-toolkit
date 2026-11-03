@@ -1,0 +1,430 @@
+{
+  "generated_at": "2026-11-03 03:34 UTC",
+  "scanner": "SkillSpector",
+  "scanner_version": "2.12.0",
+  "llm_layer": false,
+  "max_score_gate": 50,
+  "skills_total": 23,
+  "skills_scanned": 23,
+  "skills_over_gate": [],
+  "active_findings": 0,
+  "suppressed_findings": 93,
+  "max_score": 0,
+  "min_coverage_percent": 33.3,
+  "skills": [
+    {
+      "name": "_template",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "CAUTION",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 1,
+      "coverage_percent": 66.7,
+      "coverage_status": "partial",
+      "execution_successful": true,
+      "baseline": "_template.yaml"
+    },
+    {
+      "name": "bitcoin-custody-audit",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "CAUTION",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 6,
+      "coverage_percent": 66.7,
+      "coverage_status": "partial",
+      "execution_successful": true,
+      "baseline": "bitcoin-custody-audit.yaml"
+    },
+    {
+      "name": "clone-repo",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "CAUTION",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 1,
+      "coverage_percent": 50.0,
+      "coverage_status": "partial",
+      "execution_successful": true,
+      "baseline": "clone-repo.yaml"
+    },
+    {
+      "name": "docker-cleanup",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "SAFE",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 4,
+      "coverage_percent": 100.0,
+      "coverage_status": "complete",
+      "execution_successful": true,
+      "baseline": "docker-cleanup.yaml"
+    },
+    {
+      "name": "docker-compose-doctor",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "CAUTION",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 2,
+      "coverage_percent": 33.3,
+      "coverage_status": "partial",
+      "execution_successful": true,
+      "baseline": "docker-compose-doctor.yaml"
+    },
+    {
+      "name": "functional-user-flow-tester",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "SAFE",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 1,
+      "coverage_percent": 100.0,
+      "coverage_status": "complete",
+      "execution_successful": true,
+      "baseline": "functional-user-flow-tester.yaml"
+    },
+    {
+      "name": "git-push",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "SAFE",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 5,
+      "coverage_percent": 100.0,
+      "coverage_status": "complete",
+      "execution_successful": true,
+      "baseline": "git-push.yaml"
+    },
+    {
+      "name": "md-lint-fix",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "SAFE",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 5,
+      "coverage_percent": 100.0,
+      "coverage_status": "complete_with_caveats",
+      "execution_successful": true,
+      "baseline": "md-lint-fix.yaml"
+    },
+    {
+      "name": "md-to-doc",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "CAUTION",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 3,
+      "coverage_percent": 66.7,
+      "coverage_status": "partial",
+      "execution_successful": true,
+      "baseline": "md-to-doc.yaml"
+    },
+    {
+      "name": "pre-commit-guard",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "CAUTION",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 11,
+      "coverage_percent": 33.3,
+      "coverage_status": "partial",
+      "execution_successful": true,
+      "baseline": "pre-commit-guard.yaml"
+    },
+    {
+      "name": "pre-push-guard",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "CAUTION",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 9,
+      "coverage_percent": 33.3,
+      "coverage_status": "partial",
+      "execution_successful": true,
+      "baseline": "pre-push-guard.yaml"
+    },
+    {
+      "name": "preliminary-product-tester",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "CAUTION",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 1,
+      "coverage_percent": 50.0,
+      "coverage_status": "partial",
+      "execution_successful": true,
+      "baseline": "preliminary-product-tester.yaml"
+    },
+    {
+      "name": "python-deps-pinning",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "CAUTION",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 1,
+      "coverage_percent": 33.3,
+      "coverage_status": "partial",
+      "execution_successful": true,
+      "baseline": "python-deps-pinning.yaml"
+    },
+    {
+      "name": "python-lint-guard",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "CAUTION",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 2,
+      "coverage_percent": 66.7,
+      "coverage_status": "partial",
+      "execution_successful": true,
+      "baseline": "python-lint-guard.yaml"
+    },
+    {
+      "name": "python-version-control",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "CAUTION",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 3,
+      "coverage_percent": 33.3,
+      "coverage_status": "partial",
+      "execution_successful": true,
+      "baseline": "python-version-control.yaml"
+    },
+    {
+      "name": "release-evidence-auditor",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "SAFE",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 1,
+      "coverage_percent": 100.0,
+      "coverage_status": "complete",
+      "execution_successful": true,
+      "baseline": "release-evidence-auditor.yaml"
+    },
+    {
+      "name": "repo-coherence-audit",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "CAUTION",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 3,
+      "coverage_percent": 75.0,
+      "coverage_status": "partial",
+      "execution_successful": true,
+      "baseline": "repo-coherence-audit.yaml"
+    },
+    {
+      "name": "security-audit",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "CAUTION",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 21,
+      "coverage_percent": 66.7,
+      "coverage_status": "partial",
+      "execution_successful": true,
+      "baseline": "security-audit.yaml"
+    },
+    {
+      "name": "software-resilience-state-tester",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "SAFE",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 1,
+      "coverage_percent": 100.0,
+      "coverage_status": "complete",
+      "execution_successful": true,
+      "baseline": "software-resilience-state-tester.yaml"
+    },
+    {
+      "name": "sync-fork",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "CAUTION",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 1,
+      "coverage_percent": 50.0,
+      "coverage_status": "partial",
+      "execution_successful": true,
+      "baseline": "sync-fork.yaml"
+    },
+    {
+      "name": "version-bump",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "SAFE",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 3,
+      "coverage_percent": 100.0,
+      "coverage_status": "complete_with_caveats",
+      "execution_successful": true,
+      "baseline": "version-bump.yaml"
+    },
+    {
+      "name": "web-snap",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "SAFE",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 3,
+      "coverage_percent": 100.0,
+      "coverage_status": "complete_with_caveats",
+      "execution_successful": true,
+      "baseline": "web-snap.yaml"
+    },
+    {
+      "name": "yaml-control",
+      "score": 0,
+      "severity": "LOW",
+      "recommendation": "SAFE",
+      "findings": 0,
+      "by_severity": {
+        "LOW": 0,
+        "MEDIUM": 0,
+        "HIGH": 0,
+        "CRITICAL": 0
+      },
+      "suppressed": 5,
+      "coverage_percent": 100.0,
+      "coverage_status": "complete_with_caveats",
+      "execution_successful": true,
+      "baseline": "yaml-control.yaml"
+    }
+  ]
+}

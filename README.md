@@ -13,12 +13,13 @@ Automatización de tareas repetitivas de desarrollo — 🔒 auditoría de segur
 [![Skills](https://img.shields.io/badge/skills-22-1f6feb)](#-catálogo)
 [![Platforms](https://img.shields.io/badge/platforms-linux%20%7C%20macOS%20%7C%20windows-555?logo=linux&logoColor=white)](#-instalación)
 [![CI](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/vladimiracunadev-create/claude-skills-toolkit/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-87%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
+[![Tests](https://img.shields.io/badge/tests-97%20passing-brightgreen?logo=pytest&logoColor=white)](tests/)
 [![Supply chain hardened](https://img.shields.io/badge/supply%20chain-hardened-2da44e?logo=shieldsdotio&logoColor=white)](docs/supply-chain-security.md)
+[![SkillSpector](https://img.shields.io/badge/SkillSpector-23%2F23%20skills%20escaneados-2da44e?logo=securityscorecard&logoColor=white)](#-revisión-de-seguridad-de-los-skills)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?logo=github)](CONTRIBUTING.md)
 [![Made with ❤ in Chile](https://img.shields.io/badge/made_in-Chile-d52b1e)](https://github.com/vladimiracunadev-create)
 
-[**📦 Instalación**](#-instalación) · [**🗂️ Catálogo**](#-catálogo) · [**🚀 Uso**](#-uso) · [**🧭 Diseño**](#-diseño) · [**📚 Documentación**](#-documentación) · [**🤝 Contribuir**](CONTRIBUTING.md)
+[**📦 Instalación**](#-instalación) · [**🗂️ Catálogo**](#-catálogo) · [**🚀 Uso**](#-uso) · [**🧭 Diseño**](#-diseño) · [**🔬 Seguridad de los skills**](#-revisión-de-seguridad-de-los-skills) · [**📚 Documentación**](#-documentación) · [**🤝 Contribuir**](CONTRIBUTING.md)
 
 </div>
 
@@ -775,7 +776,7 @@ python ~/.claude/skills/bitcoin-custody-audit/bitcoin_custody_audit.py --report
 | 📁 **`Path.cwd()`-centric** | No importa desde qué carpeta se invoquen — operan sobre el repo actual. |
 | 🔍 **Honestidad sobre límites** | Cada `SKILL.md` documenta qué hace, qué **no** hace, y los riesgos (ej. `--apply` sin `--verify` puede romper el build). |
 | 🌐 **Cross-platform** | Linux, macOS, Windows (Git Bash / MINGW / PowerShell). Solo `docker-cleanup` requiere bash. |
-| 🐕 **Eat your own dog food** | El propio repo se valida con `yaml-control` + `md-lint-fix` en [CI](.github/workflows/ci.yml). |
+| 🐕 **Eat your own dog food** | El propio repo se valida con `yaml-control` + `md-lint-fix` en [CI](.github/workflows/ci.yml), y sus skills se escanean con [SkillSpector](#-revisión-de-seguridad-de-los-skills). |
 | 🛡️ **Supply chain hardened** | Cualquier dependencia Node usa `pnpm v11` (postinstall bloqueado + cuarentena de 24 h por defecto). Actions pinneadas a SHA. Ver [docs/supply-chain-security.md](docs/supply-chain-security.md). |
 
 ### 🧬 Anatomía de un skill
@@ -804,6 +805,41 @@ description: Qué hace + cuándo invocarlo (triggers en español e inglés).
 
 ---
 
+## 🔬 Revisión de seguridad de los skills
+
+Los 23 skills de este repo (22 de producción + `_template`) pasan por [**SkillSpector**](https://github.com/vladimiracunadev-create/SkillSpector) en cada push — un escáner de skills de agentes ([fork](https://github.com/vladimiracunadev-create/SkillSpector) de [NVIDIA/skillspector](https://github.com/NVIDIA/skillspector)) que busca prompt injection, exfiltración de datos, persistencia entre sesiones, escalada de privilegios, abuso de herramientas y riesgo de supply chain. Job [`Skill scan`](.github/workflows/skill-scan.yml), **SkillSpector v2.12.0**, capa estática.
+
+> [!IMPORTANT]
+> **Esto no es un sello de calidad.** Dice que ningún skill contiene los patrones maliciosos que el escáner conoce — no que estén bien diseñados, ni libres de bugs. Y el número que importa no es «0 hallazgos»: es que **los 93 hallazgos están triados y con su razón escrita**.
+
+| | |
+|---|---|
+| **Skills escaneados** | 23 de 23 — ninguno omitido |
+| **Hallazgos sin clasificar** | **0** |
+| **Hallazgos triados** | 93, cada uno con veredicto en [`skillspector-triage.yaml`](docs/security/skillspector-triage.yaml) |
+| **Cobertura mínima por skill** | **33,3 %** — el escáner declara qué ficheros no pudo inspeccionar del todo, y el informe lo publica por skill en vez de esconderlo |
+| **Capa LLM** | **desactivada** a propósito: enviaría el contenido de los skills a un proveedor externo. El CI se queda en estático |
+
+**Por qué 93 hallazgos y no cero.** SkillSpector está diseñado para vetar skills de terceros *antes* de instalarlos, así que marca toda capacidad peligrosa. Este toolkit *es* un conjunto de herramientas de desarrollo: su trabajo es invocar `git`, `docker` y `pytest` por `subprocess` (26 hallazgos), consultar OSV.dev por HTTPS, y documentar en su README cosas como «`docker rm` TODOS los contenedores» (22) o el `curl` de instalación hacia `~/.claude/skills/` (23). Marcarlo es correcto por parte del escáner; el trabajo está en decir, por clase de hallazgo, si el riesgo existe o no.
+
+Un hallazgo suprimido **no desaparece**: queda en [`docs/security/skillspector-baselines/`](docs/security/skillspector-baselines/) con su veredicto (`false_positive`, `by_design`, `scanner_limit` o `accepted_risk`) y su explicación. Y la regla del juego es que **una regla nueva no se puede suprimir** sin que alguien escriba antes su razón: si el escáner dispara algo que no figura en el triaje, el generador de baselines falla.
+
+**Lo que el escaneo corrigió de verdad** — dos cosas, ninguna de ellas un falso positivo:
+
+- Un **U+200B literal** (espacio de ancho cero) incrustado en el fuente de `web-snap`. Era intencional y estaba comentado, pero un carácter invisible no se ve en un diff ni en una revisión de código, y es la vía por la que se cuela texto oculto en un script. Ahora es `chr(0x200B)`, explícito y visible.
+- **`markdownlint-cli2` sin pin de versión** en `md-lint-fix` y en el propio CI. Sin versión fija, una release comprometida del linter entra sola — exactamente el escenario que [`docs/supply-chain-security.md`](docs/supply-chain-security.md) dice que el repo quiere evitar.
+
+**Un riesgo real que queda abierto, declarado:** ningún `SKILL.md` acota su scope con `allowed-tools`, así que el agente carga cada skill con toda su caja de herramientas (`LP3`, ×14). Está asumido a sabiendas en [SECURITY.md](SECURITY.md) y pendiente en el [ROADMAP](ROADMAP.md) — acotarlo exige revisar las 22 superficies una a una.
+
+```bash
+pip install git+https://github.com/vladimiracunadev-create/SkillSpector.git
+python scripts/skillspector_scan.py
+```
+
+Informe fechado: [`docs/security/SKILLSPECTOR_2026-11-03.md`](docs/security/SKILLSPECTOR_2026-11-03.md). Los hallazgos también se suben como SARIF a la pestaña **Security** del repo.
+
+---
+
 ## 🆕 Crear un skill nuevo
 
 ```bash
@@ -828,6 +864,7 @@ Ver [CONTRIBUTING.md](CONTRIBUTING.md) para las reglas completas.
 | 🔐 [SECURITY.md](SECURITY.md) | Política de seguridad y cómo reportar vulnerabilidades |
 | 🛡️ [docs/supply-chain-security.md](docs/supply-chain-security.md) | Política frente a ataques Shai-Hulud · por qué `pnpm` en vez de `npm` |
 | 🔒 [docs/security/](docs/security/) | Informes de auditoría fechados — evidencia de lo que se escaneó y lo que no |
+| 🔬 [docs/security/skillspector-triage.yaml](docs/security/skillspector-triage.yaml) | Veredicto y razón de cada hallazgo de SkillSpector suprimido · [baselines](docs/security/skillspector-baselines/) |
 | 🆘 [SUPPORT.md](SUPPORT.md) | Canales por tipo de problema · cómo pedir ayuda |
 | 🤗 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Código de conducta de la comunidad |
 | 🏗️ [docs/architecture.md](docs/architecture.md) | Arquitectura interna · decisiones de diseño |

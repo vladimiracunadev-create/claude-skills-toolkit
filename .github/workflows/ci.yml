@@ -66,8 +66,13 @@ jobs:
         with:
           version: 11
 
+      # Versión fija, no flotante: sin pin, una release comprometida del linter
+      # entra sola en el CI y el conteo de errores cambia cuando cambia de
+      # criterio. Ver docs/supply-chain-security.md.
       - name: Install markdownlint-cli2
-        run: pnpm add -g markdownlint-cli2
+        env:
+          MARKDOWNLINT_CLI2_VERSION: "0.24.0"
+        run: pnpm add -g "markdownlint-cli2@${MARKDOWNLINT_CLI2_VERSION}"
 
       - name: Lint Markdown files (report-only)
         run: |
@@ -142,7 +147,7 @@ jobs:
       # permisivos) y no depende de números de línea, así que no da falsos
       # positivos cuando el código se mueve.
       - name: SAST · Bandit (gate MEDIUM+)
-        run: python -m bandit -q -r skills tests --severity-level medium
+        run: python -m bandit -q -r skills tests scripts --severity-level medium
 
       # Informativo a propósito: el baseline se ancla a fichero y línea, así que
       # un refactor amplio reporta como "nuevo" algo ya aceptado. Rompe el log,

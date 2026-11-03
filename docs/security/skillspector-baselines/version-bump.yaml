@@ -1,0 +1,30 @@
+# Baseline de SkillSpector para el skill `version-bump`.
+# Generado por scripts/skillspector_baseline.py con SkillSpector v2.12.0.
+# Las razones vienen de docs/security/skillspector-triage.yaml;
+# no editar a mano: edita el triaje y regenera.
+version: 2
+scanner_version: 2.12.0
+rules: []
+fingerprints:
+- hash: sha256:96ca0103cf2a5806fbbc1be937c79c903960c04dc919e1efa11272f352b4a95d
+  rule_id: LP3
+  file: SKILL.md
+  reason: '[accepted_risk] Real: el frontmatter de los SKILL.md no declara `allowed-tools`,
+    así que el agente carga el skill con toda su caja de herramientas disponible.
+    Asumido por ahora: acotar el scope exige revisar las 22 superficies una a una
+    y verificar que ningún skill pierde una herramienta que necesita. Registrado como
+    riesgo conocido en SECURITY.md y como tarea en ROADMAP.md.'
+- hash: sha256:02e7695e8ed10f3d93578054bff6a7a9407b2646f110a5ad549d31f5846367eb
+  rule_id: PE3
+  file: version_probe.py
+  reason: '[false_positive] Son las cadenas literales ".env" y ".env.local" en las
+    listas de sufijos de bitcoin-custody-audit, cuyo trabajo es BUSCAR ficheros con
+    secretos en el repo auditado para reportarlos. Nombrar el fichero es la función
+    del skill; no lee ni transmite su contenido como credencial.'
+- hash: sha256:c811153c240bc6c231c8869702102df106d2d9db79fe2fdd5b77b1a2deb3b388
+  rule_id: TM1
+  file: SKILL.md
+  reason: '[false_positive] Las coincidencias están en README.md, no en código ejecutable:
+    la documentación describe lo que el skill hace ("rm TODOS los contenedores", "git
+    push --force-with-lease"). Es prosa explicativa para quien lo instala, no una
+    instrucción que el agente ejecute.'
